@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.struct.Struct;
 import edu.wpi.first.util.struct.StructSerializable;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Represents a robot pose estimate using multiple AprilTags (Megatag).
@@ -41,18 +43,19 @@ public record MegatagPoseEstimate(
         if (fieldToRobot == null) {
             fieldToRobot = MathHelpers.kPose2dZero;
         }
-        int[] fiducialIds = new int[poseEstimate.rawFiducials.length];
-        for (int i = 0; i < poseEstimate.rawFiducials.length; i++) {
-            if (poseEstimate.rawFiducials[i] != null) {
-                fiducialIds[i] = poseEstimate.rawFiducials[i].id;
-            }
-        }
+        var rawFiducials = poseEstimate.rawFiducials == null
+                ? new LimelightHelpers.RawFiducial[0] : poseEstimate.rawFiducials;
+        var validFiducials = Arrays.stream(rawFiducials).filter(Objects::nonNull).toArray(
+                LimelightHelpers.RawFiducial[]::new);
+        int[] fiducialIds = Arrays.stream(validFiducials).mapToInt(tag -> tag.id).toArray();
+        double quality = validFiducials.length == 0 ? 0.0
+                : validFiducials.length > 1 ? 1.0 : 1.0 - validFiducials[0].ambiguity;
         return new MegatagPoseEstimate(
                 fieldToRobot,
                 poseEstimate.timestampSeconds,
-                poseEstimate.latency,
+                poseEstimate.latency / 1000.0, // Limelight 毫秒 → 本介面的秒。
                 poseEstimate.avgTagArea,
-                fiducialIds.length > 1 ? 1.0 : 1.0 - poseEstimate.rawFiducials[0].ambiguity,
+                quality,
                 fiducialIds);
     }
 
@@ -72,12 +75,12 @@ public record MegatagPoseEstimate(
 
         @Override
         public int getSize() {
-            return Pose2d.struct.getSize() + 3 * Double.BYTES;
+            return Pose2d.struct.getSize() + 4 * Double.BYTES;
         }
 
         @Override
         public String getSchema() {
-            return "Pose2d fieldToRobot; double timestampSeconds; double latency; double avgTagArea";
+            return "Pose2d fieldToRobot; double timestampSeconds; double latency; double avgTagArea; double quality";
         }
 
         @Override

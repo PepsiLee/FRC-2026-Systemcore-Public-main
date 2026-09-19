@@ -1,5 +1,7 @@
 # 單顆 Limelight：安裝位置設定與編譯前確認
 
+> 最新定位原始碼已改為 MT2 位置＋MT1 朝向，完整檔案清單、流程差異及待確認指令見 [MEGATAG-IO.md](MEGATAG-IO.md)。下方保留前階段的確認紀錄；其中「MT1／gyro 備援保留」只描述當時版本。
+
 這次在 `offseason` 將目前架構整理為單顆 `limelight-rear`。保留 MegaTag1、gyro 輔助判斷，以及 `Vision → RobotState → Drive` 的定位回送。沒有改成 MegaTag2；`main` 原始 Team 254 完整機台分支不受影響。
 
 ## 鏡頭裝在哪裡，要改哪裡？
@@ -49,6 +51,8 @@ flowchart TD
 
 模擬只建立一顆 PhotonCamera。`kRobotToCamera` 從上方常數推導，請勿另填第二份安裝數值。Limelight 的 right 正方向對應 WPILib 的 left 負方向，因此模擬 Y 取負號；抬頭正角對應 WPILib 的負 pitch。這次也修正舊模擬把 Limelight 的左右數值直接當 WPILib Y 使用的問題。底盤物理仍只由原 DriveSim 迴圈推進。
 
+指定 21 號後，`tv` 供局部追蹤使用；場地定位改由 pose 的 tagCount 判斷。完整增量見 [21 號流程確認](APRILTAG-TRACKING.md#本輪指定-21-號的增量變更)。
+
 ## 本輪實際變更與流程確認
 
 | 流程 | 修改前 | 修改後 |
@@ -81,7 +85,7 @@ flowchart TD
 
 單鏡頭階段已通過 `python3 docs/drive-vision/static_check.py` 與 `git diff --check`；額外源碼比對確認單相機篩選／gyro 備援函式未改、Drive 與生命週期程式未改、舊 A／B 執行引用為 0、只建立一顆 PhotonCamera，且原有暫存與 BuildConstants 檔案雜湊保持一致。文件圖表已重繪；Dashboard 僅做 JSON／topic 靜態檢查，尚未匯入軟體驗證。
 
-本檔有七項 JUnit 案例（含後續追蹤新增兩項），尚未執行：
+本檔有九項 JUnit 案例（含後續追蹤與指定 ID 驗證），尚未執行：
 
 1. 單顆相機的有效量測只回送一次，時間、tag 數與原標準差保持正確。
 2. 相同或更舊影格不重複融合，新影格可繼續回送。
@@ -90,6 +94,8 @@ flowchart TD
 5. 實機安裝陣列與模擬座標一致，包含左右與抬頭角轉換。
 6. 關閉場地定位回送時，局部 tag 仍可供追蹤；無目標時 getter 清空。
 7. 局部量測使用 NT 時間減掉 capture／pipeline 延遲，重讀不刷新時間，丟失時清空。
+8. 看不到指定追蹤標籤時，其他標籤仍可回送有效場地定位。
+9. IO 在 tv=0 時仍可讀取場地 pose，無場地資料後會清空舊值。
 
 依使用者規則「程式下進去編譯前要跟我完整確認會改到哪些流程才可以下」，完成上述修改後取得確認，才會執行：
 

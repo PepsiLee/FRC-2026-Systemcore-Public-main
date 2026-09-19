@@ -6,7 +6,7 @@
 
 目前底盤已接入使用者的 MK5i R2／Kraken X60／CANivore 設定，詳見 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md)。2026 library 更新見 [LIBRARY-UPGRADE.md](LIBRARY-UPGRADE.md)。
 
-**狀態：2026-09-19 依工作樹原始碼查核；尚未執行 Java 編譯、Gradle、測試、模擬或部署。** 本文件中的程式片段已對照本地方法簽章，沒有經編譯或實機驗證。四張圖以相同節點／連線模型產生 Mermaid、Graphviz DOT、SVG 與 PNG；本輪核對圖表結構與輸出檔案。
+**狀態：2026-09-19 依工作樹原始碼查核；尚未執行 Java 編譯、Gradle、測試、模擬或部署。** 本文件中的程式片段已對照本地方法簽章，沒有經編譯或實機驗證。五張圖以相同節點／連線模型產生 Mermaid、Graphviz DOT、SVG 與 PNG；本輪核對圖表結構與輸出檔案。
 
 使用者要求：「程式下進去編譯前要跟我完整確認會改到哪些流程才可以下」。因此先提供可審查的分支變更、流程與待跑驗證；確認前不執行上述步驟。原始版本的 `main` 分支與 `docs/mentor-analysis/` 保留作為完整版參考；本機另保留 `codex/original-2025` 備份，舊 mentor 文件不代表此精簡分支的現況。
 
@@ -16,6 +16,8 @@
 | 操作替換 | 舊 controlboard 與 modal controls 改為 RobotContainer 直接建立 PS5；不需要第二支手把。 |
 | 移除 | 原 `claw`、`climber`、`elevator`、`indexer`、`intake`、`led`、`superstructure`、`wrist` 八個子系統目錄與相關 factories／狀態機；Reefscape 競賽 Auto selector／factory 與自動得分流程。 |
 | 後續擴充入口 | `RobotContainer.getAutonomousCommand()`、generic Pose 路徑與 AutoAlign；目前沒有新路徑按鍵綁定。 |
+
+最新定位介面採用 **MT2 X/Y＋MT1 朝向**，見 [MT1／MT2 流程與第 5 張圖](MEGATAG-IO.md)。
 
 ## 1. 先讀這張總圖
 
@@ -32,7 +34,7 @@
 | [DriveSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java) | 手動 request、本地 PathPlanner trajectory、Vision measurement | 擁有 Drive IO 與 100 Hz 路徑控制器；序列化輸出／停止／重設姿態；週期讀 IO、記錄 DriveInputs 與模組資料。 |
 | [DriveIO.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveIO.java) | Drive subsystem 的讀寫呼叫 | 定義底盤 IO 介面；REAL 使用 `DriveIOHardware`，SIM 使用繼承它的 `DriveIOSim`。 |
 | [RobotState.java](../../src/main/java/com/team11855/frc2026/RobotState.java) | Drive IO 的里程計／速度，Vision 接受的觀測 | 保存位置與動作歷史、提供控制回授與 alliance；透過 constructor 注入的 callback 把 Vision estimate 送回 Drive。沒有舊 RobotContainer 反向依賴。 |
-| [VisionSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java) | 單相機 inputs、歷史位置與角速度 | 檢查觀測、處理 MegaTag／陀螺儀備援、回送單相機定位並提供獨立局部 tag 觀測；呼叫 `RobotState.updateMegatagEstimate()`。 |
+| [VisionSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java) | 單相機 inputs、歷史位置與角速度 | 檢查 MT1／MT2、組合 MT2 位置與 MT1 朝向回送一次定位，提供獨立局部 tag 觀測；呼叫 `RobotState.updateMegatagEstimate()`。 |
 | [VisionIO.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionIO.java) | Limelight NetworkTables 或 Photon 模擬結果 | 把相機資料交給 Vision subsystem；相機輸出不是 motor request。 |
 | [SimulatedDriveState.java](../../src/main/java/com/team11855/frc2026/simulation/SimulatedDriveState.java) | SIM 底盤 truth pose | 只保存帶時間的 `Pose2d` 歷史，交給 Photon 相機模擬；不保存 coral、algae、機構或得分狀態。 |
 
@@ -49,8 +51,8 @@
 | 右搖桿 X | `-sign(X) × abs(X)^2` | 手動角速度；推左為正角速度。 | 同上；轉向整形後絕對值超過 `0.05` 進入手動轉向。 |
 | 放開右搖桿 | 原有釋放緩衝判斷後鎖定 yaw | 保持釋放後的機器人方向，左搖桿仍可平移。 | 同上；不是將 yaw 自動設為 0。 |
 | Options | 合成 trigger 的 rising edge | 保留最新 field X/Y，藍方 yaw 設 `0`、紅方設 `π`；下一次預設駕駛初始化直接使用新 heading。 | `options().and(teleopEnabled && connected)`；命令持有 Drive requirement。 |
-| □ Square | 按一下 | 車頭對準第一張有效 AprilTag，對準後結束，不平移。 | Teleop enabled、連線、未按 Options／△。 |
-| △ Triangle | 按住 | 轉向並前後維持底盤中心至 tag 的 1 m 水平距離；放開交回手動。 | Teleop enabled、連線、未按 Options；優先於 □。 |
+| □ Square | 按一下 | 車頭只對準 **21 號 AprilTag**，對準後結束，不平移。 | Teleop enabled、連線、未按 Options／△。 |
+| △ Triangle | 按住 | 對準 **21 號**並前後維持底盤中心至 tag 的 1 m 水平距離；放開交回手動。 | Teleop enabled、連線、未按 Options；優先於 □。 |
 | 右搖桿 Y、扳機、其餘按鍵、POV | 未綁功能 | 不會啟動機構、自動得分或路徑。 | — |
 | HID 斷線 | execute 先檢查條件，不讀取軸值 | 呼叫 `Drive.stop()` 並清除手動 heading 狀態。 | 預設駕駛命令執行時。 |
 | Autonomous | `getAutonomousCommand()` 回傳 `Commands.none()` | Auto 入口先停止；此預設命令不要求底盤移動。 | 手動預設命令即使被排程，亦因非 Teleop 而停止。 |
@@ -118,7 +120,7 @@ warmup 使用本地 `PathfindingCommand.warmupCommand()`，其 trajectory consum
 
 1. REAL 的 `DriveIOHardware` 使用 CTRE swerve。CTRE 里程計設定為 `250 Hz`，telemetry callback 轉換時間後寫入 `RobotState`；Drive 的週期讀取再更新測量速度、角速度、pitch／roll、加速度等歷史。
 2. `VisionIOHardwareLimelight` 只讀取一顆 `limelight-rear`；藍方原點的相機 pose、觀測時間、fiducials 與 stddev 交給 Vision。安裝位置集中在 `Constants.VisionConstants`；欄位、單位、正負方向與範例見 [單鏡頭設定](SINGLE-CAMERA.md)。
-3. Vision 對這一顆相機的新舊觀測、品質與動作條件進行篩選，接受後直接回送；已移除兩顆相機之間的融合。MegaTag1 與 gyro 備援檢查沿用既有演算法，沒有改成 MegaTag2，也沒有宣稱已覆蓋所有異常時間或數值。
+3. Vision 每輪先發送底盤朝向，讀取 MT1 與 MT2。兩者有效且時間接近時，組合「MT2 位置＋MT1 朝向」回送一次；檢查年齡、重複時間、場界、距離與角速度。最新資料流、門檻及編譯前確認見 [MT1／MT2 說明](MEGATAG-IO.md)。
 4. 接受的 `VisionFieldPoseEstimate` 經 `RobotState → RobotContainer callback → DriveSubsystem → DriveIOHardware` 回到 CTRE。`Utils.fpgaToCurrentTime()` 把 Vision timestamp 轉到 CTRE 時基；不可把相機 capture time 改成讀取當下時間。
 5. Drive controller、heading hold 與 AutoAlign 從 `RobotState` 取得 pose／motion 回授；`DriveViz`、AdvantageKit 與 PathPlanner log callbacks 顯示狀態。
 

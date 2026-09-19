@@ -1,0 +1,32 @@
+flowchart TB
+    state["RobotState / blue-origin heading<br/>Pigeon angular rate (SIM: wheel rate)"]:::state
+    orientation["setRobotOrientation BEFORE read<br/>Yaw: degrees / yaw rate: degrees per second<br/>External IMU mode 0"]:::logic
+    camera["limelight-rear / front-facing<br/>Center + 0.54m / pitch 0"]:::input
+    mt1["MT1: botpose_wpiblue<br/>Heading + capture timestamp"]:::io
+    mt2["MT2: botpose_orb_wpiblue<br/>XY + timestamp + tag count + distance"]:::io
+    filter["Both valid / fresh / within 50ms<br/>No reused frames / field / distance / rotation"]:::decision
+    combine["One Pose2d: MT2 XY + MT1 heading<br/>Use MT2 timestamp / heading std = 10 rad"]:::logic
+    callback["RobotState vision callback<br/>DriveIO: FPGA -> CTRE time ONCE"]:::state
+    drive["CTRE pose estimator<br/>Vision + gyro + wheel odometry"]:::sink
+    relative["tv + tid + targetpose_cameraspace<br/>Square / Triangle track ID 21<br/>Independent of field-pose acceptance"]:::logic
+    reject["No field-pose update<br/>Log Vision/RejectionReason"]:::stop
+    state -->|"every periodic"| orientation
+    orientation -->|"robot_orientation_set"| camera
+    camera -->|"Helper read"| mt1
+    camera -->|"Helper read"| mt2
+    mt1 -->|"required"| filter
+    mt2 -->|"required"| filter
+    filter -->|"accepted"| combine
+    filter -->|"rejected"| reject
+    combine -->|"one measurement"| callback
+    callback -->|"latency-aware fusion"| drive
+    drive -->|"updated odometry"| state
+    camera -->|"separate observation"| relative
+    classDef host fill:#e6eef8,stroke:#43688f,color:#172d43
+    classDef input fill:#e5f4f0,stroke:#2d7868,color:#172d43
+    classDef logic fill:#edf2ff,stroke:#5269ad,color:#172d43
+    classDef io fill:#fff1dd,stroke:#9c7032,color:#172d43
+    classDef state fill:#f2eafb,stroke:#8057a2,color:#172d43
+    classDef sink fill:#eaf0f4,stroke:#627c91,color:#172d43
+    classDef stop fill:#fce8e8,stroke:#a34b50,color:#172d43
+    classDef decision fill:#fff7d8,stroke:#9c852d,color:#172d43

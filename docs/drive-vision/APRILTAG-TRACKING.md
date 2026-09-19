@@ -1,13 +1,15 @@
 # AprilTag 對準與 1 公尺跟隨：編譯前流程確認
 
+> 最新定位原始碼已改為 MT2 位置＋MT1 朝向，完整檔案清單、流程差異及待確認指令見 [MEGATAG-IO.md](MEGATAG-IO.md)。下方保留前階段的確認紀錄；其中「MT1／gyro 備援保留」只描述當時版本。
+
 分支 `offseason`。已完成原始碼、測試案例與圖表；**尚未編譯、執行測試、啟動模擬或部署**。本頁涵蓋新增按鍵及尚未編譯的[單顆 Limelight 修改](SINGLE-CAMERA.md)。
 
 ## 操作與相機安裝
 
 | 輸入 | 行為 |
 |---|---|
-| □ Square 按一下 | 車頭轉向第一張有效 AprilTag；不平移。連續 0.15 秒落在 ±2° 內即結束；最長 3 秒。放開 □ 不會提前取消。 |
-| △ Triangle 按住 | 車頭對準標籤並前後移動，維持「底盤中心 → 標籤中心」的 **1.0 公尺水平距離**；太遠前進、太近後退。放開即停止追蹤，交還搖桿。 |
+| □ Square 按一下 | 車頭只轉向 **21 號 AprilTag**；不平移。連續 0.15 秒落在 ±2° 內即結束；最長 3 秒。放開 □ 不會提前取消。 |
+| △ Triangle 按住 | 車頭對準 **21 號標籤**並前後移動，維持「底盤中心 → 標籤中心」的 **1.0 公尺水平距離**；太遠前進、太近後退。放開即停止追蹤，交還搖桿。 |
 | 同時按 □、△ | △ 優先；跟隨期間按 □ 不會中斷跟隨。放開 △ 時即使 □ 還按住，也不會突然開始對準。 |
 | Options | 中斷追蹤並執行原本的朝向重設；按住 Options 時不能開始追蹤。若 △ 仍按住，Options 放開後會重新開始跟隨。 |
 | 模擬 Keyboard0 | `Z` 對應 □、`X` 對應 △，`R` 仍是 Options；尚未啟動驗證。 |
@@ -44,7 +46,11 @@ kCameraYawDegrees = 0.0;
 
 ## 停止、目標選擇與調校
 
-每次啟動鎖住第一筆有效量測的 tag ID，不指定固定號碼。鎖定的是機器人端接受的 ID；沒有修改相機 `priorityid`。若 Limelight 改回傳另一張標籤，就停止輸出；△ 需同一 ID 再成為主要目標才恢復。要改追另一張，放開再按 △。
+固定目標是 **21 號**，由 `Constants.AprilTagTrackingConstants.kTargetTagId = 21` 統一管理。啟動時設定 Limelight 的 `priorityid`；底盤命令再核對回傳 `tid`，不是 21 就送零輸出。□ 找不到 21 會停止並結束，△ 持續停住等 21 出現；放開重按仍只接受 21。
+
+Limelight 的 `priorityid` 用於指定追蹤目標，與場地定位 ID 篩選不同，依 [官方 API 說明](https://docs.limelightvision.io/docs/docs-limelight/apis/complete-networktables-api)。本程式沒有把 `fiducial_id_filters_set` 設成只有 21。為保留其他標籤的場地定位，MT1／MT2 使用各自的 `tagCount > 0` 與 [雙通道檢查](MEGATAG-IO.md)，不受局部追蹤的 `tv` 阻擋。
+
+Photon 模擬也只挑選可見的 21 號作為局部追蹤目標；場地 pose 仍可用其他可見標籤。記錄的 `AprilTagTracking/LockedTagId` 固定為 21，`ObservedTagId` 顯示本輪實際收到的 ID；無局部觀測時為 -1。
 
 | 情況／參數 | 行為／預設值 |
 |---|---|
@@ -82,9 +88,26 @@ kCameraYawDegrees = 0.0;
 
 `Robot.java` 模式切換、Drive 輸出鎖、馬達 Tuner／CANivore 設定與 vendor 版本本輪沒有修改。原本 staged／工作目錄的 `BuildConstants.java` 保持原樣；不 commit、push 或修改 `main`。
 
+## 本輪指定 21 號的增量變更
+
+基準是已提交的 `bbcd64e`。這次修改尚未另行 commit、編譯或部署。
+
+| 檔案 | 前 → 後 |
+|---|---|
+| `Constants.java` | 沒有固定 ID → `kTargetTagId = 21`。 |
+| `commands/AprilTagTrackingCommand.java` | 鎖第一次有效 ID → 每次啟動只接受 21，拒絕其他 ID；記錄實際收到的 ID。 |
+| `subsystems/vision/VisionIOHardwareLimelight.java` | 不設定優先 ID → 啟動寫入 `priorityid=21`；場地 pose 每輪獨立讀取，無有效 pose 時清空舊資料。 |
+| `subsystems/vision/VisionSubsystem.java` | 場地融合受 `tv` gate → 使用 pose 的 tagCount gate，原本品質與時間檢查保留。 |
+| `subsystems/vision/VisionIOSimPhoton.java` | 使用模擬主要目標 → 局部資料固定挑 21；場地資料仍用所有可見標籤，無 pose 時清空。 |
+| `AprilTagTrackingCommandTest.java` | 正常控制案例改用 21；覆蓋第一次看到其他 ID、重新啟動、失去／恢復 21、□ 拒絕其他標籤。 |
+| `SingleCameraVisionTest.java` | 核對 priorityid=21，新增 tv=0 仍接受其他標籤場地 pose，以及無 pose 時清空。 |
+| `docs/drive-vision/` | 更新操作、此流程確認、靜態報告與第 4 張圖。 |
+
+相機位置、1 公尺設定、速度／PID、按鍵、Options、DriverStation 模式 gate 與 Drive 輸出同步介面保持原值。指定 21 是目標選擇變更；尚未取得先前「按鍵沒反應」的即時資料，因此沒有宣稱該問題已排除。
+
 ## 取得確認後才執行
 
-已通過 `python3 docs/drive-vision/static_check.py` 與 `git diff --check`，核對原始碼／本地 WPILib、CTRE、Photon API 簽章、文件、JSON、引用與 Git diff。共有 83 個正式 Java 檔，仍只有 Drive／Vision；43 項 JUnit 案例尚未執行。原有暫存內容與 BuildConstants 工作檔的 SHA-256 一致。沒有 Java 型別解析或執行結果，新增的測試原始碼也不能視為已通過。
+已通過 `python3 docs/drive-vision/static_check.py` 與 `git diff --check`，核對原始碼／本地 WPILib、CTRE、Photon API 簽章、文件、JSON、引用與 Git diff。共有 83 個正式 Java 檔，仍只有 Drive／Vision；46 項 JUnit 案例尚未執行。原有暫存內容與 BuildConstants 工作檔的 SHA-256 一致。沒有 Java 型別解析或執行結果，新增的測試原始碼也不能視為已通過。
 
 ```sh
 ./gradlew spotlessCheck test build -PteamNumber=0

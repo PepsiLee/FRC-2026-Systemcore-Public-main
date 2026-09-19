@@ -70,11 +70,11 @@ class AprilTagTrackingCommandTest {
     @Test
     void aimTurnsTowardEitherSideWithoutTranslation() {
         start(Mode.AIM_ONCE, new Transform3d());
-        see(18, 2.0, 1.0, 0.0);
+        see(21, 2.0, 1.0, 0.0);
         assertTrue(request().RotationalRate > 0.0);
         assertEquals(0.0, request().VelocityX);
         assertEquals(0.0, request().VelocityY);
-        see(18, 2.0, -1.0, 0.0);
+        see(21, 2.0, -1.0, 0.0);
         assertTrue(request().RotationalRate < 0.0);
         assertEquals(0.0, request().VelocityX);
         assertFalse(command.isFinished());
@@ -82,11 +82,11 @@ class AprilTagTrackingCommandTest {
 
     @Test
     void followApproachesBacksAwayAndStopsInsideDistanceTolerance() {
-        see(18, 4.0, 0.0, 0.0);
+        see(21, 4.0, 0.0, 0.0);
         assertEquals(0.6, request().VelocityX, 1e-9);
-        see(18, 0.6, 0.0, 0.0);
+        see(21, 0.6, 0.0, 0.0);
         assertEquals(-0.4, request().VelocityX, 1e-9);
-        see(18, 1.03, 0.0, 0.0);
+        see(21, 1.03, 0.0, 0.0);
         assertEquals(0.0, request().VelocityX);
         assertEquals(0.0, request().RotationalRate);
         assertFalse(command.isFinished());
@@ -96,34 +96,34 @@ class AprilTagTrackingCommandTest {
     void measuresHorizontalRangeFromRobotCenterInsteadOfCameraOrSlantRange() {
         start(Mode.FOLLOW_WHILE_HELD,
                 new Transform3d(new Translation3d(0.3, 0.2, 0.54), new Rotation3d()));
-        see(18, 0.7, -0.2, 2.0);
+        see(21, 0.7, -0.2, 2.0);
         assertEquals(0.0, request().VelocityX);
         assertEquals(0.0, request().RotationalRate);
     }
 
     @Test
     void largeHeadingErrorRotatesFirstAndCapsAngularSpeed() {
-        see(18, 1.0, 2.0, 0.0);
+        see(21, 1.0, 2.0, 0.0);
         assertEquals(0.0, request().VelocityX);
         assertEquals(0.0, request().VelocityY);
         assertEquals(1.5, request().RotationalRate, 1e-9);
-        see(18, 1.0, -2.0, 0.0);
+        see(21, 1.0, -2.0, 0.0);
         assertEquals(-1.5, request().RotationalRate, 1e-9);
     }
 
     @Test
     void lostStaleFutureAndInvalidTargetsStopWhileFollowKeepsOwnership() {
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         now += 0.26;
         command.execute();
         assertStopped();
         assertFalse(command.isFinished());
-        observation = Optional.of(new AprilTagObservation(18, new Translation3d(2, 0, 0), now + 1));
+        observation = Optional.of(new AprilTagObservation(21, new Translation3d(2, 0, 0), now + 1));
         command.execute();
         assertStopped();
-        see(18, Double.NaN, 0.0, 0.0);
+        see(21, Double.NaN, 0.0, 0.0);
         assertStopped();
-        see(18, 7.0, 0.0, 0.0);
+        see(21, 7.0, 0.0, 0.0);
         assertStopped();
         observation = Optional.empty();
         command.execute();
@@ -132,23 +132,36 @@ class AprilTagTrackingCommandTest {
     }
 
     @Test
-    void differentTagStopsUntilOriginalReturnsAndNewPressResetsLock() {
-        see(18, 2.0, 0.0, 0.0);
-        see(19, 0.5, 0.0, 0.0);
+    void followRejectsOtherTagsEvenBeforeFirstMatchAndAfterRestart() {
+        see(19, 2.0, 0.0, 0.0);
         assertStopped();
         assertFalse(command.isFinished());
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         assertTrue(request().VelocityX > 0.0);
+        see(19, 0.5, 0.0, 0.0);
+        assertStopped();
+        see(21, 0.5, 0.0, 0.0);
+        assertTrue(request().VelocityX < 0.0);
         command.end(true);
         command.initialize();
         see(19, 0.5, 0.0, 0.0);
-        assertTrue(request().VelocityX < 0.0);
+        assertStopped();
+        see(21, 2.0, 0.0, 0.0);
+        assertTrue(request().VelocityX > 0.0);
+    }
+
+    @Test
+    void aimEndsWithoutMovingWhenOnlyAnotherTagIsVisible() {
+        start(Mode.AIM_ONCE, new Transform3d());
+        see(19, 2.0, 1.0, 0.0);
+        assertStopped();
+        assertTrue(command.isFinished());
     }
 
     @Test
     void controlGateStopsBeforeReadingCameraAndEndAlwaysStops() {
         assertTrue(command.getRequirements().contains(drive));
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         int previousReads = reads;
         enabled = false;
         command.execute();
@@ -157,7 +170,7 @@ class AprilTagTrackingCommandTest {
         assertStopped();
         enabled = true;
         command.initialize();
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         command.end(true);
         assertStopped();
     }
@@ -165,20 +178,20 @@ class AprilTagTrackingCommandTest {
     @Test
     void aimMustStayAlignedAndTimesOutOrEndsWhenTargetLost() {
         start(Mode.AIM_ONCE, new Transform3d());
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         now += 0.10;
-        see(18, 2.0, 0.2, 0.0); // Break the settle window.
+        see(21, 2.0, 0.2, 0.0); // Break the settle window.
         now += 0.10;
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         assertFalse(command.isFinished());
         now += 0.16;
-        see(18, 2.0, 0.0, 0.0);
+        see(21, 2.0, 0.0, 0.0);
         assertTrue(command.isFinished());
         assertStopped();
 
         command.initialize();
         now += 3.01;
-        see(18, 2.0, 1.0, 0.0);
+        see(21, 2.0, 1.0, 0.0);
         assertTrue(command.isFinished());
         assertStopped();
 

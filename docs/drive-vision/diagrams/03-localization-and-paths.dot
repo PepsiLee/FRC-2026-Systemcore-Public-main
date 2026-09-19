@@ -5,8 +5,8 @@ edge [fontname="Arial", fontsize=11, color="#7a91a5", fontcolor="#435c71", arrow
 mount [label="Constants.VisionConstants\nCamera name + mounting position", fillcolor="#f2eafb", color="#8057a2"];
 cameras [label="Single Limelight: limelight-rear\nBlue-origin pose + capture time", fillcolor="#e5f4f0", color="#2d7868"];
 sim [label="SimulatedDriveState Pose2d\n→ One Photon camera simulation", fillcolor="#e5f4f0", color="#2d7868"];
-visionio [label="VisionIO inputs\nObservations + std deviations", fillcolor="#fff1dd", color="#9c7032"];
-vision [label="VisionSubsystem\nTimestamp / quality checks\nOne accepted camera estimate", fillcolor="#edf2ff", color="#5269ad"];
+visionio [label="VisionIO inputs\nMT1 + MT2 + relative target", fillcolor="#fff1dd", color="#9c7032"];
+vision [label="VisionSubsystem\nMT2 XY + MT1 heading\nOne accepted measurement", fillcolor="#edf2ff", color="#5269ad"];
 state [label="RobotState\nPose and motion history\nVision estimate callback", fillcolor="#f2eafb", color="#8057a2"];
 ctre [label="DriveIOHardware / CTRE\nVision time conversion\nOdometry telemetry ~250 Hz", fillcolor="#fff1dd", color="#9c7032"];
 api [label="Local AutoBuilder.pathfindToPose\nPose2d + 6 constraint parameters", fillcolor="#edf2ff", color="#5269ad"];

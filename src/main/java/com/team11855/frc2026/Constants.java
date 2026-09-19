@@ -144,14 +144,15 @@ public class Constants {
                                 -Units.degreesToRadians(kCameraPitchDegrees),
                                 Units.degreesToRadians(kCameraYawDegrees)));
 
-        // Vision processing constants
-        public static final double kDefaultAmbiguityThreshold = 0.19;
-        public static final double kDefaultYawDiffThreshold = 5.0;
-        public static final double kTagAreaThresholdForYawCheck = 2.0;
-        public static final double kTagMinAreaForSingleTagMegatag = 1.0;
-        public static final double kDefaultZThreshold = 0.2;
-        public static final double kDefaultNormThreshold = 1.0;
-        public static final double kMinAmbiguityToFlip = 0.08;
+        // MT2 位置 + MT1 朝向：量測仍以 FPGA 秒保存，僅 DriveIO 轉換 CTRE 時間。
+        public static final double kMaxMeasurementAgeSeconds = 0.50;
+        public static final double kFutureTimestampToleranceSeconds = 0.05;
+        public static final double kMaxMegatagTimestampSkewSeconds = 0.05;
+        public static final double kMaxTagDistanceMeters = 6.0;
+        public static final double kFieldBoundaryMarginMeters = 0.5;
+        public static final double kMaxVisionYawRateRadiansPerSecond = 5.0; // 約 286 度／秒。
+        // 與參考專案相同：10 rad 的大標準差，讓陀螺儀主導朝向。
+        public static final double kHeadingStandardDeviationRadians = 10.0;
 
         public static final double kCameraHorizontalFOVDegrees = 81.0;
         public static final double kCameraVerticalFOVDegrees = 55.0;
@@ -162,6 +163,7 @@ public class Constants {
 
     /** AprilTag 對準／跟隨專用參數；不改手動駕駛、路徑或朝向維持的 PID。 */
     public static final class AprilTagTrackingConstants {
+        public static final int kTargetTagId = 21; // □ 與 △ 固定瞄準的 AprilTag 編號。
         public static final double kTargetDistanceMeters = 1.0; // 底盤中心至標籤的水平距離。
         public static final double kDistanceToleranceMeters = 0.05; // ±5 cm 內停止前後移動。
         public static final double kHeadingToleranceRadians = Units.degreesToRadians(2.0);

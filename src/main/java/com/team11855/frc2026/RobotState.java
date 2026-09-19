@@ -161,6 +161,13 @@ public class RobotState {
         return fieldToRobot.getSample(timestamp);
     }
 
+    /** Pigeon 的實測角速度，rad/s；模擬使用輪組回報的角速度。 */
+    public double getLatestDriveYawAngularVelocity() {
+        if (!Robot.isReal()) return measuredRobotRelativeChassisSpeeds.get().omegaRadiansPerSecond;
+        var latest = driveYawAngularVelocity.getLatest();
+        return latest == null ? 0.0 : latest.getValue();
+    }
+
     public ChassisSpeeds getLatestMeasuredFieldRelativeChassisSpeeds() {
         return measuredFieldRelativeChassisSpeeds.get();
     }

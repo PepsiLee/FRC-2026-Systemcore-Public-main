@@ -17,7 +17,10 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-/** Turns the robot's front toward one tag, optionally holding a center-to-tag horizontal distance. */
+/**
+ * Turns the robot's front toward the configured tag, optionally holding a center-to-tag horizontal
+ * distance.
+ */
 public class AprilTagTrackingCommand extends Command {
     public enum Mode {
         AIM_ONCE,
@@ -31,7 +34,7 @@ public class AprilTagTrackingCommand extends Command {
     private final Transform3d robotToCamera;
     private final DoubleSupplier clock;
     private final SwerveRequest.RobotCentric request = new SwerveRequest.RobotCentric();
-    private int lockedTagId = -1;
+    private final int targetTagId = AprilTagTrackingConstants.kTargetTagId;
     private double startTime;
     private double alignedSince = Double.NaN;
     private boolean finished;
@@ -74,15 +77,15 @@ public class AprilTagTrackingCommand extends Command {
 
     @Override
     public void initialize() {
-        lockedTagId = -1;
         startTime = clock.getAsDouble();
         alignedSince = Double.NaN;
         finished = false;
         drive.stop();
         Logger.recordOutput("AprilTagTracking/HasUsableTarget", false);
         Logger.recordOutput("AprilTagTracking/Active", true);
+        Logger.recordOutput("AprilTagTracking/ObservedTagId", -1);
         Logger.recordOutput("AprilTagTracking/Mode", mode.toString());
-        Logger.recordOutput("AprilTagTracking/LockedTagId", lockedTagId);
+        Logger.recordOutput("AprilTagTracking/LockedTagId", targetTagId);
     }
 
     @Override
@@ -108,10 +111,12 @@ public class AprilTagTrackingCommand extends Command {
 
         var observation = observationSupplier.get();
         if (observation.isEmpty()) {
+            Logger.recordOutput("AprilTagTracking/ObservedTagId", -1);
             targetUnavailable("NoTarget");
             return;
         }
         var target = observation.get();
+        Logger.recordOutput("AprilTagTracking/ObservedTagId", target.tagId());
         double age = now - target.timestampSeconds();
         if (target.tagId() <= 0
                 || !Double.isFinite(age)
@@ -130,8 +135,8 @@ public class AprilTagTrackingCommand extends Command {
             targetUnavailable("InvalidDistance");
             return;
         }
-        if (lockedTagId < 0) lockedTagId = target.tagId();
-        if (target.tagId() != lockedTagId) {
+        // 即使相機回傳其他 ID，也不可改追其他標籤。
+        if (target.tagId() != targetTagId) {
             targetUnavailable("DifferentTag");
             return;
         }
@@ -170,7 +175,7 @@ public class AprilTagTrackingCommand extends Command {
                             maxSpeed);
         }
 
-        Logger.recordOutput("AprilTagTracking/LockedTagId", lockedTagId);
+        Logger.recordOutput("AprilTagTracking/LockedTagId", targetTagId);
         Logger.recordOutput("AprilTagTracking/DistanceMeters", distance);
         Logger.recordOutput("AprilTagTracking/DistanceErrorMeters", distanceError);
         Logger.recordOutput("AprilTagTracking/HeadingErrorDegrees", Math.toDegrees(headingError));
@@ -198,7 +203,7 @@ public class AprilTagTrackingCommand extends Command {
     private void targetUnavailable(String reason) {
         alignedSince = Double.NaN;
         Logger.recordOutput("AprilTagTracking/HasUsableTarget", false);
-        // □ 失去目標就結束；△ 持有底盤並停止，等待同一張標籤重新出現。
+        // □ 失去目標就結束；△ 持有底盤並停止，等待指定的 21 號標籤重新出現。
         if (mode == Mode.AIM_ONCE) finished = true;
         stop(reason);
     }

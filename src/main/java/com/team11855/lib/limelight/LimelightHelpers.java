@@ -913,8 +913,10 @@ public class LimelightHelpers {
         double[] poseArray = tsValue.value;
         long timestamp = tsValue.timestamp;
 
-        if (poseArray.length == 0) {
-            // Handle the case where no data is available
+        if (poseArray.length < 11 || !Double.isFinite(poseArray[7])
+                || poseArray[7] < 0 || poseArray[7] > 1024
+                || poseArray[7] != Math.rint(poseArray[7])) {
+            // Local guard: incomplete/invalid pose metadata is not a measurement.
             return new PoseEstimate();
         }
 

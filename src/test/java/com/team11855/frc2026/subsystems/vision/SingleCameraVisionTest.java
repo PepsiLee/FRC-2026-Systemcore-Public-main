@@ -26,6 +26,7 @@ class SingleCameraVisionTest {
     private FakeCamera io;
     private RobotState state;
     private VisionSubsystem vision;
+    private double now = 1.05;
 
     @BeforeAll
     static void initializeHal() {
@@ -37,7 +38,7 @@ class SingleCameraVisionTest {
         io = new FakeCamera();
         state = new RobotState(accepted::add);
         state.addOdometryMeasurement(1.0, OBSERVED_POSE);
-        vision = new VisionSubsystem(io, state);
+        vision = new VisionSubsystem(io, state, () -> now);
     }
 
     @AfterEach
@@ -46,7 +47,7 @@ class SingleCameraVisionTest {
     }
 
     @Test
-    void oneCameraForwardsOneMeasurementWithoutReducingItsUncertainty() {
+    void oneCameraForwardsOneHybridMeasurementWithReferenceUncertainty() {
         vision.periodic();
 
         assertEquals(1, accepted.size());
@@ -54,9 +55,9 @@ class SingleCameraVisionTest {
         assertEquals(OBSERVED_POSE, estimate.getVisionRobotPoseMeters());
         assertEquals(1.0, estimate.getTimestampSeconds());
         assertEquals(2, estimate.getNumTags());
-        assertEquals(0.5, estimate.getVisionMeasurementStdDevs().get(0, 0), 1e-9);
-        assertEquals(0.5, estimate.getVisionMeasurementStdDevs().get(1, 0), 1e-9);
-        assertEquals(0.1, estimate.getVisionMeasurementStdDevs().get(2, 0), 1e-9);
+        assertEquals(0.4, estimate.getVisionMeasurementStdDevs().get(0, 0), 1e-9);
+        assertEquals(0.4, estimate.getVisionMeasurementStdDevs().get(1, 0), 1e-9);
+        assertEquals(10.0, estimate.getVisionMeasurementStdDevs().get(2, 0), 1e-9);
     }
 
     @Test
@@ -68,6 +69,7 @@ class SingleCameraVisionTest {
         assertEquals(1, accepted.size());
 
         io.timestamp = 2.0;
+        now = 2.05;
         state.addOdometryMeasurement(2.0, OBSERVED_POSE);
         vision.periodic();
         assertEquals(2, accepted.size());
@@ -78,13 +80,16 @@ class SingleCameraVisionTest {
     void noTargetDoesNotForwardAnOldPoseAndCanRecover() {
         vision.periodic();
         io.timestamp = 2.0;
+        now = 2.05;
         io.seesTarget = false;
+        io.hasFieldPose = false;
         state.addOdometryMeasurement(2.0, OBSERVED_POSE);
         vision.periodic();
         assertEquals(1, accepted.size());
         assertEquals(1.0, state.lastUsedMegatagTimestamp());
 
         io.seesTarget = true;
+        io.hasFieldPose = true;
         vision.periodic();
         assertEquals(2, accepted.size());
     }
@@ -121,6 +126,9 @@ class SingleCameraVisionTest {
                 published,
                 1e-9);
 
+        assertEquals(21.0, NetworkTableInstance.getDefault()
+                .getTable(VisionConstants.kLimelightTableName)
+                .getEntry("priorityid").getDouble(-1.0));
         var simMount = VisionConstants.kRobotToCamera;
         assertEquals(published[0], simMount.getX(), 1e-9);
         assertEquals(-published[1], simMount.getY(), 1e-9);
@@ -177,8 +185,46 @@ class SingleCameraVisionTest {
         }
     }
 
+    @Test
+    void otherTagsCanStillLocalizeWhenPriorityTargetIsNotVisible() {
+        io.seesTarget = false;
+        io.hasFieldPose = true; // The two field tags are 18 and 19, not target 21.
+        vision.periodic();
+        assertEquals(1, accepted.size());
+        assertTrue(vision.getAprilTagObservation().isEmpty());
+    }
+
+    @Test
+    void hardwareReadsFieldPoseWithTvZeroAndClearsItWhenNoFieldPoseRemains() {
+        var hardware = new VisionIOHardwareLimelight(state);
+        var inputs = new VisionIO.VisionIOInputs();
+        var table = NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightTableName);
+        var poseEntry = LimelightHelpers.getLimelightDoubleArrayEntry(
+                VisionConstants.kLimelightTableName, "botpose_wpiblue");
+        try {
+            table.getEntry("tv").setDouble(0.0);
+            poseEntry.set(new double[] {
+                2, 3, 0, 0, 0, 0, 0, 2, 0, 1, 4,
+                18, 0, 0, 4, 1, 1, 0.01,
+                19, 0, 0, 4, 1, 1, 0.01
+            }, 1_000_000L);
+            hardware.readInputs(inputs);
+            assertFalse(inputs.camera.seesTarget);
+            assertTrue(inputs.camera.aprilTagObservation.isEmpty());
+            assertEquals(2, inputs.camera.megatagCount);
+            assertEquals(OBSERVED_POSE, inputs.camera.megatagPoseEstimate.fieldToRobot());
+            poseEntry.set(new double[0]);
+            hardware.readInputs(inputs);
+            assertEquals(0, inputs.camera.megatagCount);
+            assertNull(inputs.camera.megatagPoseEstimate);
+        } finally {
+            poseEntry.set(new double[0]);
+        }
+    }
+
     private static class FakeCamera implements VisionIO {
         boolean seesTarget = true;
+        boolean hasFieldPose = true;
         Optional<AprilTagObservation> relativeTarget = Optional.empty();
         double timestamp = 1.0;
 
@@ -187,10 +233,13 @@ class SingleCameraVisionTest {
             var camera = inputs.camera;
             camera.seesTarget = seesTarget;
             camera.aprilTagObservation = relativeTarget;
-            camera.megatagCount = 2;
+            camera.megatagCount = hasFieldPose ? 2 : 0;
             camera.megatagPoseEstimate =
                     new MegatagPoseEstimate(
                             OBSERVED_POSE, timestamp, 0.02, 4.0, 1.0, new int[] {18, 19});
+            camera.megatag2Count = hasFieldPose ? 2 : 0;
+            camera.megatag2PoseEstimate = camera.megatagPoseEstimate;
+            camera.megatag2AverageTagDistanceMeters = 2.0;
             camera.pose3d = new Pose3d(OBSERVED_POSE);
             camera.fiducialObservations = new FiducialObservation[0];
             camera.standardDeviations =

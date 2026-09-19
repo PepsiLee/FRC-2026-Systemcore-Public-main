@@ -1,5 +1,9 @@
 # 修改完成後的編譯確認清單
 
+> 最新定位原始碼已改為 MT2 位置＋MT1 朝向，完整檔案清單、流程差異及待確認指令見 [MEGATAG-IO.md](MEGATAG-IO.md)。下方保留前階段的確認紀錄；其中「MT1／gyro 備援保留」只描述當時版本。
+
+最新增量：□／△ 固定指定 21 號；相機優先 ID、場地定位與局部追蹤分流、模擬及測試變更見 [本輪確認](APRILTAG-TRACKING.md#本輪指定-21-號的增量變更)。此增量尚未編譯或部署。
+
 本輪新增 □ 對準／△ 持有 1 公尺跟隨，完整流程、檔案與待確認指令見 [APRILTAG-TRACKING.md](APRILTAG-TRACKING.md)。
 
 前一階段單顆 Limelight 變更、實際檔案與待確認指令見 [SINGLE-CAMERA.md](SINGLE-CAMERA.md)。本輪尚未編譯、測試或模擬；下方較早階段的紀錄保留供參考。

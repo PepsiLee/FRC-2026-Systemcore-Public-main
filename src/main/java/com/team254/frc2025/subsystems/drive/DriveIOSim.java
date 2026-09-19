@@ -5,7 +5,8 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.team254.frc2025.Constants;
 import com.team254.frc2025.RobotState;
-import com.team254.frc2025.simulation.SimulatedRobotState;
+import com.team254.frc2025.simulation.DriveSimulationArena;
+import com.team254.frc2025.simulation.SimulatedDriveState;
 import com.team254.frc2025.utils.simulations.MapleSimSwerveDrivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.function.Consumer;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -23,17 +25,19 @@ import org.littletonrobotics.junction.Logger;
  */
 public class DriveIOSim extends DriveIOHardware {
 
-    private SimulatedRobotState simRobotState = null;
-    private static final double kSimLoopPeriod = 0.005; // 5 ms
+    private SimulatedDriveState simulatedDriveState = null;
+    // 使用 Tuner 指定的 4 ms（250 Hz），此 Notifier 是唯一的物理更新入口。
+    private static final double kSimLoopPeriod =
+            CompTunerConstants.kSimulationLoopPeriod.in(Units.Seconds);
+    private final SwerveModuleConstants<?, ?, ?>[] simulationModules;
     private Notifier simNotifier = null;
     private double lastSimTime;
     public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
-    Pose2d lastConsumedPose = null;
     Consumer<SwerveDriveState> simTelemetryConsumer =
             swerveDriveState -> {
                 // Protect at init
-                if (simRobotState == null) {
+                if (simulatedDriveState == null) {
                     return;
                 }
 
@@ -41,42 +45,43 @@ public class DriveIOSim extends DriveIOHardware {
                     swerveDriveState.Pose =
                             mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose();
                 }
-                simRobotState.addFieldToRobot(swerveDriveState.Pose);
+                simulatedDriveState.addFieldToRobot(swerveDriveState.Pose);
                 telemetryConsumer_.accept(swerveDriveState);
             };
 
     public DriveIOSim(
             RobotState robotState,
-            SimulatedRobotState simRobotState,
+            SimulatedDriveState simulatedDriveState,
             SwerveDrivetrainConstants driveTrainConstants,
-            @SuppressWarnings("rawtypes") SwerveModuleConstants... modules) {
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(robotState, driveTrainConstants, modules);
-        this.simRobotState = simRobotState;
+        this.simulatedDriveState = simulatedDriveState;
+        // 與 CTRE 模擬共用本次傳入的模組設定，不再另外讀取另一台機器人的參數。
+        this.simulationModules = modules.clone();
 
         // Rewrite the telemetry consumer with a consumer for sim
         registerTelemetry(simTelemetryConsumer);
         startSimThread();
     }
 
-    @SuppressWarnings("unchecked")
     public void startSimThread() {
         if (Constants.useMapleSim) {
+            // Select the matching field before constructing or registering any simulated drive.
+            SimulatedArena.overrideInstance(new DriveSimulationArena());
             mapleSimSwerveDrivetrain =
                     new MapleSimSwerveDrivetrain(
                             Units.Seconds.of(kSimLoopPeriod),
                             Units.Pounds.of(Constants.DriveConstants.kRobotWeightPounds),
-                            Units.Inches.of(Constants.DriveConstants.kBumperWidthInches),
                             Units.Inches.of(Constants.DriveConstants.kBumperLengthInches),
+                            Units.Inches.of(Constants.DriveConstants.kBumperWidthInches),
+                            // 使用者確認：MK5i R2 的行走與轉向馬達皆為 Kraken X60。
                             DCMotor.getKrakenX60(Constants.DriveConstants.kDriveMotorCount),
                             DCMotor.getKrakenX60(Constants.DriveConstants.kDriveMotorCount),
                             1.2,
                             getModuleLocations(),
                             getPigeon2(),
                             getModules(),
-                            SimTunerConstants.FrontLeft,
-                            SimTunerConstants.FrontRight,
-                            SimTunerConstants.BackLeft,
-                            SimTunerConstants.BackRight);
+                            simulationModules);
             simNotifier = new Notifier(mapleSimSwerveDrivetrain::update);
         } else {
             lastSimTime = Utils.getCurrentTimeSeconds();
@@ -105,9 +110,9 @@ public class DriveIOSim extends DriveIOHardware {
         super.readInputs(inputs);
 
         // Handle the viz
-        var pose = simRobotState.getLatestFieldToRobot();
+        var pose = simulatedDriveState.getLatestFieldToRobot();
         if (pose != null) {
-            Logger.recordOutput("Drive/Viz/SimPose", simRobotState.getLatestFieldToRobot());
+            Logger.recordOutput("Drive/Viz/SimPose", pose);
         }
     }
 

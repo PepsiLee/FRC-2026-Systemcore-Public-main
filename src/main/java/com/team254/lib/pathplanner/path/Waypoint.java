@@ -1,7 +1,7 @@
 package com.team254.lib.pathplanner.path;
 
-import com.pathplanner.lib.util.FlippingUtil;
-import com.pathplanner.lib.util.JSONUtil;
+import com.team254.lib.pathplanner.util.FlippingUtil;
+import com.team254.lib.pathplanner.util.JSONUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import org.json.simple.JSONObject;

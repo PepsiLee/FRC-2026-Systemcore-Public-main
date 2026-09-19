@@ -1,0 +1,21 @@
+digraph auto {
+ graph [label="自動模式 · 準備、規劃與執行",labelloc=t,rankdir=TB,bgcolor="#ffffff",fontname="Arial",fontsize=22,ranksep=.5];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=14,margin=".34,.16"];edge [fontname="Arial",fontsize=11,color="#52677b"];
+ Dash [label="Dashboard\nMode / Start / scoreOrder / levelOrder\nFeeder strategy / Ice Cream Count"];
+ Disabled [label="Robot.disabledPeriodic\n輸入變動 → 重建auto / reset pose / warmup"];
+ Start [label="autonomousInit\n預裝coral假設 / autoStartTime / schedule"];
+ Step [label="PathfindingAuto.getNextAction\nDeferred + currentStep"];
+ Coral [label="Coral step\nAutoFactory.getPathfindToReef"];
+ Align [label="PathfindingAutoAlignCommand\nbranch → ScoringLocation → join path"];
+ AD [label="LocalADStar + navgrid\n幾何路徑 → trajectory"];
+ Stage [label="Start Staging event\n要求future state → 機構到位"];
+ Gate [label="stage finished + doneStaging + pose ready\nAuto的poseReady直接true\n解除末段0.001 m/s限制",fillcolor="#fff4df"];
+ Controller [label="100 Hz controller → Drive\n得分/avoidDescore條件推進"];
+ Acquire [label="下一步取件\nFunnel / Ground / Retry / Ice Cream"];
+ Algae [label="* algae step\n依lastScoredPosition接續\n短距離對位 / backoff / intake"];
+ Dash -> Disabled -> Start -> Step;
+ Step -> Coral [label="2 / 3 / 4"]; Step -> Algae [label="*"];
+ Coral -> Align -> AD; AD -> Stage [label="event marker"]; Stage -> Gate;
+ AD -> Gate [label="姿態 / path callback"]; Gate -> Controller -> Acquire -> Step;
+ Controller -> Coral [label="無coral且stow：重試",style=dashed]; Algae -> Step [label="currentStep++"];
+}

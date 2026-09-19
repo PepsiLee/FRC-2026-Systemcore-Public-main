@@ -1,0 +1,31 @@
+digraph architecture {
+ graph [label="Team 254 · 2025 軟體架構\n箭頭表示呼叫／資料傳递；不是實體配線", labelloc=t, rankdir=TB, bgcolor="#ffffff", nodesep=.35, ranksep=.65, fontname="Arial", fontsize=22];
+ node [shape=box, style="rounded,filled", fillcolor="#edf5ff", color="#adc4df", fontname="Arial", fontsize=15, margin=".34,.16"];
+ edge [fontname="Arial", fontsize=11, color="#52677b", arrowsize=.7];
+ Main [label="Main → Robot\n啟動 / 比賽生命週期 / Logger"];
+ Container [label="RobotContainer\n建立 IO、Subsystem 與 bindings"];
+ Scheduler [label="CommandScheduler\n主週期通常 20 ms"];
+ Control [label="ControlBoard + ModalControls\nCORAL / ALGAECLIMB / CORALMANUAL"];
+ Triggers [label="ModalSuperstructureTriggers\n按鍵條件 / 狀態請求 / 排程"];
+ SM [label="SuperstructureStateMachine\n24 states / 424 allowed edges"];
+ Factory [label="Mechanism Factories\n依序 / 並行 / 等待 / 中斷"];
+ Mechanisms [label="各機構 Subsystem\nElevator / Wrist / Claw / Intake\nIndexer / Climber / LED"];
+ IO [label="MotorIO / SensorIO / LED IO\nHardware 或 SIM"];
+ Auto [label="AutoModeSelector → PathfindingAuto\nAutoFactory → AutoAlign"];
+ Planner [label="本地 PathPlanner / ADStar\n路徑 → 軌跡 → 100 Hz controller"];
+ Drive [label="DriveSubsystem → DriveIO\nCTRE Swerve / 四模組 / Pigeon"];
+ Vision [label="VisionSubsystem\nLimelight → 驗證 / 合併"];
+ State [label="RobotState\n位姿歷史 / 機構量測 / 共享旗標", fillcolor="#ecf9f4", color="#8bc8b3"];
+ Observe [label="Logger / RobotViz / ReefViz\nWPILOG / NT4 / AdvantageScope"];
+ Main -> Container [label="constructor"]; Main -> Scheduler [label="robotPeriodic"];
+ Container -> Control; Container -> Mechanisms; Container -> Drive; Container -> Vision;
+ Control -> Triggers [label="意圖 + 模式"]; Triggers -> SM [label="desired / future"];
+ SM -> Factory [label="A*選轉移"]; Factory -> Mechanisms [label="Commands"];
+ Mechanisms -> IO [label="設定輸出 / 讀量測"]; Scheduler -> Mechanisms [label="periodic / command"];
+ Scheduler -> Triggers [label="poll triggers"]; Scheduler -> Auto [label="auto command"];
+ Auto -> Planner; Triggers -> Auto [label="teleop自動對位"];
+ Planner -> Drive [label="trajectory controller"];
+ Drive -> State [label="pose / speeds"]; Mechanisms -> State [label="量測"];
+ State -> Vision [label="歷史pose / gyro"]; Vision -> Drive [label="經RobotState callback\nvision measurement"];
+ State -> Planner [label="pose / velocity"]; State -> Observe [label="顯示與記錄"];
+}

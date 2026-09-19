@@ -3,7 +3,7 @@ package com.team254.frc2025.subsystems.vision;
 import com.team254.frc2025.Constants;
 import com.team254.frc2025.Constants.VisionConstants;
 import com.team254.frc2025.RobotState;
-import com.team254.frc2025.simulation.SimulatedRobotState;
+import com.team254.frc2025.simulation.SimulatedDriveState;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -30,15 +30,15 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
     private PhotonCameraSim cameraSim;
     private PhotonCameraSim cameraBSim;
     private final VisionSystemSim visionSim;
-    private final SimulatedRobotState simRobotState;
+    private final SimulatedDriveState simulatedDriveState;
 
     private final int kResWidth = 1280;
     private final int kResHeight = 800;
 
     /** Creates a new simulated vision IO instance using PhotonVision. */
-    public VisionIOSimPhoton(RobotState state, SimulatedRobotState simRobotState) {
+    public VisionIOSimPhoton(RobotState state, SimulatedDriveState simulatedDriveState) {
         super(state);
-        this.simRobotState = simRobotState;
+        this.simulatedDriveState = simulatedDriveState;
 
         visionSim = new VisionSystemSim("main");
         visionSim.addAprilTags(Constants.kAprilTagLayoutReefsOnly);
@@ -93,10 +93,10 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
 
     @Override
     public void readInputs(VisionIOInputs inputs) {
-        Pose2d estimatedPose = simRobotState.getLatestFieldToRobot();
-        if (estimatedPose != null) {
-            visionSim.update(estimatedPose);
-            Logger.recordOutput("Vision/SimIO/updateSimPose", estimatedPose);
+        Pose2d simulatedPose = simulatedDriveState.getLatestFieldToRobot();
+        if (simulatedPose != null) {
+            visionSim.update(simulatedPose);
+            Logger.recordOutput("Vision/SimIO/updateSimPose", simulatedPose);
         }
 
         NetworkTable table =
@@ -116,7 +116,7 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
             int numTags,
             PhotonPipelineResult result,
             PhotonCameraSim cameraSim) {
-        if (result == null || result.targets.isEmpty()) return null;
+        if (result == null || !result.hasTargets()) return null;
 
         Optional<Transform3d> optRobotToCamera =
                 visionSim.getRobotToCamera(cameraSim, Timer.getFPGATimestamp());
@@ -146,13 +146,13 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                                 0.0,
                                 result.getBestTarget().getArea()));
 
-        for (var target : result.targets) {
+        for (var target : result.getTargets()) {
             pose_data.addAll(
                     Arrays.asList(
                             (double) target.getFiducialId(),
                             target.getYaw(), // txnc
                             target.getPitch(), // tync
-                            target.area, // ta
+                            target.getArea(), // ta
                             0.0, // distToCamera
                             0.0, // distToRobot
                             target.getPoseAmbiguity() // ambiguity
@@ -182,7 +182,7 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                                 .getTagPose(bestTarget.getFiducialId())
                                 .get()
                                 .minus(Pose3d.kZero)
-                                .plus(bestTarget.bestCameraToTarget.inverse());
+                                .plus(bestTarget.getBestCameraToTarget().inverse());
 
                 pose_data = getBotpose(best, 1, result, cameraSim);
             }

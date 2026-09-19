@@ -130,6 +130,10 @@ public class FollowPathCommand extends Command {
                     path.generateTrajectory(currentSpeeds, currentPose.getRotation(), robotConfig);
         }
 
+        if (!Double.isFinite(trajectory.getTotalTimeSeconds())) {
+            controller.accept(PathPlannerTrajectory.makeStayInPlaceTrajectory());
+            return;
+        }
         controller.accept(trajectory);
         PathPlannerAuto.setCurrentTrajectory(trajectory);
         PathPlannerAuto.currentPathName = originalPath.name;
@@ -144,6 +148,7 @@ public class FollowPathCommand extends Command {
 
     @Override
     public void execute() {
+        if (!Double.isFinite(trajectory.getTotalTimeSeconds())) return;
         double currentTime = timer.get();
         var targetState = trajectory.sample(currentTime);
         Logger.recordOutput("PathPlanner/TargetStateFieldSpeeds", targetState.fieldSpeeds);
@@ -169,7 +174,8 @@ public class FollowPathCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(trajectory.getTotalTimeSeconds());
+        double totalTime = trajectory.getTotalTimeSeconds();
+        return !Double.isFinite(totalTime) || timer.hasElapsed(totalTime);
     }
 
     @Override
@@ -178,10 +184,11 @@ public class FollowPathCommand extends Command {
         PathPlannerAuto.currentPathName = "";
         PathPlannerAuto.setCurrentTrajectory(null);
 
-        // Only output 0 speeds when ending a path that is supposed to stop, this allows
-        // interrupting
-        // the command to smoothly transition into some auto-alignment routine
-        if (!interrupted && path.getGoalEndState().velocityMPS() < 0.1
+        // Interrupted paths stop immediately. Normal nonzero-speed endings hand off to the
+        // next path without a zero-speed pulse.
+        if (interrupted
+                || !Double.isFinite(trajectory.getTotalTimeSeconds())
+                || path.getGoalEndState().velocityMPS() < 0.1
                 || DriverStation.isDisabled()) {
             controller.accept(PathPlannerTrajectory.makeStayInPlaceTrajectory());
         } else {

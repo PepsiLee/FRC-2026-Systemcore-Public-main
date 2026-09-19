@@ -1,0 +1,16 @@
+digraph vision {
+ graph [label="視覺回授鏈 · MT1 與 gyro fallback 必須分開看",labelloc=t,rankdir=TB,bgcolor="#ffffff",fontname="Arial",fontsize=22,ranksep=.55];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=14,margin=".34,.16"];edge [fontname="Arial",fontsize=11,color="#52677b"];
+ LL [label="limelight-left / limelight-right\ntv / botpose_wpiblue / stddevs"];
+ IO [label="VisionIOHardwareLimelight.readInputs\n主週期讀取 cameraA / cameraB"];
+ MT [label="MT1驗證\n新time / tags / ambiguity / area\nyaw / Z / norm / exclusive tag / history"];
+ G [label="gyro fallback\n單tag + 新time + gyro / history / reef tag\n沒有套用全部MT1 gates",fillcolor="#fff4df"];
+ Pick [label="每相機先選MT1，否則gyro fallback"];
+ Fusion [label="一台可用：直接用\n兩台可用：時間對齊 + inverse variance合併"];
+ Gate [label="useVision=true 才送融合"];
+ State [label="RobotState.updateMegatagEstimate\n記lastUsed pose/time + callback",fillcolor="#ecf9f4"];
+ CTRE [label="DriveIOHardware.addVisionMeasurement\nFPGA → CTRE timestamp → estimator"];
+ O [label="CTRE telemetry → RobotState\n更新pose歷史 → drive control",fillcolor="#ecf9f4"];
+ LL -> IO; IO -> MT; IO -> G; MT -> Pick; G -> Pick; Pick -> Fusion -> Gate -> State -> CTRE -> O;
+ O -> G [label="歷史heading / rates",constraint=false]; O -> Fusion [label="歷史odometry變換",constraint=false];
+}

@@ -1,0 +1,21 @@
+digraph hardware {
+ graph [label="程式宣告的裝置拓撲\n不是線材走向、供電或接頭針腳圖",labelloc=t,rankdir=LR,bgcolor="#ffffff",fontname="Arial",fontsize=22,nodesep=.35,ranksep=.55];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=14,margin=".34,.16"];edge [fontname="Arial",fontsize=11,color="#52677b"];
+ RIO [label="roboRIO / RobotContainer"];
+ DriveBus [label="CANivore\ndrivebase-climber",fillcolor="#ecf9f4"];
+ SuperBus [label="CANivore\nsuperstructure",fillcolor="#fff4df"];
+ Swerve [label="Swerve Drive/Steer/Encoder\nFL 6/5/11 · FR 8/7/12\nBL 4/3/10 · BR 2/1/9\nPigeon2 13"];
+ Climb [label="Climber Pivot 14 / Roller 15\nCANcoder 19 / CANdi 17"];
+ LED [label="CANdle 18\n8內建 + 10外接LED設定"];
+ Elev [label="Elevator leader21 / follower22\nCANdi32"];
+ Ranges [label="Elevator CANrange 41 / 42\n測前方reef／障礙距離\n供升降機收回判斷"];
+ Wrist [label="Wrist motor26 / CANcoder29"];
+ Claw [label="Claw motor27 / CANdi33"];
+ Intake [label="Intake Pivot23 / CANcoder30\nIntake Roller24"];
+ Index [label="Indexer motor25 / CANdi31"];
+ Cam [label="NetworkTables\nlimelight-left / limelight-right"];
+ Controller [label="USB controllers\nport0 drive / port1 additional / port2 operator\n實際建構與SIM配置見第02章"];
+ RIO -> DriveBus; RIO -> SuperBus; RIO -> Cam [label="network"]; Controller -> RIO [label="DS USB input"];
+ DriveBus -> Swerve; DriveBus -> Climb; DriveBus -> LED; DriveBus -> Ranges;
+ SuperBus -> Elev; SuperBus -> Wrist; SuperBus -> Claw; SuperBus -> Intake; SuperBus -> Index;
+}

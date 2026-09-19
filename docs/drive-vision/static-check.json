@@ -1,0 +1,289 @@
+{
+  "check_type": "static structure only; no Java compilation or runtime tests",
+  "production_java_files": 80,
+  "subsystem_directories": [
+    "drive",
+    "vision"
+  ],
+  "subsystem_implementations": [
+    "src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java",
+    "src/main/java/com/team254/frc2025/subsystems/vision/VisionSubsystem.java"
+  ],
+  "junit_test_cases_not_executed": 21,
+  "errors": [],
+  "branch": "offseason",
+  "base_commit": "79645a4b0193d84b179d11654fbe499b42f2e52d",
+  "original_mentor_files_sha256_checked": 206,
+  "original_mentor_changes": [],
+  "preserved_hardware_vision_paths": [
+    "src/main/java/com/team254/frc2025/Main.java",
+    "src/main/java/com/team254/frc2025/subsystems/drive/DriveIOHardware.java",
+    "src/main/java/com/team254/frc2025/subsystems/vision/VisionSubsystem.java",
+    "src/main/java/com/team254/frc2025/subsystems/vision/VisionIOHardwareLimelight.java",
+    "src/main/deploy/pathplanner",
+    "limelight/calibrations"
+  ],
+  "java_compilation_executed": false,
+  "junit_executed": false,
+  "robot_simulation_executed": false,
+  "dashboard_ui_import_executed": false,
+  "report_phase": "static verification before the initial offseason commit",
+  "git_commit_or_push_executed": false,
+  "tracked_files_modified": 29,
+  "tracked_files_deleted": 95,
+  "new_files_excluding_original_mentor_docs": 31,
+  "vendor_versions": {
+    "AdvantageKit.json": "26.0.2",
+    "PathplannerLib.json": "2026.1.2",
+    "Phoenix6-frc2026-latest.json": "26.3.0",
+    "WPILibNewCommands.json": "1.0.0",
+    "maple-sim.json": "0.4.0-beta",
+    "photonlib.json": "v2026.3.4"
+  },
+  "library_upgrade_stage": {
+    "upgrade_preserved_files_sha256_checked": 223,
+    "upgrade_protected_changes": [],
+    "library_upgrade_files": [
+      {
+        "status": "M",
+        "path": "README.md"
+      },
+      {
+        "status": "M",
+        "path": "build.gradle"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/CHANGES.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/drive-vision/LIBRARY-UPGRADE.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/README.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/REVIEW.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/static-check.json"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/static_check.py"
+      },
+      {
+        "status": "M",
+        "path": "settings.gradle"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/commands/DriveMaintainingHeadingCommand.java"
+      },
+      {
+        "status": "A",
+        "path": "src/main/java/com/team254/frc2025/simulation/DriveSimulationArena.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/vision/VisionIOSimPhoton.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/limelight/LimelightHelpers.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/commands/FollowPathCommand.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/commands/PathPlannerAuto.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/commands/PathfindingCommand.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/path/PathPlannerPath.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/path/Waypoint.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/lib/pathplanner/trajectory/PathPlannerTrajectory.java"
+      },
+      {
+        "status": "A",
+        "path": "src/test/java/com/team254/frc2025/simulation/DriveSimulationArenaTest.java"
+      },
+      {
+        "status": "M",
+        "path": "src/test/java/com/team254/frc2025/subsystems/drive/DriveSubsystemControlTest.java"
+      },
+      {
+        "status": "A",
+        "path": "src/test/java/com/team254/lib/pathplanner/path/PathPlannerCompatibilityTest.java"
+      },
+      {
+        "status": "M",
+        "path": "vendordeps/AdvantageKit.json"
+      },
+      {
+        "status": "D",
+        "path": "vendordeps/PathplannerLib-2025.2.7.json"
+      },
+      {
+        "status": "A",
+        "path": "vendordeps/PathplannerLib.json"
+      },
+      {
+        "status": "D",
+        "path": "vendordeps/Phoenix6-frc2025-latest.json"
+      },
+      {
+        "status": "A",
+        "path": "vendordeps/Phoenix6-frc2026-latest.json"
+      },
+      {
+        "status": "M",
+        "path": "vendordeps/WPILibNewCommands.json"
+      },
+      {
+        "status": "M",
+        "path": "vendordeps/maple-sim.json"
+      },
+      {
+        "status": "M",
+        "path": "vendordeps/photonlib.json"
+      }
+    ]
+  },
+  "tuner_integration": {
+    "source_file": "/Users/pepsi/Downloads/DriveConstants.java",
+    "source_sha256": "f4d3cc25be08083d79cdce010076d6894c6c96165d0d64fda1d5a5a4b2be5aae",
+    "scalar_parameters_compared": 51,
+    "parameter_mismatches": [],
+    "module_factory_calls_compared": 4,
+    "module_call_mismatches": [],
+    "gains_initial_configs_and_factory_chain_match": true,
+    "motor_types_user_confirmed": [
+      "Kraken X60 drive",
+      "Kraken X60 steer"
+    ],
+    "module_user_confirmed": "MK5i R2",
+    "bus": "canivore",
+    "unspecified_physical_defaults_retained_with_user_approval": true,
+    "protected_files_sha256_checked": 219,
+    "protected_changes": [],
+    "files": [
+      {
+        "status": "M",
+        "path": "README.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/CHANGES.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/LIBRARY-UPGRADE.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/README.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/REVIEW.md"
+      },
+      {
+        "status": "A",
+        "path": "docs/drive-vision/TUNER-INTEGRATION.md"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/static-check.json"
+      },
+      {
+        "status": "M",
+        "path": "docs/drive-vision/static_check.py"
+      },
+      {
+        "status": "M",
+        "path": "layouts/2025 AdvantageScope Layout.json"
+      },
+      {
+        "status": "M",
+        "path": "layouts/2025 Elastic Layout.json"
+      },
+      {
+        "status": "M",
+        "path": "layouts/2025 Shuffleboard Layout.json"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/Constants.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/Robot.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/RobotContainer.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/CommandSwerveDrivetrain.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/CompTunerConstants.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java"
+      },
+      {
+        "status": "D",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/PracTunerConstants.java"
+      },
+      {
+        "status": "D",
+        "path": "src/main/java/com/team254/frc2025/subsystems/drive/SimTunerConstants.java"
+      },
+      {
+        "status": "M",
+        "path": "src/main/java/com/team254/frc2025/utils/simulations/MapleSimSwerveDrivetrain.java"
+      },
+      {
+        "status": "M",
+        "path": "src/test/java/com/team254/frc2025/subsystems/drive/DriveMaintainingHeadingCommandTest.java"
+      },
+      {
+        "status": "A",
+        "path": "src/test/java/com/team254/frc2025/subsystems/drive/TunerConfigurationTest.java"
+      }
+    ]
+  }
+}

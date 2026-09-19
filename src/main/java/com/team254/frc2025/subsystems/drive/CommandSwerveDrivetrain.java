@@ -4,17 +4,17 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.team254.frc2025.Constants;
 import com.team254.frc2025.utils.simulations.MapleSimSwerveDrivetrain;
+import edu.wpi.first.math.geometry.Translation2d;
+import java.util.Arrays;
 
 /**
- * This is a simple container for holding CTRE drive creation constants. It is called the same thing
- * that the generated TunerConstants file from TunerX is called. Instead of implementing the drive
- * base here, we simply hold the constants, then use them to create a DriveSubsytem later in
- * RobotContainer. This is done so that we can copy and paste in new TunerConstants.java if we need
- * to change configuration and want to use the wizard again.
+ * 本專案的底盤設定容器，保存 CAN bus、Pigeon 與四個模組參數，不建立馬達硬體。
+ * CompTunerConstants.createDrivetrain() 用此介面把 Tuner 設定交給 RobotContainer；
+ * RobotContainer 再建立 DriveIOHardware 或 DriveIOSim，最後交給 DriveSubsystem。
  */
 public class CommandSwerveDrivetrain {
-    SwerveDrivetrainConstants driveTrainConstants;
-    SwerveModuleConstants<?, ?, ?>[] moduleConstants;
+    private final SwerveDrivetrainConstants driveTrainConstants;
+    private final SwerveModuleConstants<?, ?, ?>[] moduleConstants;
 
     public CommandSwerveDrivetrain(
             SwerveDrivetrainConstants driveTrainConstants,
@@ -35,5 +35,12 @@ public class CommandSwerveDrivetrain {
 
     public SwerveModuleConstants<?, ?, ?>[] getModuleConstants() {
         return moduleConstants;
+    }
+
+    /** 路徑模型直接讀取同一組模組中心座標，單位公尺，順序為左前、右前、左後、右後。 */
+    public Translation2d[] getModuleLocations() {
+        return Arrays.stream(moduleConstants)
+                .map(module -> new Translation2d(module.LocationX, module.LocationY))
+                .toArray(Translation2d[]::new);
     }
 }

@@ -470,6 +470,10 @@ public class PathfindingCommand extends Command {
                                     robotConfig);
                 }
 
+                if (!Double.isFinite(currentTrajectory.getTotalTimeSeconds())) {
+                    controller.accept(PathPlannerTrajectory.makeStayInPlaceTrajectory());
+                    return;
+                }
                 controller.accept(currentTrajectory);
                 eventScheduler.initialize(currentTrajectory);
 
@@ -501,6 +505,7 @@ public class PathfindingCommand extends Command {
     @Override
     public boolean isFinished() {
         if (currentTrajectory != null) {
+            if (!Double.isFinite(currentTrajectory.getTotalTimeSeconds())) return true;
             if (timer.hasElapsed(currentTrajectory.getTotalTimeSeconds())) {
                 // Also sanity check the actual pose.
                 var pose = poseSupplier.get();
@@ -524,10 +529,13 @@ public class PathfindingCommand extends Command {
         timer.stop();
         eventScheduler.end();
 
-        // Only output 0 speeds when ending a path that is supposed to stop, this allows
-        // interrupting
-        // the command to smoothly transition into some auto-alignment routine
-        if (!interrupted && goalEndState.velocityMPS() < 0.1 || DriverStation.isDisabled()) {
+        // Interrupted paths stop immediately. Normal nonzero-speed endings hand off to the
+        // next path without a zero-speed pulse.
+        if (interrupted
+                || (currentTrajectory != null
+                        && !Double.isFinite(currentTrajectory.getTotalTimeSeconds()))
+                || goalEndState.velocityMPS() < 0.1
+                || DriverStation.isDisabled()) {
             controller.accept(PathPlannerTrajectory.makeStayInPlaceTrajectory());
         } else {
             controller.accept(null);

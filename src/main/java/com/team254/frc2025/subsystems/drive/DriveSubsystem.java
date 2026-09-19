@@ -18,15 +18,14 @@ import com.team254.lib.pathplanner.trajectory.PathPlannerTrajectoryState;
 import com.team254.lib.pathplanner.util.PathPlannerLogging;
 import com.team254.lib.time.RobotTime;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -46,7 +45,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     RobotState robotState;
 
-    Controller controller;
+    private Controller controller;
+
+    // Serialize the 100 Hz trajectory loop with command and mode changes.
+    private final Object controlLock = new Object();
 
     private final ApplyRobotSpeeds stopRequest =
             new ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -63,6 +65,14 @@ public class DriveSubsystem extends SubsystemBase {
         configurePathPlanner();
     }
 
+    /** Creates a manually stepped controller without hardware configuration or a Notifier. */
+    DriveSubsystem(
+            DriveIO io, RobotState robotState, PathFollowingController pathFollowingController) {
+        this.io = io;
+        this.robotState = robotState;
+        controller = new Controller(pathFollowingController, false);
+    }
+
     private ChassisSpeeds applyDeadband(ChassisSpeeds input) {
         if (Math.hypot(input.vxMetersPerSecond, input.vyMetersPerSecond) < 0.05) {
             input.vxMetersPerSecond = input.vyMetersPerSecond = 0.0;
@@ -75,57 +85,74 @@ public class DriveSubsystem extends SubsystemBase {
 
     private class Controller implements Consumer<PathPlannerTrajectory>, Runnable {
         private final PathFollowingController controller;
-        private volatile PathPlannerTrajectory trajectory = null;
-        private volatile Timer timer = null;
-        private Notifier notifier;
+        private PathPlannerTrajectory trajectory = null;
+        private final Timer timer = new Timer();
+        private final Notifier notifier;
 
         boolean hasSetPriority = false;
 
-        public Controller(PathFollowingController controller) {
+        public Controller(PathFollowingController controller, boolean startNotifier) {
             this.controller = controller;
-            this.timer = new Timer();
-            notifier = new Notifier(this);
-            notifier.startPeriodic(0.01);
+            if (startNotifier) {
+                notifier = new Notifier(this);
+                notifier.startPeriodic(0.01);
+            } else {
+                notifier = null;
+            }
+        }
+
+        // Call only while holding controlLock.
+        private void clearTrajectory() {
+            trajectory = null;
+            timer.stop();
+            timer.reset();
         }
 
         @Override
         public void accept(PathPlannerTrajectory t) {
-            trajectory = t;
-            timer.reset();
-            timer.start();
-            controller.reset(null, null);
+            synchronized (controlLock) {
+                clearTrajectory();
+                // A normal path ending at nonzero speed hands off without a zero-speed pulse.
+                if (t == null) return;
+                if (t.isStayStoppedTrajectory()
+                        || t.getStates().isEmpty()
+                        || !Double.isFinite(t.getTotalTimeSeconds())) {
+                    io.setControl(stopRequest);
+                    return;
+                }
+                controller.reset(
+                        robotState.getLatestFieldToRobot().getValue(),
+                        robotState.getLatestRobotRelativeChassisSpeed());
+                timer.start();
+                trajectory = t;
+            }
         }
 
         @Override
         public void run() {
-            if (!hasSetPriority) {
+            if (notifier != null && !hasSetPriority) {
                 hasSetPriority = Threads.setCurrentThreadPriority(true, 41);
             }
 
-            PathPlannerTrajectory traj = trajectory;
+            synchronized (controlLock) {
+                if (trajectory == null) return;
 
-            if (traj == null) return;
+                double now = timer.get();
+                PathPlannerTrajectoryState targetState = trajectory.sample(now);
 
-            if (traj.isStayStoppedTrajectory()) {
-                setControl(stopRequest);
-                trajectory = null;
-                return;
-            }
-
-            double now = timer.get();
-            PathPlannerTrajectoryState targetState = traj.sample(now);
-
-            ChassisSpeeds speeds =
-                    controller.calculateRobotRelativeSpeeds(
-                            robotState.getLatestFieldToRobot().getValue(), targetState);
-            if (DriverStation.isEnabled()) {
-                setControl(
-                        pathplannerAutoRequest
-                                .withSpeeds(applyDeadband(speeds))
-                                .withWheelForceFeedforwardsX(
-                                        targetState.feedforwards.robotRelativeForcesXNewtons())
-                                .withWheelForceFeedforwardsY(
-                                        targetState.feedforwards.robotRelativeForcesYNewtons()));
+                ChassisSpeeds speeds =
+                        controller.calculateRobotRelativeSpeeds(
+                                robotState.getLatestFieldToRobot().getValue(), targetState);
+                if (DriverStation.isEnabled()) {
+                    // The trajectory already owns control; do not use the manual takeover API.
+                    io.setControl(
+                            pathplannerAutoRequest
+                                    .withSpeeds(applyDeadband(speeds))
+                                    .withWheelForceFeedforwardsX(
+                                            targetState.feedforwards.robotRelativeForcesXNewtons())
+                                    .withWheelForceFeedforwardsY(
+                                            targetState.feedforwards.robotRelativeForcesYNewtons()));
+                }
             }
         }
     }
@@ -155,9 +182,12 @@ public class DriveSubsystem extends SubsystemBase {
         ModuleConfig moduleConfig =
                 new ModuleConfig(
                         Constants.DriveConstants.kDrivetrain.getModuleConstants()[0].WheelRadius,
-                        Constants.DriveConstants.kDriveMaxSpeed,
+                        // 馬達模型使用 Tuner 的 12 V 速度；不以 PS5 的速度上限代替。
+                        CompTunerConstants.kSpeedAt12Volts.in(
+                                edu.wpi.first.units.Units.MetersPerSecond),
                         Constants.DriveConstants.kWheelCoefficientOfFriction,
-                        DCMotor.getKrakenX60Foc(1),
+                        // MK5i R2 行走馬達為 Kraken X60；沿用原本路徑模型的 FOC 曲線。
+                        DCMotor.getKrakenX60Foc(Constants.DriveConstants.kDriveMotorCount),
                         Constants.DriveConstants.kDrivetrain
                                 .getModuleConstants()[0]
                                 .DriveMotorGearRatio,
@@ -166,14 +196,11 @@ public class DriveSubsystem extends SubsystemBase {
 
         RobotConfig robotConfig =
                 new RobotConfig(
-                        Constants.kRobotMassKg + Units.lbsToKilograms(0),
+                        Constants.kRobotMassKg,
                         Constants.kRobotMomentOfInertia,
                         moduleConfig,
                         Constants.kCOGHeightMeters,
-                        new Translation2d(0.31115, 0.31115),
-                        new Translation2d(0.31115, -0.31115),
-                        new Translation2d(-0.31115, 0.31115),
-                        new Translation2d(-0.31115, -0.31115));
+                        Constants.DriveConstants.kDrivetrain.getModuleLocations());
 
         controller =
                 new Controller(
@@ -181,12 +208,15 @@ public class DriveSubsystem extends SubsystemBase {
                                 new PIDConstants(Constants.AutoConstants.kPLTEController, 0.0, 0.0),
                                 new PIDConstants(Constants.AutoConstants.kPCTEController, 0.0, 0.0),
                                 new PIDConstants(
-                                        Constants.AutoConstants.kPThetaController, 0.0, 0.0),
-                                0.01));
+                                        Constants.AutoConstants.kPathRotationControllerP,
+                                        0.0,
+                                        0.0),
+                                0.01),
+                        true);
 
         AutoBuilder.configure(
                 () -> robotState.getLatestFieldToRobot().getValue(),
-                (pose) -> {},
+                this::resetOdometry,
                 () -> robotState.getLatestFusedRobotRelativeChassisSpeed(),
                 controller,
                 robotConfig,
@@ -218,20 +248,36 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        io.resetOdometry(pose);
+        synchronized (controlLock) {
+            stop();
+            io.resetOdometry(pose);
+        }
     }
 
     public Consumer<PathPlannerTrajectory> getController() {
         return controller;
     }
 
+    /** Cancels trajectory output before applying a manually supplied drive request. */
     public void setControl(SwerveRequest request) {
-        io.setControl(request);
+        synchronized (controlLock) {
+            controller.clearTrajectory();
+            io.setControl(request);
+        }
+    }
+
+    /** Stops immediately and prevents a pending trajectory tick from restoring motion. */
+    public void stop() {
+        synchronized (controlLock) {
+            controller.clearTrajectory();
+            io.setControl(stopRequest);
+        }
     }
 
     // API
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        return io.applyRequest(requestSupplier, this).withName("Swerve drive request");
+        return Commands.runEnd(() -> setControl(requestSupplier.get()), this::stop, this)
+                .withName("Swerve drive request");
     }
 
     public void addVisionMeasurement(VisionFieldPoseEstimate visionFieldPoseEstimate) {

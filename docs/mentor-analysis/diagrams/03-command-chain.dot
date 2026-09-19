@@ -1,0 +1,20 @@
+digraph commands {
+ graph [label="從手把到機構輸出與回授",labelloc=t,rankdir=TB,bgcolor="#ffffff",fontname="Arial",fontsize=22,ranksep=.55];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=15,margin=".34,.16"];edge [fontname="Arial",fontsize=11,color="#52677b"];
+ USB [label="手把 port / 按鍵 / 軸"];
+ CB [label="GamepadDrive / GamepadButton\nControlBoard facade"];
+ Mode [label="ModalControls\n模式决定按鍵語意"];
+ Tr [label="ModalSuperstructureTriggers\n按鍵 + 感測器 + 狀態條件"];
+ Req [label="futureDesired → desired\ncurrentState / transitioning"];
+ Plan [label="AStarSolver + allowedTransitions\ntransition_costs.txt提供權重"];
+ Fact [label="StateTransition → Factories\n建立轉移命令"];
+ Cmd [label="CommandScheduler\nrequirements決定資源衝突 / 中斷"];
+ Sub [label="Subsystem command / setpoint"];
+ Motor [label="ServoMotorSubsystem → MotorIO\nTalonFXIO 或 SimTalonFXIO"];
+ Sense [label="SensorIO → inputs\nbanner / CANrange / CANcoder"];
+ Tracker [label="CoralStateTracker / RobotState\n回授與完成條件",fillcolor="#ecf9f4"];
+ USB -> CB -> Mode -> Tr -> Req -> Plan -> Fact -> Cmd -> Sub -> Motor;
+ Sense -> Tracker; Motor -> Tracker [label="position / velocity / current"];
+ Tracker -> Tr [label="觸發條件"]; Tracker -> Fact [label="waitUntil / 到位"];
+ CB -> Drive [label="搖桿軸"]; Drive [label="DriveMaintainingHeadingCommand\nDrive default → DriveSubsystem"];
+}

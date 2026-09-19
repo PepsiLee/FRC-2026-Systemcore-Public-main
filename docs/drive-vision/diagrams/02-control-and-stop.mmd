@@ -1,0 +1,37 @@
+flowchart TB
+    hid["PS5 HID / port 0"]:::input
+    gate["Teleop enabled<br/>AND HID connected?"]:::decision
+    shape["Left -Y / -X: signed power 1.5<br/>Right -X: signed power 2"]:::logic
+    turn["Turn input above deadband?<br/>Includes preserved release settling"]:::decision
+    manual["FieldCentric<br/>Manual angular rate"]:::logic
+    hold["FieldCentricFacingAngle<br/>Capture / hold heading"]:::logic
+    options["Options rising edge<br/>Keep XY; blue 0 / red pi<br/>Refresh heading hold"]:::input
+    drive["DriveSubsystem<br/>Shared output lock"]:::logic
+    path["Path controller Notifier<br/>100 Hz / same output lock"]:::logic
+    stop["stop()<br/>Clear active trajectory<br/>Send zero drive request"]:::stop
+    exit["Command end / mode exit<br/>Disable / disconnected HID"]:::stop
+    io["DriveIO → CTRE swerve"]:::io
+    auto["Autonomous default<br/>Commands.none()"]:::host
+    hid -->|"poll each execute"| gate
+    gate -->|"yes"| shape
+    gate -->|"no"| stop
+    shape -->|"same speed/PID limits"| turn
+    turn -->|"turning"| manual
+    turn -->|"released / settled"| hold
+    manual -->|"request"| drive
+    hold -->|"request"| drive
+    options -->|"gated pose reset"| drive
+    options -->|"new heading target"| hold
+    path -->|"trajectory request"| drive
+    exit -->|"stop boundary"| stop
+    stop -->|"same lock"| drive
+    drive -->|"serialized output"| io
+    auto -->|"mode entry remains stopped"| stop
+    classDef host fill:#e6eef8,stroke:#43688f,color:#172d43
+    classDef input fill:#e5f4f0,stroke:#2d7868,color:#172d43
+    classDef logic fill:#edf2ff,stroke:#5269ad,color:#172d43
+    classDef io fill:#fff1dd,stroke:#9c7032,color:#172d43
+    classDef state fill:#f2eafb,stroke:#8057a2,color:#172d43
+    classDef sink fill:#eaf0f4,stroke:#627c91,color:#172d43
+    classDef stop fill:#fce8e8,stroke:#a34b50,color:#172d43
+    classDef decision fill:#fff7d8,stroke:#9c852d,color:#172d43

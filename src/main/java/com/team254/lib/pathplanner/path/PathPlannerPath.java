@@ -576,9 +576,9 @@ public class PathPlannerPath {
                 // Assume version 0
             }
 
-            if (version > 1) {
+            if (version > 3) {
                 throw new FileVersionException(
-                        Integer.toString(version), "<= 1", trajectoryName + ".traj");
+                        Integer.toString(version), "<= 3", trajectoryName + ".traj");
             }
 
             JSONObject trajJson = (JSONObject) json.get("trajectory");
@@ -1120,6 +1120,15 @@ public class PathPlannerPath {
             Translation2d endPosition = samplePath(numSegments);
             double distanceToEnd = endPosition.getDistance(position);
             if (distanceToEnd <= 0.01) {
+                // Preserve the starting point for very short paths (upstream 2026 fix).
+                if (points.size() < 2) {
+                    points.add(
+                            new PathPoint(
+                                    endPosition,
+                                    null,
+                                    constraintsForWaypointPos(numSegments),
+                                    samplePathCurvature(numSegments)));
+                }
                 // Force the last point to be exactly the endpoint.
                 points.set(
                         points.size() - 1,

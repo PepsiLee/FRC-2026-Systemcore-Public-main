@@ -1,0 +1,37 @@
+flowchart TB
+    main["Main → Robot<br/>Lifecycle + CommandScheduler"]:::host
+    container["RobotContainer<br/>Composition root"]:::host
+    ps5["CommandPS5Controller(0)<br/>Direct HID input"]:::input
+    heading["DriveMaintainingHeadingCommand<br/>Teleop default command"]:::logic
+    drive["DriveSubsystem<br/>Swerve output + path controller"]:::logic
+    vision["VisionSubsystem<br/>Validate + fuse observations"]:::logic
+    state["RobotState<br/>Pose + motion history"]:::state
+    driveio["DriveIO<br/>Hardware / Sim"]:::io
+    visionio["VisionIO<br/>Limelight / Photon Sim"]:::io
+    simstate["SimulatedDriveState<br/>Shared Pose2d only"]:::state
+    paths["com.team254.lib.pathplanner<br/>Local generic planning API"]:::logic
+    logs["AdvantageKit / DriveViz<br/>Logs + pose visualization"]:::sink
+    main -->|"constructs"| container
+    container -->|"constructs"| ps5
+    container -->|"constructs"| drive
+    container -->|"constructs"| vision
+    ps5 -->|"axes + teleop/connection gate"| heading
+    heading -->|"requires Drive"| drive
+    paths -->|"trajectory consumer"| drive
+    drive -->|"output / input"| driveio
+    visionio -->|"camera observations"| vision
+    vision -->|"accepted pose"| state
+    driveio -->|"odometry + motion"| state
+    state -->|"control feedback"| drive
+    driveio -->|"SIM pose"| simstate
+    simstate -->|"SIM camera scene"| visionio
+    state -->|"pose / diagnostics"| logs
+    drive -->|"module state"| logs
+    classDef host fill:#e6eef8,stroke:#43688f,color:#172d43
+    classDef input fill:#e5f4f0,stroke:#2d7868,color:#172d43
+    classDef logic fill:#edf2ff,stroke:#5269ad,color:#172d43
+    classDef io fill:#fff1dd,stroke:#9c7032,color:#172d43
+    classDef state fill:#f2eafb,stroke:#8057a2,color:#172d43
+    classDef sink fill:#eaf0f4,stroke:#627c91,color:#172d43
+    classDef stop fill:#fce8e8,stroke:#a34b50,color:#172d43
+    classDef decision fill:#fff7d8,stroke:#9c852d,color:#172d43

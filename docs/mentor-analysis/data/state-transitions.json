@@ -1,0 +1,4069 @@
+{
+  "metadata": {
+    "analysisDate": "2026-09-19",
+    "method": "Static parsing of enum allowedNextStates and transition_costs.txt; no Java compilation or robot execution. Explicitly accounts for GROUND_ALGAE_INTAKE fall-through.",
+    "stateCount": 24,
+    "edgeCount": 424,
+    "selfLoopCount": 19,
+    "movementEdgeCount": 405,
+    "costFileRows": 312,
+    "matchedCostCount": 310,
+    "defaultCostCount": 114,
+    "unusedCostCount": 2,
+    "costUnits": "seconds",
+    "stateSource": "src/main/java/com/team254/frc2025/subsystems/superstructure/SuperstructureState.java",
+    "costFile": "src/main/deploy/transition_costs.txt",
+    "defaultCostSource": "src/main/java/com/team254/frc2025/subsystems/superstructure/SuperstructureStateMachine.java:51",
+    "caveat": "Nominal state wrist angles shown. CLEAR_ELEVATOR_CROSSBEAM dynamically chooses/clamps wrist angle -90..-80 degrees from final desired state. Edges are allowed transitions, not proof of physical collision safety. All generated collision flags are false. This file does not apply runtime algae/manual-mode blocking."
+  },
+  "states": [
+    {
+      "id": "CLEAR_ELEVATOR_CROSSBEAM",
+      "label": "橫梁避讓",
+      "elevatorMeters": 0.96,
+      "wristDegrees": -90,
+      "sourceLine": 13,
+      "outDegree": 21,
+      "wristDynamic": true
+    },
+    {
+      "id": "CLEAR_WHEELS",
+      "label": "輪組避讓",
+      "elevatorMeters": 0,
+      "wristDegrees": -87,
+      "sourceLine": 58,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "CLEAR_LIMELIGHT",
+      "label": "相機避讓",
+      "elevatorMeters": 0,
+      "wristDegrees": 42,
+      "sourceLine": 61,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "STOW_CORAL",
+      "label": "Coral 收納",
+      "elevatorMeters": 0,
+      "wristDegrees": -103,
+      "sourceLine": 64,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "STOW_ALGAE",
+      "label": "Algae 收納",
+      "elevatorMeters": 0,
+      "wristDegrees": 55,
+      "sourceLine": 67,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "GROUND_ALGAE_INTAKE",
+      "label": "地面取 Algae",
+      "elevatorMeters": 0,
+      "wristDegrees": -71,
+      "sourceLine": 70,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "LOLLIPOP_INTAKE",
+      "label": "Lollipop 取球",
+      "elevatorMeters": 0.3,
+      "wristDegrees": -71,
+      "sourceLine": 73,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "REEF_ALGAE_SLAP",
+      "label": "Reef Algae Slap",
+      "elevatorMeters": 0.506,
+      "wristDegrees": -71.3,
+      "sourceLine": 76,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "REEF_ALGAE_INTAKE_L2",
+      "label": "Reef 取 Algae L2",
+      "elevatorMeters": 0.606,
+      "wristDegrees": -71.3,
+      "sourceLine": 79,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "REEF_ALGAE_INTAKE_L3",
+      "label": "Reef 取 Algae L3",
+      "elevatorMeters": 1.006,
+      "wristDegrees": -71.3,
+      "sourceLine": 82,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "label": "手動取 Algae L3",
+      "elevatorMeters": 0.5319,
+      "wristDegrees": -4,
+      "sourceLine": 85,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_CORAL_L1",
+      "label": "Coral L1",
+      "elevatorMeters": 0.07,
+      "wristDegrees": -93,
+      "sourceLine": 88,
+      "outDegree": 20,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_CORAL_L2",
+      "label": "Coral L2",
+      "elevatorMeters": 0.13,
+      "wristDegrees": -4,
+      "sourceLine": 91,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "NON_DESCORE_CORAL_L2",
+      "label": "L2 得分後避讓",
+      "elevatorMeters": 0,
+      "wristDegrees": 55,
+      "sourceLine": 94,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_CORAL_L3",
+      "label": "Coral L3",
+      "elevatorMeters": 0.52,
+      "wristDegrees": -4,
+      "sourceLine": 97,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "NON_DESCORE_CORAL_L3",
+      "label": "L3 得分後避讓",
+      "elevatorMeters": 0.445,
+      "wristDegrees": 55,
+      "sourceLine": 100,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_CORAL_L4",
+      "label": "Coral L4",
+      "elevatorMeters": 1.14,
+      "wristDegrees": -2,
+      "sourceLine": 103,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "INTERMEDIATE_CORAL_L4",
+      "label": "L4 中間姿態",
+      "elevatorMeters": 1.25,
+      "wristDegrees": -5,
+      "sourceLine": 106,
+      "outDegree": 1,
+      "wristDynamic": false
+    },
+    {
+      "id": "NON_DESCORE_CORAL_L4",
+      "label": "L4 得分後避讓",
+      "elevatorMeters": 1.25,
+      "wristDegrees": 55,
+      "sourceLine": 109,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "INTERMEDIATE_BARGE",
+      "label": "Barge 中間姿態",
+      "elevatorMeters": 1.385,
+      "wristDegrees": 55,
+      "sourceLine": 112,
+      "outDegree": 2,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_PROCESSOR",
+      "label": "Processor",
+      "elevatorMeters": 0.15,
+      "wristDegrees": -66,
+      "sourceLine": 115,
+      "outDegree": 21,
+      "wristDynamic": false
+    },
+    {
+      "id": "CLEAR_BUMPER",
+      "label": "Bumper 避讓",
+      "elevatorMeters": 0,
+      "wristDegrees": -71,
+      "sourceLine": 118,
+      "outDegree": 2,
+      "wristDynamic": false
+    },
+    {
+      "id": "STOW_ELEVATOR",
+      "label": "先收 Elevator",
+      "elevatorMeters": 0,
+      "wristDegrees": 55,
+      "sourceLine": 121,
+      "outDegree": 20,
+      "wristDynamic": false
+    },
+    {
+      "id": "STAGE_BARGE",
+      "label": "Barge",
+      "elevatorMeters": 1.385,
+      "wristDegrees": 113,
+      "sourceLine": 124,
+      "outDegree": 1,
+      "wristDynamic": false
+    }
+  ],
+  "edges": [
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.460818999999999,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 1,
+      "selfLoop": true
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6184119999999993,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 2,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5619980000000009,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 3,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STOW_ALGAE",
+      "cost": 0.26222299999999876,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 4,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9186770000000003,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 5,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.4978800000000003,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 6,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.42077399999999976,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 7,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4596700000000009,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 8,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4686350000000008,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 9,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.7103970000000004,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 10,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4917289999999994,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 11,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.40763700000000114,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 12,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7871200000000016,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 13,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.30192500000000067,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 14,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.3425849999999997,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 15,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7418390000000024,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 16,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.2243460000000006,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 17,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_ELEVATOR_CROSSBEAM",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5158369999999977,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 18,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.46284299999999945,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 19,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6180669999999999,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 20,
+      "selfLoop": true
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5404740000000032,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 21,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STOW_CORAL",
+      "cost": 0.5619289999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 22,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STOW_ALGAE",
+      "cost": 0.5383289999999974,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 23,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.4951270000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 24,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5013670000000019,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 25,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.6982420000000005,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 26,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4602579999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 27,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4675989999999999,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 28,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.3881160000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 29,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.48905599999999794,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 30,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.3881450000000015,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 31,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.764523999999998,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 32,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3010149999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 33,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.6991939999999985,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 34,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.22103199999999745,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 35,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_WHEELS",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5243089999999988,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 36,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.45840300000000056,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 37,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6205250000000007,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 38,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5341529999999999,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 39,
+      "selfLoop": true
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STOW_ALGAE",
+      "cost": 0.259527999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 40,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.7097590000000054,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 41,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5218240000000023,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 42,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4140999999999977,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 43,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4800329999999988,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 44,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.466822999999998,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 45,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.3864239999999981,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 46,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.49105699999999786,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 47,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.40847700000000486,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 48,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7886859999999984,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 49,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.32146099999999933,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 50,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.33762500000000273,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 51,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7378450000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 52,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.21386900000000253,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 53,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_LIMELIGHT",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5236769999999993,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 54,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4564279999999954,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 55,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.622080000000004,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 56,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5563029999999998,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 57,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STOW_CORAL",
+      "cost": 0.5549949999999981,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 58,
+      "selfLoop": true
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STOW_ALGAE",
+      "cost": 0.5421929999999975,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 59,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.5027850000000029,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 60,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.49872700000000236,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 61,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4202009999999987,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 62,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.8593559999999982,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 63,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4507170000000045,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 64,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.3887709999999984,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 65,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.49148600000000187,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 66,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.40486400000000344,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 67,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7899999999999991,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 68,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.2946680000000015,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 69,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7019009999999994,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 70,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.20090499999999878,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 71,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_CORAL",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.520077999999998,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 72,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4601029999999966,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 73,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6170970000000011,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 74,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.542904,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 75,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STOW_ALGAE",
+      "cost": 0.28352999999999895,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 76,
+      "selfLoop": true
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.504016,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 77,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.49742599999999726,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 78,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.42093200000000053,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 79,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4594939999999994,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 80,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.47017999999999915,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 81,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.40330000000000155,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 82,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.48535799999999796,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 83,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4685449999999989,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 84,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7622250000000008,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 85,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3007390000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 86,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.3406829999999985,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 87,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7644519999999986,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 88,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.21883500000000566,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 89,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ALGAE",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5200430000000011,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 90,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4580529999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 91,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6229140000000015,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 92,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5441630000000046,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 93,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STOW_ALGAE",
+      "cost": 0.9747649999999979,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 95,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.497409999999995,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 96,
+      "selfLoop": true
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.49932799999999133,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 97,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.39701300000000117,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 98,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.45933399999999835,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 99,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4506679999999932,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 100,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.4086070000000035,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 101,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4885500000000036,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 102,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4084529999999944,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 103,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7841310000000021,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 104,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3017799999999937,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 105,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.33898700000000304,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 106,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7429990000000117,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 107,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.19901900000000694,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 108,
+      "selfLoop": false
+    },
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5194180000000017,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 109,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "CLEAR_WHEELS",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STOW_ALGAE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": true
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STAGE_CORAL_L1",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STAGE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STAGE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STAGE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STAGE_PROCESSOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "CLEAR_BUMPER",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "LOLLIPOP_INTAKE",
+      "to": "STOW_ELEVATOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "CLEAR_WHEELS",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STOW_ALGAE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": true
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STAGE_CORAL_L1",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STAGE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STAGE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STAGE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STAGE_PROCESSOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "CLEAR_BUMPER",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_SLAP",
+      "to": "STOW_ELEVATOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.459668999999991,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 110,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6201209999999975,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 111,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5198550000000068,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 112,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STOW_ALGAE",
+      "cost": 0.26192599999998833,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 113,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.47934399999999755,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 114,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5878270000000043,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 115,
+      "selfLoop": true
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.37735800000000097,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 116,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.45834500000000844,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 117,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4453619999999887,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 118,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.38791899999999657,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 119,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4891009999999909,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 120,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4085579999999993,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 121,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7936890000000005,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 122,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.29693899999999473,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 123,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.3409500000000065,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 124,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7400580000000048,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 125,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.20077799999999968,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 126,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L2",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.521333999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 127,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4399400000000071,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 128,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6230860000000007,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 129,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5637499999999989,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 130,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STOW_ALGAE",
+      "cost": 0.2597300000000047,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 131,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.4831339999999926,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 132,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5001010000000008,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 133,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.3990579999999966,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 134,
+      "selfLoop": true
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.45879100000000506,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 135,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.42907499999999743,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 136,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.38407399999999825,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 137,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4887719999999973,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 138,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.3678680000000014,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 139,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7459970000000027,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 140,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.2959940000000074,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 141,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.33986600000000067,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 142,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7425319999999971,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 143,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.19987700000000075,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 144,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5254410000000007,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 145,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "CLEAR_WHEELS",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STOW_ALGAE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": true
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STAGE_CORAL_L1",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STAGE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STAGE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STAGE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STAGE_PROCESSOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "CLEAR_BUMPER",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "to": "STOW_ELEVATOR",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4364830000000097,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 146,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6204759999999965,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 147,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5201880000000045,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 148,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STOW_ALGAE",
+      "cost": 0.2463470000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 149,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.47715399999999875,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 150,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5043009999999981,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 151,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.41580599999998924,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 152,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4628990000000073,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 153,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.42336600000000146,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 154,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.40849900000000616,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 155,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4849609999999984,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 156,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4102050000000048,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 157,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7869930000000096,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 158,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3017240000000072,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 159,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.6782240000000002,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 160,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.19899200000000405,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 161,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L1",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.521718000000007,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 162,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4602439999999888,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 163,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6238709999999941,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 164,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5438159999999925,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 165,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STOW_ALGAE",
+      "cost": 0.2600529999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 166,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 1.0012470000000064,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 167,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.4989000000000061,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 168,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4229830000000021,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 169,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4836580000000055,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 170,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.46251900000000035,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 171,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.378895,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 172,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.47783199999999226,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 173,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.40087400000000173,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 174,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7799659999999875,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 175,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.2998619999999903,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 176,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.34014200000000017,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 177,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7390369999999962,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 178,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.21882300000000043,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 179,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L2",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5252839999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 180,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4575929999999886,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 181,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6207079999999934,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 182,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5579859999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 183,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STOW_ALGAE",
+      "cost": 0.26001199999998903,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 184,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 1.021601000000004,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 185,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.4986290000000082,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 186,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.42232799999999315,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 187,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4615260000000063,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 188,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.44404699999999764,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 189,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.4001690000000053,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 190,
+      "selfLoop": true
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.48505699999999763,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 191,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.39965499999999565,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 192,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7793339999999915,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 193,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.29963699999998994,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 194,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.32004499999999325,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 195,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7628860000000088,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 196,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.2247899999999987,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 197,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L2",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5398799999999966,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 198,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.46106400000000747,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 199,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6254320000000035,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 200,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5577710000000025,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 201,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STOW_ALGAE",
+      "cost": 0.2623789999999957,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 202,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9974990000000048,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 203,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5146200000000078,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 204,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.40125899999999604,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 205,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.44129999999999825,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 206,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4425159999999977,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 207,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.37662199999999757,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 208,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.47799399999999537,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 209,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.3826450000000108,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 210,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7774140000000074,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 211,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.30281700000000455,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 212,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.34077299999999866,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 213,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.736536000000001,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 214,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.20340600000000109,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 215,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L3",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.4992770000000064,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 216,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.46051599999999837,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 217,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6184980000000024,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 218,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5417659999999955,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 219,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STOW_ALGAE",
+      "cost": 0.2457939999999894,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 220,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9831439999999816,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 221,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.4989520000000027,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 222,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4027100000000132,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 223,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4631219999999985,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 224,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.44018800000000624,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 225,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.3824680000000171,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 226,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.6445140000000151,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 227,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4220709999999883,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 228,
+      "selfLoop": true
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7776849999999911,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 229,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.30147999999999797,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 230,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.34466000000000463,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 231,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7642010000000141,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 232,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.21777500000001737,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 233,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L3",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5388599999999997,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 234,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.46340900000001284,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 235,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6196339999999907,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 236,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5396410000000174,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 237,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STOW_ALGAE",
+      "cost": 0.26303799999999455,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 238,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9778149999999926,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 239,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.4779530000000136,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 240,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4215639999999894,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 241,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4609969999999919,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 242,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.4643609999999967,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 243,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.40100100000000793,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 244,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.4754329999999811,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 245,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4174370000000067,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 246,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7859380000000158,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 247,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.29573100000001773,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 248,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.3431290000000047,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 249,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7422789999999964,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 250,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.20108500000000618,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 251,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_CORAL_L4",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.539135999999985,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 252,
+      "selfLoop": false
+    },
+    {
+      "from": "INTERMEDIATE_CORAL_L4",
+      "to": "NON_DESCORE_CORAL_L4",
+      "cost": 0.9462230000000034,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 253,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.06155100000000857,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 254,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.5577809999999772,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 255,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5394629999999836,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 256,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STOW_ALGAE",
+      "cost": 0.26517200000000685,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 257,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9783600000000092,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 258,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.50083699999999,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 259,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4238420000000076,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 260,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4617860000000178,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 261,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.44389699999999266,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 262,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.39973500000002105,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 263,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.48043899999998985,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 264,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.39760399999997276,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 265,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7545659999999828,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 266,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3234369999999842,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 267,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.355165999999997,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 268,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7416850000000181,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 269,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.2018419999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 270,
+      "selfLoop": false
+    },
+    {
+      "from": "NON_DESCORE_CORAL_L4",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5393660000000011,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 271,
+      "selfLoop": false
+    },
+    {
+      "from": "INTERMEDIATE_BARGE",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4733259999999859,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 272,
+      "selfLoop": false
+    },
+    {
+      "from": "INTERMEDIATE_BARGE",
+      "to": "STAGE_BARGE",
+      "cost": 0.7598519999999951,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 273,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.2224339999999927,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 274,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6221280000000036,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 275,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.5385880000000043,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 276,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STOW_ALGAE",
+      "cost": 0.23694800000001237,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 277,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.5013040000000046,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 278,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.5016819999999882,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 279,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.399169999999998,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 280,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.4557190000000162,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 281,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.42620900000000006,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 282,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.38450699999998506,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 283,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.49085700000000543,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 284,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.41045700000000807,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 285,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7708189999999888,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 286,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.2986140000000148,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 287,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "INTERMEDIATE_BARGE",
+      "cost": 0.33905599999999936,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 288,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.761224999999996,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 289,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.22056700000001683,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 290,
+      "selfLoop": false
+    },
+    {
+      "from": "STAGE_PROCESSOR",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5405639999999892,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 291,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_BUMPER",
+      "to": "STOW_ALGAE",
+      "cost": 0.30008399999999824,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 292,
+      "selfLoop": false
+    },
+    {
+      "from": "CLEAR_BUMPER",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.4815150000000017,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 293,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.4621920000000159,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 294,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "CLEAR_WHEELS",
+      "cost": 0.6200999999999794,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 295,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "CLEAR_LIMELIGHT",
+      "cost": 0.6252030000000275,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 296,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STOW_ALGAE",
+      "cost": 0.539560999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 298,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "GROUND_ALGAE_INTAKE",
+      "cost": 0.9993320000000097,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 299,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "LOLLIPOP_INTAKE",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "REEF_ALGAE_SLAP",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "REEF_ALGAE_INTAKE_L2",
+      "cost": 0.505408000000017,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 300,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "REEF_ALGAE_INTAKE_L3",
+      "cost": 0.4168339999999944,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 301,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "REEF_ALGAE_INTAKE_L3_MANUAL",
+      "cost": 1.0,
+      "source": "default:1.0",
+      "isDefaultCost": true,
+      "costLine": null,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STAGE_CORAL_L1",
+      "cost": 0.461182000000008,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 302,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STAGE_CORAL_L2",
+      "cost": 0.44162800000000857,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 303,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "NON_DESCORE_CORAL_L2",
+      "cost": 0.40985699999998815,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 304,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STAGE_CORAL_L3",
+      "cost": 0.5132210000000157,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 305,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "NON_DESCORE_CORAL_L3",
+      "cost": 0.4061489999999992,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 306,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STAGE_CORAL_L4",
+      "cost": 0.7875549999999976,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 307,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "INTERMEDIATE_CORAL_L4",
+      "cost": 0.3051230000000089,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 308,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STAGE_PROCESSOR",
+      "cost": 0.7027270000000101,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 309,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "CLEAR_BUMPER",
+      "cost": 0.216984999999994,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 310,
+      "selfLoop": false
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STOW_ELEVATOR",
+      "cost": 0.5413389999999936,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 311,
+      "selfLoop": true
+    },
+    {
+      "from": "STAGE_BARGE",
+      "to": "CLEAR_ELEVATOR_CROSSBEAM",
+      "cost": 0.46196800000001303,
+      "source": "transition_costs.txt",
+      "isDefaultCost": false,
+      "costLine": 312,
+      "selfLoop": false
+    }
+  ],
+  "unusedCosts": [
+    {
+      "from": "GROUND_ALGAE_INTAKE",
+      "to": "STOW_CORAL",
+      "cost": 0.5774240000000006,
+      "costLine": 94
+    },
+    {
+      "from": "STOW_ELEVATOR",
+      "to": "STOW_CORAL",
+      "cost": 0.5777889999999957,
+      "costLine": 297
+    }
+  ]
+}

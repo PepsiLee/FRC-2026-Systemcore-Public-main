@@ -1,10 +1,7 @@
 package com.team254.frc2025;
 
-import com.team254.frc2025.controlboard.ModalControls;
-import com.team254.frc2025.subsystems.led.LedState;
 import com.team254.frc2025.subsystems.vision.VisionFieldPoseEstimate;
 import com.team254.lib.util.ConcurrentTimeInterpolatableBuffer;
-import com.team254.lib.util.FieldConstants;
 import com.team254.lib.util.MathHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -13,14 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.IntSupplier;
 import org.littletonrobotics.junction.Logger;
 
-/** Tracks robot state including pose, velocities, and mechanism positions. */
+/** Shares drivetrain pose, motion history, and vision estimates across drive and vision IO. */
 public class RobotState {
 
     public static final double LOOKBACK_TIME = 1.0;
@@ -31,12 +27,6 @@ public class RobotState {
         this.visionEstimateConsumer = visionEstimateConsumer;
         fieldToRobot.addSample(0.0, MathHelpers.kPose2dZero);
         driveYawAngularVelocity.addSample(0.0, 0.0);
-
-        // Initialize mechanism positions
-        elevatorHeightMeters.set(0.0);
-        wristRadians.set(0.0);
-        intakeRollerRotations.set(0.0);
-        clawRollerRotations.set(0.0);
     }
 
     // State of robot.
@@ -80,32 +70,8 @@ public class RobotState {
     private final ConcurrentTimeInterpolatableBuffer<Double> accelY =
             ConcurrentTimeInterpolatableBuffer.createDoubleBuffer(LOOKBACK_TIME);
 
-    private final AtomicBoolean enablePathCancel = new AtomicBoolean(false);
-
-    private double autoStartTime;
-
     private Optional<Pose2d> trajectoryTargetPose = Optional.empty();
     private Optional<Pose2d> trajectoryCurrentPose = Optional.empty();
-
-    public void setAutoStartTime(double timestamp) {
-        autoStartTime = timestamp;
-    }
-
-    public double getAutoStartTime() {
-        return autoStartTime;
-    }
-
-    public void enablePathCancel() {
-        enablePathCancel.set(true);
-    }
-
-    public void disablePathCancel() {
-        enablePathCancel.set(false);
-    }
-
-    public boolean getPathCancel() {
-        return enablePathCancel.get();
-    }
 
     public void addOdometryMeasurement(double timestamp, Pose2d pose) {
         fieldToRobot.addSample(timestamp, pose);
@@ -222,14 +188,6 @@ public class RobotState {
         return speeds;
     }
 
-    public void setLedState(LedState state) {
-        ledState.set(state);
-    }
-
-    public LedState getLedState() {
-        return ledState.get();
-    }
-
     private Optional<Double> getMaxAbsValueInRange(
             ConcurrentTimeInterpolatableBuffer<Double> buffer, double minTime, double maxTime) {
         var submap = buffer.getInternalBuffer().subMap(minTime, maxTime).values();
@@ -322,131 +280,10 @@ public class RobotState {
         Logger.recordOutput(
                 "RobotState/FusedChassisSpeedFieldFrame",
                 getLatestFusedFieldRelativeChassisSpeed());
-
-        // Add mechanism logging
-        Logger.recordOutput("RobotState/ElevatorHeightMeters", getElevatorHeightMeters());
-        Logger.recordOutput("RobotState/WristRadians", getWristRadians());
-        Logger.recordOutput("RobotState/IntakeRollerRotations", getIntakeRollerRotations());
-        Logger.recordOutput("RobotState/CoralRollerRotations", getClawRollerRotations());
-
-        // Add LED state logging
-        LedState currentLEDState = getLedState();
-        Logger.recordOutput(
-                "RobotState/LEDState",
-                String.format(
-                        "R:%d G:%d B:%d",
-                        currentLEDState.red, currentLEDState.green, currentLEDState.blue));
     }
 
     private final AtomicReference<Optional<Integer>> exclusiveTag =
             new AtomicReference<>(Optional.empty());
-
-    private final AtomicReference<Double> elevatorHeightMeters = new AtomicReference<>(0.0);
-    private final AtomicReference<Double> wristRadians = new AtomicReference<>(0.0);
-    private final AtomicReference<Double> clawRollerRotations = new AtomicReference<>(0.0);
-
-    private final AtomicReference<Double> intakeRollerRotations = new AtomicReference<>(0.0);
-    private final AtomicReference<Double> intakeRollerRPS = new AtomicReference<>(0.0);
-    private final AtomicReference<Double> intakePivotRadians = new AtomicReference<>(0.0);
-
-    private final AtomicReference<Double> indexerRotations = new AtomicReference<>(0.0);
-    private final AtomicReference<Double> indexerRPS = new AtomicReference<>(0.0);
-
-    private final AtomicReference<Double> climberPivotRadians = new AtomicReference<>(0.0);
-
-    private final AtomicReference<Double> climberRollerRotations = new AtomicReference<>(0.0);
-
-    private final AtomicReference<Double> clawRollerRPS = new AtomicReference<>(0.0);
-
-    private final AtomicReference<LedState> ledState = new AtomicReference<>(LedState.kBlue);
-
-    public void setClimberRollerRotations(double rotations) {
-        climberRollerRotations.set(rotations);
-    }
-
-    public void setClimberPivotRadians(double radians) {
-        climberPivotRadians.set(radians);
-    }
-
-    public void setIndexerRotations(double rotations) {
-        indexerRotations.set(rotations);
-    }
-
-    public void setIndexerRPS(double rps) {
-        indexerRPS.set(rps);
-    }
-
-    public double getIndexerRotations() {
-        return indexerRotations.get();
-    }
-
-    public double getIndexerRPS() {
-        return indexerRPS.get();
-    }
-
-    public void setIntakePivotRadians(double radians) {
-        intakePivotRadians.set(radians);
-    }
-
-    public double getIntakePivotRadians() {
-        return intakePivotRadians.get();
-    }
-
-    public void setElevatorHeightMeters(double heightMeters) {
-        elevatorHeightMeters.set(heightMeters);
-    }
-
-    public void setWristRadians(double radians) {
-        wristRadians.set(radians);
-    }
-
-    public void setIntakeRollerRotations(double rotations) {
-        intakeRollerRotations.set(rotations);
-    }
-
-    public void setIntakeRollerRPS(double rps) {
-        intakeRollerRPS.set(rps);
-    }
-
-    public void setClawRollerRotations(double rotations) {
-        clawRollerRotations.set(rotations);
-    }
-
-    public double getElevatorHeightMeters() {
-        return elevatorHeightMeters.get();
-    }
-
-    public double getWristRadians() {
-        return wristRadians.get();
-    }
-
-    public double getIntakeRollerRotations() {
-        return intakeRollerRotations.get();
-    }
-
-    public double getIntakeRollerRPS() {
-        return intakeRollerRPS.get();
-    }
-
-    public double getClawRollerRotations() {
-        return clawRollerRotations.get();
-    }
-
-    public double getClimberRollerRotations() {
-        return climberRollerRotations.get();
-    }
-
-    public double getClimberPivotRadians() {
-        return climberPivotRadians.get();
-    }
-
-    public void setClawRollerRPS(double rps) {
-        clawRollerRPS.set(rps);
-    }
-
-    public double getClawRollerRPS() {
-        return clawRollerRPS.get();
-    }
 
     public void setExclusiveTag(int id) {
         exclusiveTag.set(Optional.of(id));
@@ -488,22 +325,5 @@ public class RobotState {
             return driveRollRads.getInternalBuffer().lastEntry().getValue();
         }
         return 0.0;
-    }
-
-    public void logControllerMode() {
-        Logger.recordOutput("Controller Mode", ModalControls.getInstance().getMode().toString());
-    }
-
-    public static boolean onOpponentSide(boolean isRedAlliance, Pose2d pose) {
-        return (isRedAlliance
-                        && pose.getTranslation().getX()
-                                < FieldConstants.fieldLength / 2 - Constants.kMidlineBuffer)
-                || (!isRedAlliance
-                        && pose.getTranslation().getX()
-                                > FieldConstants.fieldLength / 2 + Constants.kMidlineBuffer);
-    }
-
-    public boolean onOpponentSide() {
-        return onOpponentSide(this.isRedAlliance(), this.getLatestFieldToRobot().getValue());
     }
 }

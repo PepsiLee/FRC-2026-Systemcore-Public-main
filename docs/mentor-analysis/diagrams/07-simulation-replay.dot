@@ -1,0 +1,19 @@
+digraph sim {
+ graph [label="REAL / SIM / REPLAY 的現有分岔",labelloc=t,rankdir=TB,bgcolor="#ffffff",fontname="Arial",fontsize=22,ranksep=.6];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=14,margin=".34,.16"];edge [fontname="Arial",fontsize=11,color="#52677b"];
+ Main [label="Main --replay → Constants.kIsReplay"];
+ Log [label="Robot Logger設定"];
+ RealLog [label="REAL\nWPILOG + 非FMS時NT4"];
+ SimLog [label="SIM\nNT4 + WPILOG"];
+ Replay [label="REPLAY\nWPILOGReader + 不按真實時間跑"];
+ Container [label="RobotContainer\n依 isSimulation 選IO"];
+ Hardware [label="Hardware IO\nCTRE / Limelight / sensors"];
+ SimIO [label="SIM IO + physics threads\nMapleSim / Photon / SimTalonFX"];
+ Inputs [label="inputs → processInputs\n具備此契約的資料可被log回填"];
+ Bypass [label="目前需改善的旁路\nDrive IO直接寫RobotState\nVision沒有processInputs",fillcolor="#fff4df"];
+ Logic [label="RobotState / 控制邏輯 / output"];
+ Main -> Log; Log -> RealLog; Log -> SimLog; Log -> Replay;
+ Main -> Container; Container -> Hardware [label="real"]; Container -> SimIO [label="simulation包含replay"];
+ Hardware -> Inputs; SimIO -> Inputs; Replay -> Inputs [label="回填輸入"];
+ Inputs -> Logic; Hardware -> Bypass; SimIO -> Bypass; Bypass -> Logic;
+}

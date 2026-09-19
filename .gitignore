@@ -193,4 +193,6 @@ src/main/java/com/team254/frc2025/BuildConstants.java
 # simgui-ds.json
 simgui-window.json
 simgui.json
-.wpilib/
+# Keep the project identity so WPILib VS Code recognizes cloned checkouts.
+.wpilib/*
+!.wpilib/wpilib_preferences.json

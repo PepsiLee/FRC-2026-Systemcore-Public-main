@@ -1,0 +1,15 @@
+{
+  "markdownLocalLinksChecked": 3218,
+  "htmlStaticLinksChecked": 202,
+  "javaFiles": 168,
+  "javaLines": 31686,
+  "states": 24,
+  "edges": 424,
+  "defaultCosts": 114,
+  "svgDiagrams": 7,
+  "errors": [],
+  "validation": "Static file/line/hash/JSON/SVG checks. PNG diagrams visually reviewed. Browser interaction validation not completed: local HTML preview blocked by environment browser policy. No robot compilation or execution.",
+  "productionTrackedFilesChanged": false,
+  "pngDiagrams": 7,
+  "semanticQa": "Independent source review of runtime, SIM pose, auto algae target, vision candidate selection, signal frequencies, and CANrange bus/use completed."
+}

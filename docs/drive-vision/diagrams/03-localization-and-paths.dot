@@ -1,0 +1,34 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.35, nodesep=0.38, ranksep=0.65, splines=polyline, fontname="Arial", fontsize=22, fontcolor="#19334c", label="03 / Localization and generic pathfinding", labelloc=t];
+node [shape=box, style="rounded,filled", fontname="Arial", fontsize=14, margin="0.16,0.12", penwidth=1.3, fontcolor="#172d43"];
+edge [fontname="Arial", fontsize=11, color="#7a91a5", fontcolor="#435c71", arrowsize=0.7];
+cameras [label="Limelight A / B\nBlue-origin pose + capture time", fillcolor="#e5f4f0", color="#2d7868"];
+sim [label="SimulatedDriveState Pose2d\n→ Photon camera simulation", fillcolor="#e5f4f0", color="#2d7868"];
+visionio [label="VisionIO inputs\nObservations + std deviations", fillcolor="#fff1dd", color="#9c7032"];
+vision [label="VisionSubsystem\nTimestamp / quality checks\nSingle-camera or fused estimate", fillcolor="#edf2ff", color="#5269ad"];
+state [label="RobotState\nPose and motion history\nVision estimate callback", fillcolor="#f2eafb", color="#8057a2"];
+ctre [label="DriveIOHardware / CTRE\nVision time conversion\nOdometry telemetry ~250 Hz", fillcolor="#fff1dd", color="#9c7032"];
+api [label="Local AutoBuilder.pathfindToPose\nPose2d + 6 constraint parameters", fillcolor="#edf2ff", color="#5269ad"];
+grid [label="3 retained navgrid JSON files\nteleop / auto / backoff sets", fillcolor="#e5f4f0", color="#2d7868"];
+planner [label="LocalADStar\nBackground path planning", fillcolor="#edf2ff", color="#5269ad"];
+command [label="Local PathfindingCommand\nDrive requirement + trajectory", fillcolor="#edf2ff", color="#5269ad"];
+controller [label="DriveSubsystem.Controller\n100 Hz feedback + feedforward", fillcolor="#edf2ff", color="#5269ad"];
+align [label="AutoAlignToPoseCommand\nDirect PID pose alignment", fillcolor="#edf2ff", color="#5269ad"];
+output [label="DriveSubsystem locked output\n→ DriveIO → Swerve modules", fillcolor="#eaf0f4", color="#627c91"];
+cameras -> visionio [label="REAL"];
+sim -> visionio [label="SIM"];
+visionio -> vision [label="main-loop read"];
+state -> vision [label="historical pose / motion"];
+vision -> state [label="accepted measurement"];
+state -> ctre [label="vision callback"];
+ctre -> state [label="odometry / motion"];
+grid -> planner [label="selected obstacle set"];
+api -> command [label="creates command"];
+command -> planner [label="planning request"];
+planner -> command [label="new path"];
+command -> controller [label="trajectory"];
+state -> controller [label="pose feedback"];
+controller -> output [label="locked output"];
+state -> align [label="pose feedback"];
+align -> output [label="requires Drive; no path search"];
+}

@@ -1,0 +1,18 @@
+digraph runtime {
+ graph [label="執行緒與資料所有權\nHz 為設定；不是實測效能",labelloc=t,rankdir=LR,bgcolor="#ffffff",fontname="Arial",fontsize=22,nodesep=.4,ranksep=.7];
+ node [shape=box,style="rounded,filled",fillcolor="#edf5ff",color="#adc4df",fontname="Arial",fontsize=14,margin=".34,.16"]; edge [fontname="Arial",fontsize=11,color="#52677b"];
+ subgraph cluster_main {label="主週期 · 通常 20 ms";color="#adc4df";
+  S [label="Scheduler.run"]; P [label="Subsystem.periodic\n讀IO / Logger.processInputs"]; T [label="poll triggers\nexecute / isFinished / end"]; D [label="空閒Subsystem排default"]; R [label="RobotState log → RobotViz\nSIM updateSim → state log"];
+  S -> P -> T -> D -> R;
+ }
+ O [label="CTRE odometry\n250 Hz",fillcolor="#ecf9f4"]; Cache [label="telemetryCache + RobotState\nclone / timestamp歷史",fillcolor="#ecf9f4"];
+ A [label="ADStar worker\n有請求才規劃\n閒置sleep 10 ms",fillcolor="#fff4df"];
+ Traj [label="trajectory交接\nvolatile + timer",fillcolor="#fff4df"];
+ C [label="Notifier controller\n10 ms / 100 Hz",fillcolor="#fff4df"]; H [label="CTRE setControl\n馬達韌體閉迴路"];
+ V [label="Limelight / NetworkTables\n相機非同步發布"];
+ Sim [label="SIM底盤Notifier\n5 ms / 200 Hz"];
+ O -> Cache [label="callback"]; Cache -> P; Cache -> C [label="latest pose"];
+ T -> A [label="setProblem / locks"]; A -> T [label="PathPlannerPath"];
+ T -> Traj [label="accept trajectory"]; Traj -> C -> H;
+ V -> P [label="Vision在主週期讀取"]; Sim -> O [label="模擬感測器"];
+}

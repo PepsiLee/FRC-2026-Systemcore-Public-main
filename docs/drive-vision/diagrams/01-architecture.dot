@@ -1,0 +1,37 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.35, nodesep=0.38, ranksep=0.65, splines=polyline, fontname="Arial", fontsize=22, fontcolor="#19334c", label="01 / Drive + Vision architecture", labelloc=t];
+node [shape=box, style="rounded,filled", fontname="Arial", fontsize=14, margin="0.16,0.12", penwidth=1.3, fontcolor="#172d43"];
+edge [fontname="Arial", fontsize=11, color="#7a91a5", fontcolor="#435c71", arrowsize=0.7];
+main [label="Main → Robot\nLifecycle + CommandScheduler", fillcolor="#e6eef8", color="#43688f"];
+container [label="RobotContainer\nComposition root", fillcolor="#e6eef8", color="#43688f"];
+ps5 [label="CommandPS5Controller(0)\nDirect HID input", fillcolor="#e5f4f0", color="#2d7868"];
+heading [label="DriveMaintainingHeadingCommand\nTeleop default command", fillcolor="#edf2ff", color="#5269ad"];
+drive [label="DriveSubsystem\nSwerve output + path controller", fillcolor="#edf2ff", color="#5269ad"];
+vision [label="VisionSubsystem\nValidate + fuse observations", fillcolor="#edf2ff", color="#5269ad"];
+state [label="RobotState\nPose + motion history", fillcolor="#f2eafb", color="#8057a2"];
+driveio [label="DriveIO\nHardware / Sim", fillcolor="#fff1dd", color="#9c7032"];
+visionio [label="VisionIO\nLimelight / Photon Sim", fillcolor="#fff1dd", color="#9c7032"];
+simstate [label="SimulatedDriveState\nShared Pose2d only", fillcolor="#f2eafb", color="#8057a2"];
+paths [label="com.team254.lib.pathplanner\nLocal generic planning API", fillcolor="#edf2ff", color="#5269ad"];
+logs [label="AdvantageKit / DriveViz\nLogs + pose visualization", fillcolor="#eaf0f4", color="#627c91"];
+main -> container [label="constructs"];
+container -> ps5 [label="constructs"];
+container -> drive [label="constructs"];
+container -> vision [label="constructs"];
+ps5 -> heading [label="axes + teleop/connection gate"];
+heading -> drive [label="requires Drive"];
+paths -> drive [label="trajectory consumer"];
+drive -> driveio [label="output / input"];
+visionio -> vision [label="camera observations"];
+vision -> state [label="accepted pose"];
+driveio -> state [label="odometry + motion"];
+state -> drive [label="control feedback"];
+driveio -> simstate [label="SIM pose"];
+simstate -> visionio [label="SIM camera scene"];
+state -> logs [label="pose / diagnostics"];
+drive -> logs [label="module state"];
+{ rank=same; ps5; paths; visionio; }
+{ rank=same; heading; vision; }
+{ rank=same; drive; state; }
+{ rank=same; driveio; simstate; logs; }
+}

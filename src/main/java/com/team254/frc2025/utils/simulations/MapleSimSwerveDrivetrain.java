@@ -2,8 +2,6 @@ package com.team254.frc2025.utils.simulations;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -78,12 +76,7 @@ public class MapleSimSwerveDrivetrain {
             Translation2d[] moduleLocations,
             Pigeon2 pigeon,
             SwerveModule<TalonFX, TalonFX, CANcoder>[] modules,
-            @SuppressWarnings("unchecked")
-                    SwerveModuleConstants<
-                                    TalonFXConfiguration,
-                                    TalonFXConfiguration,
-                                    CANcoderConfiguration>...
-                            moduleConstants) {
+            SwerveModuleConstants<?, ?, ?>... moduleConstants) {
         this.pigeonSim = pigeon.getSimState();
         simModules = new SimSwerveModule[moduleConstants.length];
         DriveTrainSimulationConfig simulationConfig =
@@ -108,7 +101,7 @@ public class MapleSimSwerveDrivetrain {
         SwerveModuleSimulation[] moduleSimulations = mapleSimDrive.getModules();
         for (int i = 0; i < this.simModules.length; i++)
             simModules[i] =
-                    new SimSwerveModule(moduleConstants[0], moduleSimulations[i], modules[i]);
+                    new SimSwerveModule(moduleConstants[i], moduleSimulations[i], modules[i]);
 
         SimulatedArena.overrideSimulationTimings(simPeriod, 1);
         SimulatedArena.getInstance().addDriveTrainSimulation(mapleSimDrive);
@@ -137,15 +130,11 @@ public class MapleSimSwerveDrivetrain {
      * <h1>Represents the simulation of a single {@link SwerveModule}.</h1>
      */
     protected static class SimSwerveModule {
-        public final SwerveModuleConstants<
-                        TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-                moduleConstant;
+        public final SwerveModuleConstants<?, ?, ?> moduleConstant;
         public final SwerveModuleSimulation moduleSimulation;
 
         public SimSwerveModule(
-                SwerveModuleConstants<
-                                TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-                        moduleConstant,
+                SwerveModuleConstants<?, ?, ?> moduleConstant,
                 SwerveModuleSimulation moduleSimulation,
                 SwerveModule<TalonFX, TalonFX, CANcoder> module) {
             this.moduleConstant = moduleConstant;
@@ -264,6 +253,8 @@ public class MapleSimSwerveDrivetrain {
                 .withSteerMotorGains(
                         moduleConstants
                                 .SteerMotorGains
+                                // 複製 PID 設定，避免修改 Tuner 原始值或其他模組共用的物件。
+                                .clone()
                                 .withKP(70) // Proportional gain
                                 .withKD(4.5)) // Derivative gain
                 // Adjust friction voltages

@@ -191,6 +191,7 @@ public class PathPlannerAuto extends Command {
         trajTimer.restart();
 
         if (trajectory == null) {
+            currentPathName = "";
             return;
         }
 

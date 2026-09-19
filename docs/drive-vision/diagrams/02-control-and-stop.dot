@@ -1,0 +1,33 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad=0.35, nodesep=0.38, ranksep=0.65, splines=polyline, fontname="Arial", fontsize=22, fontcolor="#19334c", label="02 / Driver control and stop ownership", labelloc=t];
+node [shape=box, style="rounded,filled", fontname="Arial", fontsize=14, margin="0.16,0.12", penwidth=1.3, fontcolor="#172d43"];
+edge [fontname="Arial", fontsize=11, color="#7a91a5", fontcolor="#435c71", arrowsize=0.7];
+hid [label="PS5 HID / port 0", fillcolor="#e5f4f0", color="#2d7868"];
+gate [label="Teleop enabled\nAND HID connected?", fillcolor="#fff7d8", color="#9c852d"];
+shape [label="Left -Y / -X: signed power 1.5\nRight -X: signed power 2", fillcolor="#edf2ff", color="#5269ad"];
+turn [label="Turn input above deadband?\nIncludes preserved release settling", fillcolor="#fff7d8", color="#9c852d"];
+manual [label="FieldCentric\nManual angular rate", fillcolor="#edf2ff", color="#5269ad"];
+hold [label="FieldCentricFacingAngle\nCapture / hold heading", fillcolor="#edf2ff", color="#5269ad"];
+options [label="Options rising edge\nKeep XY; blue 0 / red pi\nRefresh heading hold", fillcolor="#e5f4f0", color="#2d7868"];
+drive [label="DriveSubsystem\nShared output lock", fillcolor="#edf2ff", color="#5269ad"];
+path [label="Path controller Notifier\n100 Hz / same output lock", fillcolor="#edf2ff", color="#5269ad"];
+stop [label="stop()\nClear active trajectory\nSend zero drive request", fillcolor="#fce8e8", color="#a34b50"];
+exit [label="Command end / mode exit\nDisable / disconnected HID", fillcolor="#fce8e8", color="#a34b50"];
+io [label="DriveIO → CTRE swerve", fillcolor="#fff1dd", color="#9c7032"];
+auto [label="Autonomous default\nCommands.none()", fillcolor="#e6eef8", color="#43688f"];
+hid -> gate [label="poll each execute"];
+gate -> shape [label="yes"];
+gate -> stop [label="no"];
+shape -> turn [label="same speed/PID limits"];
+turn -> manual [label="turning"];
+turn -> hold [label="released / settled"];
+manual -> drive [label="request"];
+hold -> drive [label="request"];
+options -> drive [label="gated pose reset"];
+options -> hold [label="new heading target"];
+path -> drive [label="trajectory request"];
+exit -> stop [label="stop boundary"];
+stop -> drive [label="same lock"];
+drive -> io [label="serialized output"];
+auto -> stop [label="mode entry remains stopped"];
+}

@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "idea"
-    id "edu.wpi.first.GradleRIO" version "2025.3.2"
+    id "edu.wpi.first.GradleRIO" version "2026.2.1"
     id "com.peterabeles.gversion" version "1.10"
     id "com.diffplug.spotless" version "6.22.0"
 }
@@ -10,8 +10,7 @@ spotless {
     java {
         googleJavaFormat().aosp()
         targetExclude(
-            'src/main/java/com/team254/frc2025/BuildConstants.java',
-            'src/main/java/com/team254/frc2025/subsystems/superstructure/ModalSuperstructureTriggers.java'
+            'src/main/java/com/team254/frc2025/BuildConstants.java'
         )
     }
 }

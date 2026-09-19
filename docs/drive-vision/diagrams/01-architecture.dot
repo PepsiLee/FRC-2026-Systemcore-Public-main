@@ -12,7 +12,7 @@ state [label="RobotState\nPose + motion history", fillcolor="#f2eafb", color="#8
 driveio [label="DriveIO\nHardware / Sim", fillcolor="#fff1dd", color="#9c7032"];
 visionio [label="VisionIO\nLimelight / Photon Sim", fillcolor="#fff1dd", color="#9c7032"];
 simstate [label="SimulatedDriveState\nShared Pose2d only", fillcolor="#f2eafb", color="#8057a2"];
-paths [label="com.team254.lib.pathplanner\nLocal generic planning API", fillcolor="#edf2ff", color="#5269ad"];
+paths [label="com.team11855.lib.pathplanner\nLocal generic planning API", fillcolor="#edf2ff", color="#5269ad"];
 logs [label="AdvantageKit / DriveViz\nLogs + pose visualization", fillcolor="#eaf0f4", color="#627c91"];
 main -> container [label="constructs"];
 container -> ps5 [label="constructs"];

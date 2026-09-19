@@ -1,6 +1,8 @@
-# Drive + Vision — PS5 底盤分支
+# FRC-2026-Systemcore-Public-main
 
 本分支 `offseason` 由 Team 254 的 [2025 Undertow 程式](https://www.team254.com/first/2025/) 精簡而來。原始完整機器人版本保留在 `main`。
+
+本隊 Java 程式使用 `com.team11855.frc2026`，共用程式使用 `com.team11855.lib`。專案資料夾與套件名稱的對應及驗證狀態見 [更名說明](docs/drive-vision/NAMESPACE-MIGRATION.md)。
 
 只保留 Drive、Vision 兩個 subsystem，以及通用 PathPlanner 路徑、AprilTag 定位、AdvantageKit 記錄與底盤模擬。PS5 控制器透過 WPILib 的 `CommandPS5Controller` 直接接入；舊 controlboard 與機構得分流程已移除。
 

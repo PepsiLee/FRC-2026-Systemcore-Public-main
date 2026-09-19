@@ -187,7 +187,7 @@ compile_commands.json
 .factorypath
 
 # Build constants file
-src/main/java/com/team254/frc2025/BuildConstants.java
+src/main/java/com/team11855/frc2026/BuildConstants.java
 
 # Sim GUI configs
 # simgui-ds.json

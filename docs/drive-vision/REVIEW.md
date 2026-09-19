@@ -1,5 +1,7 @@
 # 修改完成後的編譯確認清單
 
+目前 Java 套件與專案資料夾已依 [更名說明](NAMESPACE-MIGRATION.md) 更新；本次更名後尚未編譯。下方保留底盤整合的完整流程確認。
+
 分支：`offseason`。基準：`main` 的 `79645a4b0193d84b179d11654fbe499b42f2e52d`。此分支保存本機提交；編譯、測試與模擬仍需另行確認，不包含 push 或部署。
 
 最新 Tuner 硬體與模擬參數接入見 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md)，此項也包含在編譯前確認範圍。

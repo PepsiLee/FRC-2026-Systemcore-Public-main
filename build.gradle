@@ -10,7 +10,7 @@ spotless {
     java {
         googleJavaFormat().aosp()
         targetExclude(
-            'src/main/java/com/team254/frc2025/BuildConstants.java'
+            'src/main/java/com/team11855/frc2026/BuildConstants.java'
         )
     }
 }
@@ -20,7 +20,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-def ROBOT_MAIN_CLASS = "com.team254.frc2025.Main"
+def ROBOT_MAIN_CLASS = "com.team11855.frc2026.Main"
 
 final MAX_JAVA_HEAP_SIZE_MB = 100
 
@@ -178,7 +178,7 @@ tasks.withType(JavaCompile) {
 project.compileJava.dependsOn(createVersionFile)
 gversion {
     srcDir       = "src/main/java/"
-    classPackage = "com.team254.frc2025"
+    classPackage = "com.team11855.frc2026"
     className    = "BuildConstants"
     dateFormat   = "yyyy-MM-dd HH:mm:ss z"
     timeZone     = "America/Los_Angeles"

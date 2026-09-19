@@ -1,5 +1,7 @@
 # Drive + Vision 分支使用說明
 
+目前專案名稱為 `FRC-2026-Systemcore-Public-main`；機器人套件為 `com.team11855.frc2026`、共用套件為 `com.team11855.lib`。詳見 [更名說明](NAMESPACE-MIGRATION.md)。
+
 本文件說明 `offseason` 的新版接線與操作方式。此分支把機器人功能縮為 **Drive 與 Vision 兩個 subsystem**，用一支 USB 0 的 PS5 控制器駕駛；保留本地 PathPlanner、三張 navgrid 與指定 Pose 的自動對位能力。預設 Autonomous 為 `Commands.none()`，沒有競賽取料、得分或機構排程。
 
 目前底盤已接入使用者的 MK5i R2／Kraken X60／CANivore 設定，詳見 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md)。2026 library 更新見 [LIBRARY-UPGRADE.md](LIBRARY-UPGRADE.md)。
@@ -17,22 +19,22 @@
 
 ## 1. 先讀這張總圖
 
-![Drive 與 Vision 架構](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/01-architecture.png)
+![Drive 與 Vision 架構](../../docs/drive-vision/diagrams/01-architecture.png)
 
-[可縮放 SVG](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/01-architecture.svg) · [Mermaid 原始碼](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/01-architecture.mmd) · [Graphviz 原始碼](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/01-architecture.dot)
+[可縮放 SVG](../../docs/drive-vision/diagrams/01-architecture.svg) · [Mermaid 原始碼](../../docs/drive-vision/diagrams/01-architecture.mmd) · [Graphviz 原始碼](../../docs/drive-vision/diagrams/01-architecture.dot)
 
 | 層／檔案 | 從哪裡接收 | 做什麼、再交給哪裡 |
 |---|---|---|
-| [Main.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/Main.java) | WPILib 啟動入口 | 啟動 `Robot`。 |
-| [Robot.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/Robot.java) | Disabled／Auto／Teleop／Test 生命週期 | 設定 AdvantageKit、建立 `RobotContainer`、執行 `CommandScheduler`、更新狀態記錄；模式切換取消 Auto 並呼叫 Drive 停止。 |
-| [RobotContainer.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/RobotContainer.java) | 平台 REAL／SIM、PS5 USB 0 | 建立 `RobotState`、Drive IO、Vision IO、兩個 subsystem 與預設駕駛命令；直接綁定 Options，不經舊 controlboard。 |
-| [DriveMaintainingHeadingCommand.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/commands/DriveMaintainingHeadingCommand.java) | 三個軸 supplier、模式／連線 supplier、`RobotState` | 取得 Drive requirement；產生手動角速度或 heading hold 的 CTRE request；交給 `DriveSubsystem.setControl()`。 |
-| [DriveSubsystem.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java) | 手動 request、本地 PathPlanner trajectory、Vision measurement | 擁有 Drive IO 與 100 Hz 路徑控制器；序列化輸出／停止／重設姿態；週期讀 IO、記錄 DriveInputs 與模組資料。 |
-| [DriveIO.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/subsystems/drive/DriveIO.java) | Drive subsystem 的讀寫呼叫 | 定義底盤 IO 介面；REAL 使用 `DriveIOHardware`，SIM 使用繼承它的 `DriveIOSim`。 |
-| [RobotState.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/RobotState.java) | Drive IO 的里程計／速度，Vision 接受的觀測 | 保存位置與動作歷史、提供控制回授與 alliance；透過 constructor 注入的 callback 把 Vision estimate 送回 Drive。沒有舊 RobotContainer 反向依賴。 |
-| [VisionSubsystem.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/subsystems/vision/VisionSubsystem.java) | 相機 A/B inputs、歷史位置與角速度 | 檢查觀測、處理 MegaTag／陀螺儀備援、融合可用相機；呼叫 `RobotState.updateMegatagEstimate()`。 |
-| [VisionIO.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/subsystems/vision/VisionIO.java) | Limelight NetworkTables 或 Photon 模擬結果 | 把相機資料交給 Vision subsystem；相機輸出不是 motor request。 |
-| [SimulatedDriveState.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/simulation/SimulatedDriveState.java) | SIM 底盤 truth pose | 只保存帶時間的 `Pose2d` 歷史，交給 Photon 相機模擬；不保存 coral、algae、機構或得分狀態。 |
+| [Main.java](../../src/main/java/com/team11855/frc2026/Main.java) | WPILib 啟動入口 | 啟動 `Robot`。 |
+| [Robot.java](../../src/main/java/com/team11855/frc2026/Robot.java) | Disabled／Auto／Teleop／Test 生命週期 | 設定 AdvantageKit、建立 `RobotContainer`、執行 `CommandScheduler`、更新狀態記錄；模式切換取消 Auto 並呼叫 Drive 停止。 |
+| [RobotContainer.java](../../src/main/java/com/team11855/frc2026/RobotContainer.java) | 平台 REAL／SIM、PS5 USB 0 | 建立 `RobotState`、Drive IO、Vision IO、兩個 subsystem 與預設駕駛命令；直接綁定 Options，不經舊 controlboard。 |
+| [DriveMaintainingHeadingCommand.java](../../src/main/java/com/team11855/frc2026/commands/DriveMaintainingHeadingCommand.java) | 三個軸 supplier、模式／連線 supplier、`RobotState` | 取得 Drive requirement；產生手動角速度或 heading hold 的 CTRE request；交給 `DriveSubsystem.setControl()`。 |
+| [DriveSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java) | 手動 request、本地 PathPlanner trajectory、Vision measurement | 擁有 Drive IO 與 100 Hz 路徑控制器；序列化輸出／停止／重設姿態；週期讀 IO、記錄 DriveInputs 與模組資料。 |
+| [DriveIO.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveIO.java) | Drive subsystem 的讀寫呼叫 | 定義底盤 IO 介面；REAL 使用 `DriveIOHardware`，SIM 使用繼承它的 `DriveIOSim`。 |
+| [RobotState.java](../../src/main/java/com/team11855/frc2026/RobotState.java) | Drive IO 的里程計／速度，Vision 接受的觀測 | 保存位置與動作歷史、提供控制回授與 alliance；透過 constructor 注入的 callback 把 Vision estimate 送回 Drive。沒有舊 RobotContainer 反向依賴。 |
+| [VisionSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java) | 相機 A/B inputs、歷史位置與角速度 | 檢查觀測、處理 MegaTag／陀螺儀備援、融合可用相機；呼叫 `RobotState.updateMegatagEstimate()`。 |
+| [VisionIO.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionIO.java) | Limelight NetworkTables 或 Photon 模擬結果 | 把相機資料交給 Vision subsystem；相機輸出不是 motor request。 |
+| [SimulatedDriveState.java](../../src/main/java/com/team11855/frc2026/simulation/SimulatedDriveState.java) | SIM 底盤 truth pose | 只保存帶時間的 `Pose2d` 歷史，交給 Photon 相機模擬；不保存 coral、algae、機構或得分狀態。 |
 
 啟動時 Drive 先建立，接著建立 Vision。`RobotState` 的 Vision callback 由 `RobotContainer.acceptVisionEstimate()` 轉交 `DriveSubsystem.addVisionMeasurement()`，最後到 Drive IO 的 CTRE pose estimator。`RobotState` 仍由 Drive IO 直接寫入里程計與動作資料；這點與完全透過 logged inputs 還原狀態的架構不同。
 
@@ -67,13 +69,13 @@ Options 的 trigger 是「按鍵與模式／連線條件的 AND」之上升沿�
 | 釋放緩衝 | 最近 `0.25 s` 曾轉動且目前 `abs(omega) > 10 deg/s` 時，暫維持手動角速度模式；條件解除後擷取 heading。 |
 | 實機／SIM request type | 手動實機採 `Velocity`；SIM 採 `OpenLoopVoltage`，沿用上游差異。 |
 
-參數來源：[Constants.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/Constants.java)、[RobotContainer.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/RobotContainer.java)、[DriveMaintainingHeadingCommand.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/commands/DriveMaintainingHeadingCommand.java)。
+參數來源：[Constants.java](../../src/main/java/com/team11855/frc2026/Constants.java)、[RobotContainer.java](../../src/main/java/com/team11855/frc2026/RobotContainer.java)、[DriveMaintainingHeadingCommand.java](../../src/main/java/com/team11855/frc2026/commands/DriveMaintainingHeadingCommand.java)。
 
 ## 3. 輸出權、停止與模式切換
 
-![控制與停止流程](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/02-control-and-stop.png)
+![控制與停止流程](../../docs/drive-vision/diagrams/02-control-and-stop.png)
 
-[可縮放 SVG](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/02-control-and-stop.svg) · [Mermaid 原始碼](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/02-control-and-stop.mmd)
+[可縮放 SVG](../../docs/drive-vision/diagrams/02-control-and-stop.svg) · [Mermaid 原始碼](../../docs/drive-vision/diagrams/02-control-and-stop.mmd)
 
 `DriveSubsystem.controlLock` 同時保護 trajectory 的替換／清除、100 Hz 控制輸出、手動 `setControl()`、`stop()` 與 `resetOdometry()`。手動控制或停止先清掉 trajectory，讓下一個 100 Hz tick 不會再輸出被取消的舊路徑。這是依原始碼得到的同步設計；競態測試尚未執行。
 
@@ -87,7 +89,7 @@ Options 的 trigger 是「按鍵與模式／連線條件的 AND」之上升沿�
 | 路徑命令中斷、Disabled、目標末速 `< 0.1 m/s` | 本地 `PathfindingCommand`／`FollowPathCommand` 傳入 stay-stopped trajectory，Drive controller 清除路徑並送出零輸出。 |
 | 路徑正常結束且末速 `>= 0.1 m/s` | 傳入 `null` 清除路徑控制迴圈，不額外送零；供下一段接續。最後一段不應無意使用此語義而留下先前 motor request。 |
 
-模式入口與出口由 [Robot.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/Robot.java) 管理：
+模式入口與出口由 [Robot.java](../../src/main/java/com/team11855/frc2026/Robot.java) 管理：
 
 | 模式事件 | 執行內容 |
 |---|---|
@@ -106,9 +108,9 @@ warmup 使用本地 `PathfindingCommand.warmupCommand()`，其 trajectory consum
 
 ## 4. 定位、相機與 SIM
 
-![定位與路徑資料流](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/03-localization-and-paths.png)
+![定位與路徑資料流](../../docs/drive-vision/diagrams/03-localization-and-paths.png)
 
-[可縮放 SVG](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/03-localization-and-paths.svg) · [Mermaid 原始碼](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/diagrams/03-localization-and-paths.mmd)
+[可縮放 SVG](../../docs/drive-vision/diagrams/03-localization-and-paths.svg) · [Mermaid 原始碼](../../docs/drive-vision/diagrams/03-localization-and-paths.mmd)
 
 1. REAL 的 `DriveIOHardware` 使用 CTRE swerve。CTRE 里程計設定為 `250 Hz`，telemetry callback 轉換時間後寫入 `RobotState`；Drive 的週期讀取再更新測量速度、角速度、pitch／roll、加速度等歷史。
 2. `VisionIOHardwareLimelight` 讀取 `limelight-left` 與 `limelight-right`；藍方原點的相機 pose、觀測時間、fiducials 與 stddev 交給 Vision。相機位置、角度與場地 layout 在 `Constants`。
@@ -118,7 +120,7 @@ warmup 使用本地 `PathfindingCommand.warmupCommand()`，其 trajectory consum
 
 SIM 仍採 `DriveIOSim` 與 `VisionIOSimPhoton`。Drive 的 Notifier 以 Tuner 指定的 `0.004 s` 週期推進模擬；`Robot.simulationPeriodic()` 不再重複推進同一個 MapleSim 世界。`SimulatedDriveState` 只共享 pose truth 的歷史，Photon 使用它產生相機結果，再進入既有 Vision 處理路徑。初始 SIM pose 在 `Robot` 設為 `(3 m, 3 m, 0 rad)`。其 history 在時間範圍外取樣會 clamp 邊界，所以 `Optional` 非空不能單獨證明時間資料新鮮。
 
-[simgui-ds.json](/Users/pepsi/Desktop/FRC-2025-Public-main/simgui-ds.json) 準備單一 `Keyboard0`：`A/D` 是 axis 0、`W/S` 是 axis 1、`Q/E` 是 axis 2、`R` 是 button 10（Options）。其他按鍵／軸沒有配置。這只描述已寫入設定；模擬尚未啟動，按鍵與 PS5 mapping 待驗證。
+[simgui-ds.json](../../simgui-ds.json) 準備單一 `Keyboard0`：`A/D` 是 axis 0、`W/S` 是 axis 1、`Q/E` 是 axis 2、`R` 是 button 10（Options）。其他按鍵／軸沒有配置。這只描述已寫入設定；模擬尚未啟動，按鍵與 PS5 mapping 待驗證。
 
 MapleSim 0.4.0-beta 的預設場地為 2026；本分支明確使用 `DriveSimulationArena`，只載入 2025 障礙物，連場地重設也不加入遊戲物件。
 
@@ -126,15 +128,15 @@ Replay runner 保留，但不能宣稱完整 deterministic replay：`RobotContai
 
 ## 5. 本地 PathPlanner API：如何擴充
 
-這份專案用的是 `com.team254.lib.pathplanner` 原始碼 fork。匯入、建構子與 output callback 都要以本地源碼為準。`DriveSubsystem` 已完成一次 `AutoBuilder.configure()`，其中 controller 接收的是 `Consumer<PathPlannerTrajectory>`；不要在 RobotContainer 再配置第二次，也不要直接套用另一版本的 motor-output callback 範例。
+這份專案用的是 `com.team11855.lib.pathplanner` 原始碼 fork。匯入、建構子與 output callback 都要以本地源碼為準。`DriveSubsystem` 已完成一次 `AutoBuilder.configure()`，其中 controller 接收的是 `Consumer<PathPlannerTrajectory>`；不要在 RobotContainer 再配置第二次，也不要直接套用另一版本的 motor-output callback 範例。
 
 ### 指定座標的避障路徑
 
 以下是**未接到按鍵或 Auto 的擴充範例**，可放在 RobotContainer 類別中。目標 pose 應由已審查的呼叫者提供；範例不選定實際場地目的地、不啟用 Auto。
 
 ```java
-import com.team254.lib.pathplanner.auto.AutoBuilder;
-import com.team254.lib.pathplanner.path.PathConstraints;
+import com.team11855.lib.pathplanner.auto.AutoBuilder;
+import com.team11855.lib.pathplanner.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.Objects;
@@ -160,11 +162,11 @@ private Command pathfindAndStop(Pose2d targetInBlueFieldFrame) {
 
 若輸入是「藍方設計的目標位置，需要依紅藍切換」，改用 `AutoBuilder.pathfindToPoseFlipped(target, constraints, 0.0)`。它在 command 執行時依已配置的 alliance supplier 決定翻轉。若 target 已經轉成當前 alliance 的實際 field pose，使用 `pathfindToPose()`；不能先自行翻轉後又呼叫 flipped 版本。
 
-已逐項核對：[AutoBuilder.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/lib/pathplanner/auto/AutoBuilder.java)、[PathConstraints.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/lib/pathplanner/path/PathConstraints.java)、[PathfindingCommand.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/lib/pathplanner/commands/PathfindingCommand.java)。此為源碼閱讀核對，並非編譯結果。
+已逐項核對：[AutoBuilder.java](../../src/main/java/com/team11855/lib/pathplanner/auto/AutoBuilder.java)、[PathConstraints.java](../../src/main/java/com/team11855/lib/pathplanner/path/PathConstraints.java)、[PathfindingCommand.java](../../src/main/java/com/team11855/lib/pathplanner/commands/PathfindingCommand.java)。此為源碼閱讀核對，並非編譯結果。
 
 ### 最後一小段直接對位
 
-generic [AutoAlignToPoseCommand.java](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/java/com/team254/frc2025/commands/AutoAlignToPoseCommand.java) 保留以下 constructor：
+generic [AutoAlignToPoseCommand.java](../../src/main/java/com/team11855/frc2026/commands/AutoAlignToPoseCommand.java) 保留以下 constructor：
 
 ```java
 new AutoAlignToPoseCommand(
@@ -182,9 +184,9 @@ new AutoAlignToPoseCommand(
 
 | 檔案 | 本地選擇 API | 本分支目前使用狀態 |
 |---|---|---|
-| [navgrid.json](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/deploy/pathplanner/navgrid.json) | `Pathfinding.setTeleopObstacles()` | 啟動、Disabled、Teleop 都明確選它。 |
-| [auto_navgrid.json](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/deploy/pathplanner/auto_navgrid.json) | `Pathfinding.setAutoObstacles()` | 檔案保留；目前 Autonomous 入口沒有呼叫此切換。 |
-| [backoff_navgrid.json](/Users/pepsi/Desktop/FRC-2025-Public-main/src/main/deploy/pathplanner/backoff_navgrid.json) | `Pathfinding.setBackoffObstacles()` | 檔案保留；目前沒有按鍵或 Auto 綁定它。 |
+| [navgrid.json](../../src/main/deploy/pathplanner/navgrid.json) | `Pathfinding.setTeleopObstacles()` | 啟動、Disabled、Teleop 都明確選它。 |
+| [auto_navgrid.json](../../src/main/deploy/pathplanner/auto_navgrid.json) | `Pathfinding.setAutoObstacles()` | 檔案保留；目前 Autonomous 入口沒有呼叫此切換。 |
+| [backoff_navgrid.json](../../src/main/deploy/pathplanner/backoff_navgrid.json) | `Pathfinding.setBackoffObstacles()` | 檔案保留；目前沒有按鍵或 Auto 綁定它。 |
 
 `Pathfinding.ensureInitialized()` 在 Robot 啟動時執行，建立 LocalADStar。檔名不會讓系統自動隨模式切換。未來選用不同 grid，應同時審查障礙物尺寸、場地版本、cache 與整段 command 結束後要恢復哪一組網格。Dynamic obstacles 的本地入口為 `Pathfinding.setDynamicObstacles(...)`，目前沒有新增資料來源或呼叫者。
 
@@ -218,4 +220,4 @@ new AutoAlignToPoseCommand(
 | generic 路徑 | 三種 obstacle set 切換、紅藍 flip、路線空間與停止／取消符合預期。 | 先 SIM，再經確認的受控實機測試。 |
 | 最終實機 | CAN 配置、模組方向／offset、輪速、controller 斷線、Disable、Options 與 heading hold。 | 經流程確認後的實機檢查紀錄；不是此文件建立時已完成。 |
 
-三張圖的重建工具是 [render-diagrams.mjs](/Users/pepsi/Desktop/FRC-2025-Public-main/docs/drive-vision/render-diagrams.mjs)，只執行 Node 的 Graphviz WASM 與 PNG 轉檔，不啟動機器人程式。`FRC_DOC_NODE_MODULES` 可指定包含 `@viz-js/viz` 與 `sharp` 的本地套件目錄；預設是此工作站的 Codex dependency runtime。
+三張圖的重建工具是 [render-diagrams.mjs](../../docs/drive-vision/render-diagrams.mjs)，只執行 Node 的 Graphviz WASM 與 PNG 轉檔，不啟動機器人程式。`FRC_DOC_NODE_MODULES` 可指定包含 `@viz-js/viz` 與 `sharp` 的本地套件目錄；預設是此工作站的 Codex dependency runtime。

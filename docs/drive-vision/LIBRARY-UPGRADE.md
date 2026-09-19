@@ -16,7 +16,7 @@
 | PathPlanner vendor | 2025.2.7 | **2026.1.2** | [release](https://github.com/mjansen4857/pathplanner/releases/tag/v2026.1.2)、[descriptor](https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.json)；本地 fork 的處理見下節 |
 | PhotonLib／PhotonTargeting | v2025.3.1 | **v2026.3.4** | [固定版本 descriptor](https://github.com/PhotonVision/photonvision/releases/download/v2026.3.4/photonlib-v2026.3.4.json)；不採用目前 latest URL 指向的 v2027.0.0-alpha-2 |
 | MapleSim | 0.3.9 | **0.4.0-beta** | [官方已發布版本的 descriptor](https://github.com/Shenzhen-Robotics-Alliance/maple-sim/blob/4837df158cfd0c257c47b45777d563369544e624/docs/vendordep/maple-sim.json)、[Maven metadata](https://shenzhen-robotics-alliance.github.io/maple-sim/vendordep/repos/releases/org/ironmaple/maplesim-java/maven-metadata.xml) |
-| LimelightHelpers 原始碼 | 1.11 | **1.14** | [官方來源快照](https://github.com/LimelightVision/limelightlib-wpijava/blob/919aa4b573a2d0bb6ecefb1af1313a1bcb44b045/LimelightHelpers.java)；調整 package 至 `com.team254.lib.limelight` |
+| LimelightHelpers 原始碼 | 1.11 | **1.14** | [官方來源快照](https://github.com/LimelightVision/limelightlib-wpijava/blob/919aa4b573a2d0bb6ecefb1af1313a1bcb44b045/LimelightHelpers.java)；調整 package 至 `com.team11855.lib.limelight` |
 | WPILibNewCommands | 2025 年描述檔 | **2026 年描述檔** | `version: 1.0.0` 是描述檔標記；實際 Java 版本 `wpilib` 跟隨 GradleRIO，不能改成獨立的套件版本 |
 
 Java 17、Gradle wrapper 8.11、gversion、Spotless、JUnit 版本保留；此組 Java／wrapper 也用於 [AdvantageKit 26.0.2 官方範本](https://github.com/Mechanical-Advantage/AdvantageKit/tree/v26.0.2/template_projects/template)。dyn4j 保留 MapleSim 官方描述檔要求的 5.0.2。Java package 名稱 `frc2025` 保留，它代表這份 2025 機器人專案，並不決定 WPILib 版本。
@@ -43,11 +43,11 @@ Java 17、Gradle wrapper 8.11、gversion、Spotless、JUnit 版本保留；此�
 
 ## 本地 PathPlanner fork 的界線
 
-`com.team254.lib.pathplanner` 是專案內的客製原始碼，更新 vendor JSON 不會更新它。本次依 [官方 2025.2.2 → 2026.1.2 差異](https://github.com/mjansen4857/pathplanner/compare/v2025.2.2...v2026.1.2) 選擇性合併上述相容性／路徑修正，保留 100 Hz consumer、獨立 X/Y 加速度限制、尋路快取與三份網格；**它不是官方 2026.1.2 的完整逐檔複本**。
+`com.team11855.lib.pathplanner` 是專案內的客製原始碼，更新 vendor JSON 不會更新它。本次依 [官方 2025.2.2 → 2026.1.2 差異](https://github.com/mjansen4857/pathplanner/compare/v2025.2.2...v2026.1.2) 選擇性合併上述相容性／路徑修正，保留 100 Hz consumer、獨立 X/Y 加速度限制、尋路快取與三份網格；**它不是官方 2026.1.2 的完整逐檔複本**。
 
 此外，Choreo `.traj` 讀取器接受的格式上限從 1 調整為 3，與上游一致；不重新加入 Choreo vendor 或賽事 Auto。上游 2026.1.2 的 `.path`／`.auto` 讀取器仍檢查 `2025.X` 格式，這與 library 發布年份不同，不能直接把檔案內 version 改成 2026。
 
-本地 LocalADStar 已在修改 start／goal／problem 時清除 `newPathAvailable`，因此上游同類修正不需重複套用。官方新增的測試用全域 reset API 與 alert 分組沒有移植。官方 PathPlanner vendor 保留，但現有底盤路徑入口一律使用 `com.team254.lib.pathplanner`，勿混用另一套 AutoBuilder。
+本地 LocalADStar 已在修改 start／goal／problem 時清除 `newPathAvailable`，因此上游同類修正不需重複套用。官方新增的測試用全域 reset API 與 alert 分組沒有移植。官方 PathPlanner vendor 保留，但現有底盤路徑入口一律使用 `com.team11855.lib.pathplanner`，勿混用另一套 AutoBuilder。
 
 ## 已做的靜態核對與未執行的驗證
 
@@ -91,21 +91,21 @@ Java 17、Gradle wrapper 8.11、gversion、Spotless、JUnit 版本保留；此�
 | M | [docs/drive-vision/static-check.json](<../../docs/drive-vision/static-check.json>) |
 | M | [docs/drive-vision/static_check.py](<../../docs/drive-vision/static_check.py>) |
 | M | [settings.gradle](<../../settings.gradle>) |
-| M | [src/main/java/com/team254/frc2025/commands/DriveMaintainingHeadingCommand.java](<../../src/main/java/com/team254/frc2025/commands/DriveMaintainingHeadingCommand.java>) |
-| A | [src/main/java/com/team254/frc2025/simulation/DriveSimulationArena.java](<../../src/main/java/com/team254/frc2025/simulation/DriveSimulationArena.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/vision/VisionIOSimPhoton.java](<../../src/main/java/com/team254/frc2025/subsystems/vision/VisionIOSimPhoton.java>) |
-| M | [src/main/java/com/team254/lib/limelight/LimelightHelpers.java](<../../src/main/java/com/team254/lib/limelight/LimelightHelpers.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/commands/FollowPathCommand.java](<../../src/main/java/com/team254/lib/pathplanner/commands/FollowPathCommand.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/commands/PathPlannerAuto.java](<../../src/main/java/com/team254/lib/pathplanner/commands/PathPlannerAuto.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/commands/PathfindingCommand.java](<../../src/main/java/com/team254/lib/pathplanner/commands/PathfindingCommand.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/path/PathPlannerPath.java](<../../src/main/java/com/team254/lib/pathplanner/path/PathPlannerPath.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/path/Waypoint.java](<../../src/main/java/com/team254/lib/pathplanner/path/Waypoint.java>) |
-| M | [src/main/java/com/team254/lib/pathplanner/trajectory/PathPlannerTrajectory.java](<../../src/main/java/com/team254/lib/pathplanner/trajectory/PathPlannerTrajectory.java>) |
-| A | [src/test/java/com/team254/frc2025/simulation/DriveSimulationArenaTest.java](<../../src/test/java/com/team254/frc2025/simulation/DriveSimulationArenaTest.java>) |
-| M | [src/test/java/com/team254/frc2025/subsystems/drive/DriveSubsystemControlTest.java](<../../src/test/java/com/team254/frc2025/subsystems/drive/DriveSubsystemControlTest.java>) |
-| A | [src/test/java/com/team254/lib/pathplanner/path/PathPlannerCompatibilityTest.java](<../../src/test/java/com/team254/lib/pathplanner/path/PathPlannerCompatibilityTest.java>) |
+| M | [src/main/java/com/team11855/frc2026/commands/DriveMaintainingHeadingCommand.java](<../../src/main/java/com/team11855/frc2026/commands/DriveMaintainingHeadingCommand.java>) |
+| A | [src/main/java/com/team11855/frc2026/simulation/DriveSimulationArena.java](<../../src/main/java/com/team11855/frc2026/simulation/DriveSimulationArena.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/DriveIOSim.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveIOSim.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/vision/VisionIOSimPhoton.java](<../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionIOSimPhoton.java>) |
+| M | [src/main/java/com/team11855/lib/limelight/LimelightHelpers.java](<../../src/main/java/com/team11855/lib/limelight/LimelightHelpers.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/commands/FollowPathCommand.java](<../../src/main/java/com/team11855/lib/pathplanner/commands/FollowPathCommand.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/commands/PathPlannerAuto.java](<../../src/main/java/com/team11855/lib/pathplanner/commands/PathPlannerAuto.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/commands/PathfindingCommand.java](<../../src/main/java/com/team11855/lib/pathplanner/commands/PathfindingCommand.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/path/PathPlannerPath.java](<../../src/main/java/com/team11855/lib/pathplanner/path/PathPlannerPath.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/path/Waypoint.java](<../../src/main/java/com/team11855/lib/pathplanner/path/Waypoint.java>) |
+| M | [src/main/java/com/team11855/lib/pathplanner/trajectory/PathPlannerTrajectory.java](<../../src/main/java/com/team11855/lib/pathplanner/trajectory/PathPlannerTrajectory.java>) |
+| A | [src/test/java/com/team11855/frc2026/simulation/DriveSimulationArenaTest.java](<../../src/test/java/com/team11855/frc2026/simulation/DriveSimulationArenaTest.java>) |
+| M | [src/test/java/com/team11855/frc2026/subsystems/drive/DriveSubsystemControlTest.java](<../../src/test/java/com/team11855/frc2026/subsystems/drive/DriveSubsystemControlTest.java>) |
+| A | [src/test/java/com/team11855/lib/pathplanner/path/PathPlannerCompatibilityTest.java](<../../src/test/java/com/team11855/lib/pathplanner/path/PathPlannerCompatibilityTest.java>) |
 | M | [vendordeps/AdvantageKit.json](<../../vendordeps/AdvantageKit.json>) |
 | D | `vendordeps/PathplannerLib-2025.2.7.json` |
 | A | [vendordeps/PathplannerLib.json](<../../vendordeps/PathplannerLib.json>) |

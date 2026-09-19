@@ -1,0 +1,40 @@
+{
+  "check_type": "static structure only; no Java compilation or runtime tests",
+  "production_java_files": 81,
+  "subsystem_directories": [
+    "drive",
+    "vision"
+  ],
+  "subsystem_implementations": [
+    "src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java",
+    "src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java"
+  ],
+  "vendor_versions": {
+    "AdvantageKit.json": "26.0.2",
+    "PathplannerLib.json": "2026.1.2",
+    "Phoenix6-frc2026-latest.json": "26.3.0",
+    "WPILibNewCommands.json": "1.0.0",
+    "maple-sim.json": "0.4.0-beta",
+    "photonlib.json": "v2026.3.4"
+  },
+  "junit_test_cases_not_executed": 21,
+  "errors": [],
+  "branch": "offseason",
+  "base_commit": "d52d6c6cdbf6e1c405fab2a44a7f00bc9221c895",
+  "new_project_directory": "/Users/pepsi/Desktop/FRC-2026-Systemcore-Public-main",
+  "old_robot_package": "com.team254.frc2025",
+  "new_robot_package": "com.team11855.frc2026",
+  "new_library_package": "com.team11855.lib",
+  "java_files_compared": 88,
+  "tracked_java_files_compared": 87,
+  "generated_java_files_compared": 1,
+  "only_namespace_changed": true,
+  "package_folder_alignment_passed": true,
+  "original_mentor_files_sha256_checked": 206,
+  "original_mentor_changes": [],
+  "main_commit_unchanged": true,
+  "java_compilation_executed": false,
+  "junit_executed": false,
+  "robot_simulation_executed": false,
+  "directory_move_verified": true
+}

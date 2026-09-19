@@ -28,7 +28,7 @@ const graphs = [
             ['driveio', 'DriveIO\nHardware / Sim', 'io'],
             ['visionio', 'VisionIO\nLimelight / Photon Sim', 'io'],
             ['simstate', 'SimulatedDriveState\nShared Pose2d only', 'state'],
-            ['paths', 'com.team254.lib.pathplanner\nLocal generic planning API', 'logic'],
+            ['paths', 'com.team11855.lib.pathplanner\nLocal generic planning API', 'logic'],
             ['logs', 'AdvantageKit / DriveViz\nLogs + pose visualization', 'sink'],
         ],
         edges: [

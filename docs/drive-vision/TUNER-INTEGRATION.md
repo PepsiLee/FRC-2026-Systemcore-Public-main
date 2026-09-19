@@ -31,7 +31,7 @@ flowchart TD
     container --> sim
 ```
 
-你的硬體設定目前在 [CompTunerConstants.java](../../src/main/java/com/team254/frc2025/subsystems/drive/CompTunerConstants.java)。保留檔名與 package 是為了接上既有專案，不表示仍使用 Team 254 的模組參數。
+你的硬體設定目前在 [CompTunerConstants.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/CompTunerConstants.java)。保留檔名與 package 是為了接上既有專案，不表示仍使用 Team 254 的模組參數。
 
 ## 已採用的硬體參數
 
@@ -57,7 +57,7 @@ Encoder offset 保留 `Rotations.of(...)` 的圈數，不能跟角速度的 rad/
 
 ## 速度與路徑控制的設定位置
 
-[Constants.java](../../src/main/java/com/team254/frc2025/Constants.java) 已加入中文註解：
+[Constants.java](../../src/main/java/com/team11855/frc2026/Constants.java) 已加入中文註解：
 
 ```java
 // Tuner 原值 0.4 圈/秒；1 圈 = 2π 弧度，換算為 0.4 × 2π ≈ 2.513 rad/s。
@@ -143,15 +143,15 @@ public static final double kDriveMaxAngularRate = 0.4 * 2.0 * Math.PI;
 | M | [layouts/2025 AdvantageScope Layout.json](<../../layouts/2025 AdvantageScope Layout.json>) |
 | M | [layouts/2025 Elastic Layout.json](<../../layouts/2025 Elastic Layout.json>) |
 | M | [layouts/2025 Shuffleboard Layout.json](<../../layouts/2025 Shuffleboard Layout.json>) |
-| M | [src/main/java/com/team254/frc2025/Constants.java](<../../src/main/java/com/team254/frc2025/Constants.java>) |
-| M | [src/main/java/com/team254/frc2025/Robot.java](<../../src/main/java/com/team254/frc2025/Robot.java>) |
-| M | [src/main/java/com/team254/frc2025/RobotContainer.java](<../../src/main/java/com/team254/frc2025/RobotContainer.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/CommandSwerveDrivetrain.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/CommandSwerveDrivetrain.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/CompTunerConstants.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/CompTunerConstants.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/DriveIOSim.java>) |
-| M | [src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java](<../../src/main/java/com/team254/frc2025/subsystems/drive/DriveSubsystem.java>) |
-| D | `src/main/java/com/team254/frc2025/subsystems/drive/PracTunerConstants.java` |
-| D | `src/main/java/com/team254/frc2025/subsystems/drive/SimTunerConstants.java` |
-| M | [src/main/java/com/team254/frc2025/utils/simulations/MapleSimSwerveDrivetrain.java](<../../src/main/java/com/team254/frc2025/utils/simulations/MapleSimSwerveDrivetrain.java>) |
-| M | [src/test/java/com/team254/frc2025/subsystems/drive/DriveMaintainingHeadingCommandTest.java](<../../src/test/java/com/team254/frc2025/subsystems/drive/DriveMaintainingHeadingCommandTest.java>) |
-| A | [src/test/java/com/team254/frc2025/subsystems/drive/TunerConfigurationTest.java](<../../src/test/java/com/team254/frc2025/subsystems/drive/TunerConfigurationTest.java>) |
+| M | [src/main/java/com/team11855/frc2026/Constants.java](<../../src/main/java/com/team11855/frc2026/Constants.java>) |
+| M | [src/main/java/com/team11855/frc2026/Robot.java](<../../src/main/java/com/team11855/frc2026/Robot.java>) |
+| M | [src/main/java/com/team11855/frc2026/RobotContainer.java](<../../src/main/java/com/team11855/frc2026/RobotContainer.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/CommandSwerveDrivetrain.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/CommandSwerveDrivetrain.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/CompTunerConstants.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/CompTunerConstants.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/DriveIOSim.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveIOSim.java>) |
+| M | [src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java](<../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java>) |
+| D | `src/main/java/com/team11855/frc2026/subsystems/drive/PracTunerConstants.java` |
+| D | `src/main/java/com/team11855/frc2026/subsystems/drive/SimTunerConstants.java` |
+| M | [src/main/java/com/team11855/frc2026/utils/simulations/MapleSimSwerveDrivetrain.java](<../../src/main/java/com/team11855/frc2026/utils/simulations/MapleSimSwerveDrivetrain.java>) |
+| M | [src/test/java/com/team11855/frc2026/subsystems/drive/DriveMaintainingHeadingCommandTest.java](<../../src/test/java/com/team11855/frc2026/subsystems/drive/DriveMaintainingHeadingCommandTest.java>) |
+| A | [src/test/java/com/team11855/frc2026/subsystems/drive/TunerConfigurationTest.java](<../../src/test/java/com/team11855/frc2026/subsystems/drive/TunerConfigurationTest.java>) |

@@ -10,15 +10,15 @@ ROOT = Path(__file__).resolve().parents[2]
 JAVA = ROOT / 'src/main/java'
 errors = []
 files = sorted(JAVA.rglob('*.java'))
-subsystems = sorted(p.name for p in (JAVA / 'com/team254/frc2025/subsystems').iterdir() if p.is_dir())
+subsystems = sorted(p.name for p in (JAVA / 'com/team11855/frc2026/subsystems').iterdir() if p.is_dir())
 if subsystems != ['drive', 'vision']:
     errors.append(f'Unexpected subsystem directories: {subsystems}')
-forbidden = re.compile(r'com\.team254\.(?:frc2025\.(?:controlboard|factories|auto|viz|subsystems\.(?:claw|climber|elevator|indexer|intake|led|superstructure|wrist))\b|lib\.(?:subsystems|reefscape)\b)|\b(?:SimulatedRobotState|CommandSimXboxController|ControllerMappings|SimXboxController)\b')
+forbidden = re.compile(r'com\.team11855\.(?:frc2026\.(?:controlboard|factories|auto|viz|subsystems\.(?:claw|climber|elevator|indexer|intake|led|superstructure|wrist))\b|lib\.(?:subsystems|reefscape)\b)|\b(?:SimulatedRobotState|CommandSimXboxController|ControllerMappings|SimXboxController)\b')
 for path in files + sorted((ROOT / 'src/test/java').rglob('*.java')):
     source = path.read_text()
     if forbidden.search(source):
         errors.append(f'Removed dependency referenced: {path.relative_to(ROOT)}')
-    for name in re.findall(r'^import\s+(?:static\s+)?(com\.team254\.[\w.*]+);', source, re.M):
+    for name in re.findall(r'^import\s+(?:static\s+)?(com\.team11855\.[\w.*]+);', source, re.M):
         parts = name.split('.')
         # Nested types/static members resolve to the enclosing source file.
         if not any((JAVA.joinpath(*parts[:i]).with_suffix('.java')).is_file()
@@ -64,7 +64,7 @@ if 'id "edu.wpi.first.GradleRIO" version "2026.2.1"' not in (ROOT / 'build.gradl
     errors.append('Unexpected GradleRIO version')
 if "frcYear = '2026'" not in (ROOT / 'settings.gradle').read_text():
     errors.append('Unexpected local WPILib Maven year')
-waypoint = (JAVA / 'com/team254/lib/pathplanner/path/Waypoint.java').read_text()
+waypoint = (JAVA / 'com/team11855/lib/pathplanner/path/Waypoint.java').read_text()
 if 'import com.pathplanner.lib.util.FlippingUtil;' in waypoint:
     errors.append('Waypoint must use the local 2025 field dimensions')
 
@@ -75,10 +75,10 @@ for path in files:
         errors.append(f'Obsolete robot configuration referenced: {path.relative_to(ROOT)}')
     if 'drivebase-climber' in source:
         errors.append(f'Old CAN bus referenced: {path.relative_to(ROOT)}')
-drive = (JAVA / 'com/team254/frc2025/subsystems/drive/DriveSubsystem.java').read_text()
+drive = (JAVA / 'com/team11855/frc2026/subsystems/drive/DriveSubsystem.java').read_text()
 if 'kDrivetrain.getModuleLocations()' not in drive or '0.31115' in drive:
     errors.append('PathPlanner module geometry does not follow the Tuner configuration')
-sim = (JAVA / 'com/team254/frc2025/subsystems/drive/DriveIOSim.java').read_text()
+sim = (JAVA / 'com/team11855/frc2026/subsystems/drive/DriveIOSim.java').read_text()
 if 'this.simulationModules = modules.clone()' not in sim:
     errors.append('MapleSim must receive the same modules as the CTRE simulation')
 if 'CompTunerConstants.kSimulationLoopPeriod.in(Units.Seconds)' not in sim:

@@ -4,9 +4,9 @@ import com.team11855.frc2026.Constants;
 import com.team11855.frc2026.Constants.VisionConstants;
 import com.team11855.frc2026.RobotState;
 import com.team11855.frc2026.simulation.SimulatedDriveState;
+import com.team11855.lib.limelight.LimelightHelpers;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.ArrayList;
@@ -25,10 +25,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * implementation to reuse data processing logic.
  */
 public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
-    private final PhotonCamera camera = new PhotonCamera("camera");
-    private final PhotonCamera cameraB = new PhotonCamera("cameraB");
-    private PhotonCameraSim cameraSim;
-    private PhotonCameraSim cameraBSim;
+    private final PhotonCamera camera = new PhotonCamera(VisionConstants.kLimelightTableName);
+    private final PhotonCameraSim cameraSim;
     private final VisionSystemSim visionSim;
     private final SimulatedDriveState simulatedDriveState;
 
@@ -53,42 +51,13 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
 
         cameraSim = new PhotonCameraSim(camera, prop);
         cameraSim.setMinTargetAreaPixels(1000);
-        cameraBSim = new PhotonCameraSim(cameraB, prop);
-        cameraBSim.setMinTargetAreaPixels(1000);
 
-        Transform3d robotToCameraA =
-                new Transform3d(
-                        new Translation3d(
-                                VisionConstants.kRobotToCameraAForward,
-                                VisionConstants.kRobotToCameraASide,
-                                VisionConstants.kCameraAHeightOffGroundMeters),
-                        new Rotation3d(
-                                0.0, // Roll
-                                -VisionConstants.kCameraAPitchRads, // Pitch
-                                VisionConstants.kCameraAYawOffset.getRadians() // Yaw
-                                ));
-
-        Transform3d robotToCameraB =
-                new Transform3d(
-                        new Translation3d(
-                                VisionConstants.kRobotToCameraBForward,
-                                VisionConstants.kRobotToCameraBSide,
-                                VisionConstants.kCameraBHeightOffGroundMeters),
-                        new Rotation3d(
-                                0.0, // Roll
-                                -VisionConstants.kCameraBPitchRads, // Pitch
-                                VisionConstants.kCameraBYawOffset.getRadians() // Yaw
-                                ));
-
-        visionSim.addCamera(cameraSim, robotToCameraA);
-        visionSim.addCamera(cameraBSim, robotToCameraB);
+        // 使用與實機相同的安裝設定，只建立一顆模擬鏡頭。
+        visionSim.addCamera(cameraSim, VisionConstants.kRobotToCamera);
 
         cameraSim.enableRawStream(true);
         cameraSim.enableProcessedStream(true);
         cameraSim.enableDrawWireframe(true);
-        cameraBSim.enableRawStream(true);
-        cameraBSim.enableProcessedStream(true);
-        cameraBSim.enableDrawWireframe(true);
     }
 
     @Override
@@ -99,13 +68,8 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
             Logger.recordOutput("Vision/SimIO/updateSimPose", simulatedPose);
         }
 
-        NetworkTable table =
-                NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightATableName);
-        NetworkTable tableB =
-                NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightBTableName);
-
+        // 寫入父類別讀取的同一張表，沿用實機的單相機處理路徑。
         writeToTable(camera.getAllUnreadResults(), table, cameraSim);
-        writeToTable(cameraB.getAllUnreadResults(), tableB, cameraBSim);
 
         super.readInputs(inputs);
     }
@@ -166,8 +130,10 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
      */
     private void writeToTable(
             List<PhotonPipelineResult> results, NetworkTable table, PhotonCameraSim cameraSim) {
-        boolean seesTarget = false;
+        // 沒有新影格不等於失去標籤；保留原時間戳，追蹤命令仍會檢查資料逾時。
+        if (results.isEmpty()) return;
         for (var result : results) {
+            boolean seesTarget = false;
             List<Double> pose_data = null;
             if (result.getMultiTagResult().isPresent()) {
                 var multiTagResult = result.getMultiTagResult().get();
@@ -205,7 +171,29 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                 seesTarget = true;
             }
             table.getEntry("cl").setDouble(result.metadata.getLatencyMillis());
+            table.getEntry("tl").setDouble(0.0); // cl 已包含 Photon 的總延遲。
+            if (result.hasTargets()) {
+                var bestTarget = result.getBestTarget();
+                var translation = bestTarget.getBestCameraToTarget().getTranslation();
+                table.getEntry("tid").setDouble(bestTarget.getFiducialId());
+                // Photon 前／左／上 → Limelight 右／下／前；追蹤只使用前三個位置值。
+                // 保留 Photon 的拍攝時間；即使一次讀到多張排隊影格也不把舊資料刷新成現在。
+                long publishTimestamp =
+                        Math.round((result.getTimestampSeconds()
+                                + result.metadata.getLatencyMillis() / 1_000.0) * 1_000_000.0);
+                LimelightHelpers.getLimelightDoubleArrayEntry(
+                                VisionConstants.kLimelightTableName, "targetpose_cameraspace")
+                        .set(
+                                new double[] {
+                                    -translation.getY(), -translation.getZ(), translation.getX(),
+                                    0.0, 0.0, 0.0
+                                },
+                                publishTimestamp);
+            } else {
+                table.getEntry("tid").setDouble(-1.0);
+                table.getEntry("targetpose_cameraspace").setDoubleArray(new double[0]);
+            }
+            table.getEntry("tv").setInteger(seesTarget ? 1 : 0);
         }
-        table.getEntry("tv").setInteger(seesTarget ? 1 : 0);
     }
 }

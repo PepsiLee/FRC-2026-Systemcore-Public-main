@@ -9,8 +9,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -21,8 +19,8 @@ import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Vision subsystem that processes AprilTag detections and provides robot pose estimates. Supports
- * multiple cameras and various pose estimation algorithms including MegaTag.
+ * Processes one Limelight camera and forwards accepted estimates through RobotState. Retains the
+ * existing MegaTag and gyro-assisted validation without cross-camera fusion.
  */
 public class VisionSubsystem extends SubsystemBase {
 
@@ -38,80 +36,13 @@ public class VisionSubsystem extends SubsystemBase {
         this.state = state;
     }
 
-    /** Fuses two vision pose estimates using inverse-variance weighting. */
-    private VisionFieldPoseEstimate fuseEstimates(
-            VisionFieldPoseEstimate a, VisionFieldPoseEstimate b) {
-        // Ensure b is the newer measurement
-        if (b.getTimestampSeconds() < a.getTimestampSeconds()) {
-            VisionFieldPoseEstimate tmp = a;
-            a = b;
-            b = tmp;
-        }
-
-        // Preview both estimates to the same timestamp
-        Transform2d a_T_b =
-                state.getFieldToRobot(b.getTimestampSeconds())
-                        .get()
-                        .minus(state.getFieldToRobot(a.getTimestampSeconds()).get());
-
-        Pose2d poseA = a.getVisionRobotPoseMeters().transformBy(a_T_b);
-        Pose2d poseB = b.getVisionRobotPoseMeters();
-
-        // Inverse‑variance weighting
-        var varianceA =
-                a.getVisionMeasurementStdDevs().elementTimes(a.getVisionMeasurementStdDevs());
-        var varianceB =
-                b.getVisionMeasurementStdDevs().elementTimes(b.getVisionMeasurementStdDevs());
-
-        Rotation2d fusedHeading = poseB.getRotation();
-        if (varianceA.get(2, 0) < VisionConstants.kLargeVariance
-                && varianceB.get(2, 0) < VisionConstants.kLargeVariance) {
-            fusedHeading =
-                    new Rotation2d(
-                            poseA.getRotation().getCos() / varianceA.get(2, 0)
-                                    + poseB.getRotation().getCos() / varianceB.get(2, 0),
-                            poseA.getRotation().getSin() / varianceA.get(2, 0)
-                                    + poseB.getRotation().getSin() / varianceB.get(2, 0));
-        }
-
-        double weightAx = 1.0 / varianceA.get(0, 0);
-        double weightAy = 1.0 / varianceA.get(1, 0);
-        double weightBx = 1.0 / varianceB.get(0, 0);
-        double weightBy = 1.0 / varianceB.get(1, 0);
-
-        Pose2d fusedPose =
-                new Pose2d(
-                        new Translation2d(
-                                (poseA.getTranslation().getX() * weightAx
-                                                + poseB.getTranslation().getX() * weightBx)
-                                        / (weightAx + weightBx),
-                                (poseA.getTranslation().getY() * weightAy
-                                                + poseB.getTranslation().getY() * weightBy)
-                                        / (weightAy + weightBy)),
-                        fusedHeading);
-
-        Matrix<N3, N1> fusedStdDev =
-                VecBuilder.fill(
-                        Math.sqrt(1.0 / (weightAx + weightBx)),
-                        Math.sqrt(1.0 / (weightAy + weightBy)),
-                        Math.sqrt(1.0 / (1.0 / varianceA.get(2, 0) + 1.0 / varianceB.get(2, 0))));
-
-        int numTags = a.getNumTags() + b.getNumTags();
-        double time = b.getTimestampSeconds();
-
-        return new VisionFieldPoseEstimate(fusedPose, time, fusedStdDev, numTags);
-    }
-
     @Override
     public void periodic() {
         double startTime = RobotTime.getTimestampSeconds();
         io.readInputs(inputs);
 
-        logCameraInputs("Vision/CameraA", inputs.cameraA);
-        logCameraInputs("Vision/CameraB", inputs.cameraB);
-
-        var maybeMTA = processCamera(inputs.cameraA, "CameraA", VisionConstants.kRobotToCameraA);
-        var maybeMTB = processCamera(inputs.cameraB, "CameraB", VisionConstants.kRobotToCameraB);
+        logCameraInputs("Vision/Camera", inputs.camera);
+        var accepted = processCamera(inputs.camera);
 
         if (!useVision) {
             Logger.recordOutput("Vision/usingVision", false);
@@ -123,16 +54,9 @@ public class VisionSubsystem extends SubsystemBase {
 
         Logger.recordOutput("Vision/usingVision", true);
 
-        Optional<VisionFieldPoseEstimate> accepted = Optional.empty();
-        if (maybeMTA.isPresent() != maybeMTB.isPresent()) {
-            accepted = maybeMTA.isPresent() ? maybeMTA : maybeMTB;
-        } else if (maybeMTA.isPresent() && maybeMTB.isPresent()) {
-            accepted = Optional.of(fuseEstimates(maybeMTA.get(), maybeMTB.get()));
-        }
-
         accepted.ifPresent(
                 est -> {
-                    Logger.recordOutput("Vision/fusedAccepted", est.getVisionRobotPoseMeters());
+                    Logger.recordOutput("Vision/accepted", est.getVisionRobotPoseMeters());
                     state.updateMegatagEstimate(est);
                 });
 
@@ -141,8 +65,21 @@ public class VisionSubsystem extends SubsystemBase {
                 "Vision/latencyPeriodicSec", RobotTime.getTimestampSeconds() - startTime);
     }
 
+    /** Robot-relative tracking does not depend on acceptance of a global field pose. */
+    public Optional<AprilTagObservation> getAprilTagObservation() {
+        return inputs.camera.seesTarget ? inputs.camera.aprilTagObservation : Optional.empty();
+    }
+
     private void logCameraInputs(String prefix, VisionIO.VisionIOInputs.CameraInputs cam) {
         Logger.recordOutput(prefix + "/SeesTarget", cam.seesTarget);
+        Logger.recordOutput(
+                prefix + "/TrackingTagId",
+                cam.aprilTagObservation.map(AprilTagObservation::tagId).orElse(-1));
+        cam.aprilTagObservation.ifPresent(
+                target -> {
+                    Logger.recordOutput(prefix + "/CameraToTag", target.cameraToTag());
+                    Logger.recordOutput(prefix + "/TagCaptureTimestamp", target.timestampSeconds());
+                });
         Logger.recordOutput(prefix + "/MegatagCount", cam.megatagCount);
 
         if (DriverStation.isDisabled()) {
@@ -167,9 +104,9 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     private Optional<VisionFieldPoseEstimate> processCamera(
-            VisionIO.VisionIOInputs.CameraInputs cam, String label, Transform2d robotToCamera) {
+            VisionIO.VisionIOInputs.CameraInputs cam) {
 
-        String logPrefix = "Vision/" + label;
+        String logPrefix = "Vision/Camera";
 
         if (!cam.seesTarget) {
             return Optional.empty();

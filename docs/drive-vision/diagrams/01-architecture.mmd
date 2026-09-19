@@ -3,11 +3,12 @@ flowchart TB
     container["RobotContainer<br/>Composition root"]:::host
     ps5["CommandPS5Controller(0)<br/>Direct HID input"]:::input
     heading["DriveMaintainingHeadingCommand<br/>Teleop default command"]:::logic
+    tag["AprilTagTrackingCommand<br/>Square: aim / Triangle: follow 1m"]:::logic
     drive["DriveSubsystem<br/>Swerve output + path controller"]:::logic
-    vision["VisionSubsystem<br/>Validate + fuse observations"]:::logic
+    vision["VisionSubsystem<br/>Validate one camera observation"]:::logic
     state["RobotState<br/>Pose + motion history"]:::state
     driveio["DriveIO<br/>Hardware / Sim"]:::io
-    visionio["VisionIO<br/>Limelight / Photon Sim"]:::io
+    visionio["VisionIO<br/>One Limelight / one Photon Sim"]:::io
     simstate["SimulatedDriveState<br/>Shared Pose2d only"]:::state
     paths["com.team11855.lib.pathplanner<br/>Local generic planning API"]:::logic
     logs["AdvantageKit / DriveViz<br/>Logs + pose visualization"]:::sink
@@ -17,6 +18,9 @@ flowchart TB
     container -->|"constructs"| vision
     ps5 -->|"axes + teleop/connection gate"| heading
     heading -->|"requires Drive"| drive
+    ps5 -->|"Square / Triangle + gate"| tag
+    vision -->|"relative tag observation"| tag
+    tag -->|"requires Drive; end stops"| drive
     paths -->|"trajectory consumer"| drive
     drive -->|"output / input"| driveio
     visionio -->|"camera observations"| vision

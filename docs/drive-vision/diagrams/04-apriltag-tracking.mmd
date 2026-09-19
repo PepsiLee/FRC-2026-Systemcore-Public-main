@@ -1,0 +1,37 @@
+flowchart TB
+    ps5["PS5: Square once / Triangle held<br/>Triangle wins; Options interrupts"]:::input
+    gate["Teleop enabled + HID connected<br/>Options released"]:::decision
+    camera["limelight-rear / facing FRONT<br/>tv + tid + targetpose_cameraspace"]:::input
+    time["NT timestamp - (cl + tl)<br/>Reject old / malformed data"]:::logic
+    mount["Camera at robot center<br/>z = 0.54m, pitch = yaw = 0"]:::state
+    geometry["AprilTagObservation<br/>Right/down/forward -> forward/left/up<br/>Camera-space observation record"]:::logic
+    target["VisionSubsystem getter<br/>Relative tag, independent of field pose"]:::io
+    command["AprilTagTrackingCommand<br/>Lock first valid tag ID<br/>heading = atan2(y,x), range = hypot(x,y)"]:::logic
+    aim["Square: rotation only<br/>Within 2deg for 0.15s -> finish<br/>3s timeout"]:::logic
+    follow["Triangle: hold 1.0m +/- 0.05m<br/>Far -> forward; near -> reverse<br/>Turn first if error > 15deg"]:::logic
+    output["RobotCentric: vx, vy=0, omega<br/>Limits: 0.6m/s and 1.5rad/s"]:::logic
+    drive["DriveSubsystem -> DriveIO -> CTRE<br/>Shared lock; clears old path"]:::sink
+    stop["No valid tag / gate closed / end<br/>Drive.stop(): zero output<br/>Follow waits for same tag while held"]:::stop
+    ps5 -->|"input"| gate
+    gate -->|"allowed"| command
+    gate -->|"denied"| stop
+    camera -->|"one frame"| time
+    time -->|"capture time + position"| geometry
+    mount -->|"robotToTag transform"| command
+    geometry -->|"camera-relative observation"| target
+    target -->|"validated age / ID / range"| command
+    command -->|"AIM_ONCE"| aim
+    command -->|"FOLLOW_WHILE_HELD"| follow
+    aim -->|"zero translation"| output
+    follow -->|"distance + heading error"| output
+    output -->|"setControl"| drive
+    command -->|"invalid / lost / finished"| stop
+    stop -->|"zero output"| drive
+    classDef host fill:#e6eef8,stroke:#43688f,color:#172d43
+    classDef input fill:#e5f4f0,stroke:#2d7868,color:#172d43
+    classDef logic fill:#edf2ff,stroke:#5269ad,color:#172d43
+    classDef io fill:#fff1dd,stroke:#9c7032,color:#172d43
+    classDef state fill:#f2eafb,stroke:#8057a2,color:#172d43
+    classDef sink fill:#eaf0f4,stroke:#627c91,color:#172d43
+    classDef stop fill:#fce8e8,stroke:#a34b50,color:#172d43
+    classDef decision fill:#fff7d8,stroke:#9c852d,color:#172d43

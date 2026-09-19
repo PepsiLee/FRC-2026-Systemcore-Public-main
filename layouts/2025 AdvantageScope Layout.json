@@ -15,8 +15,7 @@
             "/AdvantageKit/RealOutputs/Drive",
             "/AdvantageKit/RealOutputs/Drive/Viz",
             "/AdvantageKit/RealOutputs/Vision",
-            "/AdvantageKit/RealOutputs/Vision/CameraA",
-            "/AdvantageKit/RealOutputs/Vision/CameraB",
+            "/AdvantageKit/RealOutputs/Vision/Camera",
             "/AdvantageKit/RealOutputs/PathPlanner",
             "/AdvantageKit/RealOutputs/CANBusStatus"
           ]
@@ -68,22 +67,12 @@
                   },
                   {
                     "type": "ghost",
-                    "logKey": "/RealOutputs/Vision/CameraA/AcceptedMegatagEstimate",
+                    "logKey": "/RealOutputs/Vision/Camera/AcceptedMegatagEstimate",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
                       "model": "2025Comp",
                       "color": "#00ff00"
-                    }
-                  },
-                  {
-                    "type": "ghost",
-                    "logKey": "/RealOutputs/Vision/CameraB/AcceptedMegatagEstimate",
-                    "logType": "Pose2d",
-                    "visible": true,
-                    "options": {
-                      "model": "2025Comp",
-                      "color": "#ff0000"
                     }
                   }
                 ],
@@ -143,22 +132,12 @@
                   },
                   {
                     "type": "ghost",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/CameraA/AcceptedMegatagEstimate",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/Camera/AcceptedMegatagEstimate",
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
                       "model": "2025Comp",
                       "color": "#00ff00"
-                    }
-                  },
-                  {
-                    "type": "ghost",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/CameraB/AcceptedMegatagEstimate",
-                    "logType": "Pose2d",
-                    "visible": true,
-                    "options": {
-                      "model": "2025Comp",
-                      "color": "#ff0000"
                     }
                   },
                   {
@@ -219,20 +198,11 @@
                   },
                   {
                     "type": "stripes",
-                    "logKey": "/RealOutputs/Vision/CameraA/SeesTarget",
+                    "logKey": "/RealOutputs/Vision/Camera/SeesTarget",
                     "logType": "Boolean",
                     "visible": true,
                     "options": {
                       "color": "#00aa55"
-                    }
-                  },
-                  {
-                    "type": "stripes",
-                    "logKey": "/RealOutputs/Vision/CameraB/SeesTarget",
-                    "logType": "Boolean",
-                    "visible": true,
-                    "options": {
-                      "color": "#af2437"
                     }
                   },
                   {

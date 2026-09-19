@@ -4,9 +4,9 @@ import com.team11855.frc2026.subsystems.drive.CommandSwerveDrivetrain;
 import com.team11855.frc2026.subsystems.drive.CompTunerConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -117,31 +117,32 @@ public class Constants {
 
         public static final int kMinFiducialCount = 1;
 
-        // Camera A (Left-side Camera)
-        public static final double kCameraAPitchDegrees = 20.0;
-        public static final double kCameraAPitchRads = Units.degreesToRadians(kCameraAPitchDegrees);
-        public static final double kCameraAHeightOffGroundMeters = Units.inchesToMeters(8.3787);
-        public static final String kLimelightATableName = "limelight-left";
-        public static final double kRobotToCameraAForward = Units.inchesToMeters(7.8757);
-        public static final double kRobotToCameraASide = Units.inchesToMeters(-11.9269);
-        public static final Rotation2d kCameraAYawOffset = Rotation2d.fromDegrees(0.0);
-        public static final Transform2d kRobotToCameraA =
-                new Transform2d(
-                        new Translation2d(kRobotToCameraAForward, kRobotToCameraASide),
-                        kCameraAYawOffset);
+        // 單顆 Limelight：名稱必須與裝置的 NetworkTables 名稱完全相同。
+        public static final String kLimelightTableName = "limelight-rear";
 
-        // Camera B (Right-side camera)
-        public static final double kCameraBPitchDegrees = 20.0;
-        public static final double kCameraBPitchRads = Units.degreesToRadians(kCameraBPitchDegrees);
-        public static final double kCameraBHeightOffGroundMeters = Units.inchesToMeters(8.3787);
-        public static final String kLimelightBTableName = "limelight-right";
-        public static final double kRobotToCameraBForward = Units.inchesToMeters(7.8757);
-        public static final double kRobotToCameraBSide = Units.inchesToMeters(11.9269);
-        public static final Rotation2d kCameraBYawOffset = Rotation2d.fromDegrees(0.0);
-        public static final Transform2d kRobotToCameraB =
-                new Transform2d(
-                        new Translation2d(kRobotToCameraBForward, kRobotToCameraBSide),
-                        kCameraBYawOffset);
+        // ===== 鏡頭安裝位置：更換安裝位置時只修改這一區 =====
+        // 使用者確認：正中間、鏡頭高 54 cm、水平安裝、朝車頭。
+        // 原點是底盤定位中心投影到地面的點；請量到相機鏡頭中心。
+        // 距離直接填「公尺」：例如前方 30 cm 填 0.30，不需另外換成英吋。
+        public static final double kCameraForwardMeters = 0.0; // 前方為正、後方為負。
+        public static final double kCameraRightMeters = 0.0; // Limelight：右方為正、左方為負。
+        public static final double kCameraHeightMeters = 0.54; // 鏡頭中心離地高度，向上為正。
+        public static final double kCameraPitchDegrees = 0.0; // 俯仰角（度）；抬頭為正、低頭為負。
+        public static final double kCameraYawDegrees = 0.0; // 水平朝向（度）；0 朝前、180 朝後。
+        // 名稱含 rear 不會自動把鏡頭轉向後方；實際朝後時，請把上面的 yaw 改成 180。
+        // 本設定沿用沒有左右側傾的安裝方式，roll 固定為 0 度。
+
+        // 追蹤控制與 PhotonVision 模擬共用 WPILib 前／左／上座標；由上方唯一一組設定自動換算。
+        // Limelight 的 right 要反號成 left；抬頭角要反號成 WPILib 的 pitch。
+        // 這是推導值，不要另外手動修改，避免實機與模擬的安裝位置不一致。
+        public static final Transform3d kRobotToCamera =
+                new Transform3d(
+                        new Translation3d(
+                                kCameraForwardMeters, -kCameraRightMeters, kCameraHeightMeters),
+                        new Rotation3d(
+                                0.0,
+                                -Units.degreesToRadians(kCameraPitchDegrees),
+                                Units.degreesToRadians(kCameraYawDegrees)));
 
         // Vision processing constants
         public static final double kDefaultAmbiguityThreshold = 0.19;
@@ -157,6 +158,26 @@ public class Constants {
         public static final int kCameraImageWidth = 1280;
         public static final int kCameraImageHeight = 800;
 
+    }
+
+    /** AprilTag 對準／跟隨專用參數；不改手動駕駛、路徑或朝向維持的 PID。 */
+    public static final class AprilTagTrackingConstants {
+        public static final double kTargetDistanceMeters = 1.0; // 底盤中心至標籤的水平距離。
+        public static final double kDistanceToleranceMeters = 0.05; // ±5 cm 內停止前後移動。
+        public static final double kHeadingToleranceRadians = Units.degreesToRadians(2.0);
+        public static final double kHeadingP = 3.0; // rad 誤差 → rad/s。
+        public static final double kDistanceP = 1.0; // m 誤差 → m/s。
+        public static final double kMaxLinearSpeedMetersPerSecond = 0.6;
+        public static final double kMaxAngularSpeedRadiansPerSecond = 1.5; // 弧度/秒。
+        // 偏離車頭超過 15° 先轉向，不前後移動，避免側邊目標造成錯誤接近。
+        public static final double kMaxHeadingErrorForTranslationRadians =
+                Units.degreesToRadians(15.0);
+        public static final double kAimSettleSeconds = 0.15; // □ 連續對準才結束。
+        public static final double kAimTimeoutSeconds = 3.0; // □ 最長轉向時間。
+        public static final double kMaxObservationAgeSeconds = 0.25;
+        public static final double kFutureTimestampToleranceSeconds = 0.05;
+        public static final double kMinTargetDistanceMeters = 0.10;
+        public static final double kMaxTargetDistanceMeters = 6.0;
     }
 
     public static final class AutoConstants {

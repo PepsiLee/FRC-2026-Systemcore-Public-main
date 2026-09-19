@@ -1,19 +1,17 @@
 package com.team11855.frc2026.subsystems.vision;
 
-import com.team11855.frc2026.Constants;
 import com.team11855.frc2026.Constants.VisionConstants;
 import com.team11855.frc2026.RobotState;
 import com.team11855.lib.limelight.LimelightHelpers;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-/** Hardware implementation of VisionIO using Limelight cameras. */
+/** Hardware implementation of VisionIO using a single Limelight camera. */
 public class VisionIOHardwareLimelight implements VisionIO {
-    NetworkTable tableA =
-            NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightATableName);
-    NetworkTable tableB =
-            NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightBTableName);
+    protected final NetworkTable table =
+            NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightTableName);
     RobotState robotState;
     AtomicReference<VisionIOInputs> latestInputs = new AtomicReference<>(new VisionIOInputs());
     int imuMode = 1;
@@ -27,42 +25,53 @@ public class VisionIOHardwareLimelight implements VisionIO {
         setLLSettings();
     }
 
-    /** Configures Limelight camera poses in robot coordinate system. */
+    /** Publishes the shared mounting configuration to the only Limelight. */
     private void setLLSettings() {
-        double[] cameraAPose = {
-            Constants.VisionConstants.kRobotToCameraAForward,
-            Constants.VisionConstants.kRobotToCameraASide,
-            VisionConstants.kCameraAHeightOffGroundMeters,
+        // 啟動時由程式設定安裝位置；請修改 Constants.VisionConstants，而非只改網頁 UI。
+        double[] cameraPose = {
+            VisionConstants.kCameraForwardMeters,
+            VisionConstants.kCameraRightMeters,
+            VisionConstants.kCameraHeightMeters,
             0.0,
-            VisionConstants.kCameraAPitchDegrees,
-            VisionConstants.kCameraAYawOffset.getDegrees()
+            VisionConstants.kCameraPitchDegrees,
+            VisionConstants.kCameraYawDegrees
         };
-
-        tableA.getEntry("camerapose_robotspace_set").setDoubleArray(cameraAPose);
-
-        double[] cameraBPose = {
-            Constants.VisionConstants.kRobotToCameraBForward,
-            Constants.VisionConstants.kRobotToCameraBSide,
-            VisionConstants.kCameraBHeightOffGroundMeters,
-            0.0,
-            VisionConstants.kCameraBPitchDegrees,
-            VisionConstants.kCameraBYawOffset.getDegrees()
-        };
-
-        tableB.getEntry("camerapose_robotspace_set").setDoubleArray(cameraBPose);
+        table.getEntry("camerapose_robotspace_set").setDoubleArray(cameraPose);
     }
 
     @Override
     public void readInputs(VisionIOInputs inputs) {
-        readCameraData(tableA, inputs.cameraA, VisionConstants.kLimelightATableName);
-        readCameraData(tableB, inputs.cameraB, VisionConstants.kLimelightBTableName);
+        readCameraData(table, inputs.camera, VisionConstants.kLimelightTableName);
         latestInputs.set(inputs);
+    }
+
+    /** Reads relative target data even when the field-pose estimator rejects a measurement. */
+    private Optional<AprilTagObservation> readAprilTagObservation(boolean seesTarget) {
+        if (!seesTarget) return Optional.empty();
+        var sample =
+                LimelightHelpers.getLimelightDoubleArrayEntry(
+                                VisionConstants.kLimelightTableName, "targetpose_cameraspace")
+                        .getAtomic();
+        double captureLatency = table.getEntry("cl").getDouble(0.0);
+        double pipelineLatency = table.getEntry("tl").getDouble(0.0);
+        if (!Double.isFinite(captureLatency)
+                || !Double.isFinite(pipelineLatency)
+                || captureLatency < 0.0
+                || pipelineLatency < 0.0) {
+            return Optional.empty();
+        }
+        // 使用 NT 更新時間減掉相機延遲；不可用「現在」刷新舊影格的有效期限。
+        double captureTime =
+                sample.timestamp / 1_000_000.0 - (captureLatency + pipelineLatency) / 1_000.0;
+        return AprilTagObservation.fromLimelight(
+                table.getEntry("tid").getDouble(-1.0), sample.value, captureTime);
     }
 
     /** Reads data from a single Limelight camera. */
     private void readCameraData(
             NetworkTable table, VisionIOInputs.CameraInputs camera, String limelightName) {
         camera.seesTarget = table.getEntry("tv").getDouble(0) == 1.0;
+        camera.aprilTagObservation = readAprilTagObservation(camera.seesTarget);
         if (camera.seesTarget) {
             try {
                 var megatag = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);

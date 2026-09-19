@@ -6,13 +6,13 @@
 
 目前底盤已接入使用者的 MK5i R2／Kraken X60／CANivore 設定，詳見 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md)。2026 library 更新見 [LIBRARY-UPGRADE.md](LIBRARY-UPGRADE.md)。
 
-**狀態：2026-09-19 依工作樹原始碼查核；尚未執行 Java 編譯、Gradle、測試、模擬或部署。** 本文件中的程式片段已對照本地方法簽章，沒有經編譯或實機驗證。三張圖以相同節點／連線模型產生 Mermaid、Graphviz DOT、SVG 與 PNG，並已開圖檢查。
+**狀態：2026-09-19 依工作樹原始碼查核；尚未執行 Java 編譯、Gradle、測試、模擬或部署。** 本文件中的程式片段已對照本地方法簽章，沒有經編譯或實機驗證。四張圖以相同節點／連線模型產生 Mermaid、Graphviz DOT、SVG 與 PNG；本輪核對圖表結構與輸出檔案。
 
 使用者要求：「程式下進去編譯前要跟我完整確認會改到哪些流程才可以下」。因此先提供可審查的分支變更、流程與待跑驗證；確認前不執行上述步驟。原始版本的 `main` 分支與 `docs/mentor-analysis/` 保留作為完整版參考；本機另保留 `codex/original-2025` 備份，舊 mentor 文件不代表此精簡分支的現況。
 
 | 範圍 | 此分支內容 |
 |---|---|
-| 保留 | Swerve Drive、雙相機 Vision、Drive／Vision REAL 與 SIM IO、generic `AutoAlignToPoseCommand`、本地 PathPlanner fork、三張 navgrid、定位與記錄工具。 |
+| 保留 | Swerve Drive、單顆 Limelight Vision、Drive／Vision REAL 與 SIM IO、generic `AutoAlignToPoseCommand`、本地 PathPlanner fork、三張 navgrid、定位與記錄工具。 |
 | 操作替換 | 舊 controlboard 與 modal controls 改為 RobotContainer 直接建立 PS5；不需要第二支手把。 |
 | 移除 | 原 `claw`、`climber`、`elevator`、`indexer`、`intake`、`led`、`superstructure`、`wrist` 八個子系統目錄與相關 factories／狀態機；Reefscape 競賽 Auto selector／factory 與自動得分流程。 |
 | 後續擴充入口 | `RobotContainer.getAutonomousCommand()`、generic Pose 路徑與 AutoAlign；目前沒有新路徑按鍵綁定。 |
@@ -27,12 +27,12 @@
 |---|---|---|
 | [Main.java](../../src/main/java/com/team11855/frc2026/Main.java) | WPILib 啟動入口 | 啟動 `Robot`。 |
 | [Robot.java](../../src/main/java/com/team11855/frc2026/Robot.java) | Disabled／Auto／Teleop／Test 生命週期 | 設定 AdvantageKit、建立 `RobotContainer`、執行 `CommandScheduler`、更新狀態記錄；模式切換取消 Auto 並呼叫 Drive 停止。 |
-| [RobotContainer.java](../../src/main/java/com/team11855/frc2026/RobotContainer.java) | 平台 REAL／SIM、PS5 USB 0 | 建立 `RobotState`、Drive IO、Vision IO、兩個 subsystem 與預設駕駛命令；直接綁定 Options，不經舊 controlboard。 |
+| [RobotContainer.java](../../src/main/java/com/team11855/frc2026/RobotContainer.java) | 平台 REAL／SIM、PS5 USB 0 | 建立 `RobotState`、Drive IO、Vision IO、兩個 subsystem 與預設駕駛命令；直接綁定 Options、□ 對準與 △ 跟隨，不經舊 controlboard。 |
 | [DriveMaintainingHeadingCommand.java](../../src/main/java/com/team11855/frc2026/commands/DriveMaintainingHeadingCommand.java) | 三個軸 supplier、模式／連線 supplier、`RobotState` | 取得 Drive requirement；產生手動角速度或 heading hold 的 CTRE request；交給 `DriveSubsystem.setControl()`。 |
 | [DriveSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveSubsystem.java) | 手動 request、本地 PathPlanner trajectory、Vision measurement | 擁有 Drive IO 與 100 Hz 路徑控制器；序列化輸出／停止／重設姿態；週期讀 IO、記錄 DriveInputs 與模組資料。 |
 | [DriveIO.java](../../src/main/java/com/team11855/frc2026/subsystems/drive/DriveIO.java) | Drive subsystem 的讀寫呼叫 | 定義底盤 IO 介面；REAL 使用 `DriveIOHardware`，SIM 使用繼承它的 `DriveIOSim`。 |
 | [RobotState.java](../../src/main/java/com/team11855/frc2026/RobotState.java) | Drive IO 的里程計／速度，Vision 接受的觀測 | 保存位置與動作歷史、提供控制回授與 alliance；透過 constructor 注入的 callback 把 Vision estimate 送回 Drive。沒有舊 RobotContainer 反向依賴。 |
-| [VisionSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java) | 相機 A/B inputs、歷史位置與角速度 | 檢查觀測、處理 MegaTag／陀螺儀備援、融合可用相機；呼叫 `RobotState.updateMegatagEstimate()`。 |
+| [VisionSubsystem.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionSubsystem.java) | 單相機 inputs、歷史位置與角速度 | 檢查觀測、處理 MegaTag／陀螺儀備援、回送單相機定位並提供獨立局部 tag 觀測；呼叫 `RobotState.updateMegatagEstimate()`。 |
 | [VisionIO.java](../../src/main/java/com/team11855/frc2026/subsystems/vision/VisionIO.java) | Limelight NetworkTables 或 Photon 模擬結果 | 把相機資料交給 Vision subsystem；相機輸出不是 motor request。 |
 | [SimulatedDriveState.java](../../src/main/java/com/team11855/frc2026/simulation/SimulatedDriveState.java) | SIM 底盤 truth pose | 只保存帶時間的 `Pose2d` 歷史，交給 Photon 相機模擬；不保存 coral、algae、機構或得分狀態。 |
 
@@ -49,13 +49,17 @@
 | 右搖桿 X | `-sign(X) × abs(X)^2` | 手動角速度；推左為正角速度。 | 同上；轉向整形後絕對值超過 `0.05` 進入手動轉向。 |
 | 放開右搖桿 | 原有釋放緩衝判斷後鎖定 yaw | 保持釋放後的機器人方向，左搖桿仍可平移。 | 同上；不是將 yaw 自動設為 0。 |
 | Options | 合成 trigger 的 rising edge | 保留最新 field X/Y，藍方 yaw 設 `0`、紅方設 `π`；下一次預設駕駛初始化直接使用新 heading。 | `options().and(teleopEnabled && connected)`；命令持有 Drive requirement。 |
-| 右搖桿 Y、扳機、其他按鍵、POV | 未綁功能 | 不會啟動機構、自動得分或路徑。 | — |
+| □ Square | 按一下 | 車頭對準第一張有效 AprilTag，對準後結束，不平移。 | Teleop enabled、連線、未按 Options／△。 |
+| △ Triangle | 按住 | 轉向並前後維持底盤中心至 tag 的 1 m 水平距離；放開交回手動。 | Teleop enabled、連線、未按 Options；優先於 □。 |
+| 右搖桿 Y、扳機、其餘按鍵、POV | 未綁功能 | 不會啟動機構、自動得分或路徑。 | — |
 | HID 斷線 | execute 先檢查條件，不讀取軸值 | 呼叫 `Drive.stop()` 並清除手動 heading 狀態。 | 預設駕駛命令執行時。 |
 | Autonomous | `getAutonomousCommand()` 回傳 `Commands.none()` | Auto 入口先停止；此預設命令不要求底盤移動。 | 手動預設命令即使被排程，亦因非 Teleop 而停止。 |
 
 紅方將平移 X/Y 同時反號，保留駕駛視角的 field-centric 行為；旋轉輸入不因 alliance 反號。`RobotState.isRedAlliance()` 在 alliance 未提供時為 `false`，所以目前採藍方行為。實際軸方向與 DS 裝置辨識仍在待跑驗證表內。
 
 Options 的 trigger 是「按鍵與模式／連線條件的 AND」之上升沿；若按住 Options 時由 Disabled 進入 Teleop，合成條件也可能從 false 變 true 而觸發。這不是單純只接受 Teleop 期間的新物理按壓。
+
+AprilTag 的 ID 鎖定、失去目標停止、相機中心 54 cm 安裝及追蹤圖表見 [APRILTAG-TRACKING.md](APRILTAG-TRACKING.md)。追蹤期間命令持有 Drive requirement，搖桿不會混入輸出。
 
 ### 保留的調校
 
@@ -113,14 +117,14 @@ warmup 使用本地 `PathfindingCommand.warmupCommand()`，其 trajectory consum
 [可縮放 SVG](../../docs/drive-vision/diagrams/03-localization-and-paths.svg) · [Mermaid 原始碼](../../docs/drive-vision/diagrams/03-localization-and-paths.mmd)
 
 1. REAL 的 `DriveIOHardware` 使用 CTRE swerve。CTRE 里程計設定為 `250 Hz`，telemetry callback 轉換時間後寫入 `RobotState`；Drive 的週期讀取再更新測量速度、角速度、pitch／roll、加速度等歷史。
-2. `VisionIOHardwareLimelight` 讀取 `limelight-left` 與 `limelight-right`；藍方原點的相機 pose、觀測時間、fiducials 與 stddev 交給 Vision。相機位置、角度與場地 layout 在 `Constants`。
-3. Vision 對新舊觀測、相機品質與動作條件進行篩選；單一可用相機可直接採用，兩個可用估計先利用歷史 pose 對齊時間，再做 inverse-variance 融合。這些檢查沿用既有演算法，沒有宣稱已覆蓋所有異常時間或數值。
+2. `VisionIOHardwareLimelight` 只讀取一顆 `limelight-rear`；藍方原點的相機 pose、觀測時間、fiducials 與 stddev 交給 Vision。安裝位置集中在 `Constants.VisionConstants`；欄位、單位、正負方向與範例見 [單鏡頭設定](SINGLE-CAMERA.md)。
+3. Vision 對這一顆相機的新舊觀測、品質與動作條件進行篩選，接受後直接回送；已移除兩顆相機之間的融合。MegaTag1 與 gyro 備援檢查沿用既有演算法，沒有改成 MegaTag2，也沒有宣稱已覆蓋所有異常時間或數值。
 4. 接受的 `VisionFieldPoseEstimate` 經 `RobotState → RobotContainer callback → DriveSubsystem → DriveIOHardware` 回到 CTRE。`Utils.fpgaToCurrentTime()` 把 Vision timestamp 轉到 CTRE 時基；不可把相機 capture time 改成讀取當下時間。
 5. Drive controller、heading hold 與 AutoAlign 從 `RobotState` 取得 pose／motion 回授；`DriveViz`、AdvantageKit 與 PathPlanner log callbacks 顯示狀態。
 
-SIM 仍採 `DriveIOSim` 與 `VisionIOSimPhoton`。Drive 的 Notifier 以 Tuner 指定的 `0.004 s` 週期推進模擬；`Robot.simulationPeriodic()` 不再重複推進同一個 MapleSim 世界。`SimulatedDriveState` 只共享 pose truth 的歷史，Photon 使用它產生相機結果，再進入既有 Vision 處理路徑。初始 SIM pose 在 `Robot` 設為 `(3 m, 3 m, 0 rad)`。其 history 在時間範圍外取樣會 clamp 邊界，所以 `Optional` 非空不能單獨證明時間資料新鮮。
+SIM 仍採 `DriveIOSim` 與 `VisionIOSimPhoton`。Drive 的 Notifier 以 Tuner 指定的 `0.004 s` 週期推進模擬；`Robot.simulationPeriodic()` 不再重複推進同一個 MapleSim 世界。`SimulatedDriveState` 只共享 pose truth 的歷史，Photon 使用它與唯一一組安裝設定產生單顆相機結果，再進入既有 Vision 處理路徑。初始 SIM pose 在 `Robot` 設為 `(3 m, 3 m, 0 rad)`。其 history 在時間範圍外取樣會 clamp 邊界，所以 `Optional` 非空不能單獨證明時間資料新鮮。
 
-[simgui-ds.json](../../simgui-ds.json) 準備單一 `Keyboard0`：`A/D` 是 axis 0、`W/S` 是 axis 1、`Q/E` 是 axis 2、`R` 是 button 10（Options）。其他按鍵／軸沒有配置。這只描述已寫入設定；模擬尚未啟動，按鍵與 PS5 mapping 待驗證。
+[simgui-ds.json](../../simgui-ds.json) 準備單一 `Keyboard0`：`A/D` 是 axis 0、`W/S` 是 axis 1、`Q/E` 是 axis 2、`R` 是 button 10（Options）、`Z` 是 button 1（□）、`X` 是 button 4（△）。其他按鍵／軸沒有配置。這只描述已寫入設定；模擬尚未啟動，按鍵與 PS5 mapping 待驗證。
 
 MapleSim 0.4.0-beta 的預設場地為 2026；本分支明確使用 `DriveSimulationArena`，只載入 2025 障礙物，連場地重設也不加入遊戲物件。
 
@@ -216,8 +220,8 @@ new AutoAlignToPoseCommand(
 | PS5 與鍵盤 SIM | USB 0 正確映射，WASD／QE／R 操作方向；未綁鍵不產生動作。 | 核准後的 simulator 與 Driver Station 觀察。 |
 | 模式切換 | Disabled→Auto→Teleop→Disabled／Test，Auto 預設不動、每個 exit 清除輸出。 | command 與 Drive request log。 |
 | SIM pose 共用 | sim truth 僅更新一次物理世界，Vision 取得非機構相依 pose；time interpolation／空歷史語義正確。 | SimulatedDriveState 測試與 SIM 時序記錄。 |
-| Vision | 相機 NT 名稱／extrinsics、單相機／雙相機接受與拒絕、yaw／timestamp、失去相機時里程計仍正常。 | 受控相機資料與 log；現場標定結果另列。 |
+| Vision | 相機 NT 名稱／extrinsics、單相機接受與拒絕、重複影格、yaw／timestamp、失去相機時里程計仍正常。 | 受控相機資料與 log；現場標定結果另列。 |
 | generic 路徑 | 三種 obstacle set 切換、紅藍 flip、路線空間與停止／取消符合預期。 | 先 SIM，再經確認的受控實機測試。 |
 | 最終實機 | CAN 配置、模組方向／offset、輪速、controller 斷線、Disable、Options 與 heading hold。 | 經流程確認後的實機檢查紀錄；不是此文件建立時已完成。 |
 
-三張圖的重建工具是 [render-diagrams.mjs](../../docs/drive-vision/render-diagrams.mjs)，只執行 Node 的 Graphviz WASM 與 PNG 轉檔，不啟動機器人程式。`FRC_DOC_NODE_MODULES` 可指定包含 `@viz-js/viz` 與 `sharp` 的本地套件目錄；預設是此工作站的 Codex dependency runtime。
+四張圖的重建工具是 [render-diagrams.mjs](../../docs/drive-vision/render-diagrams.mjs)，只執行 Node 的 Graphviz WASM 與 PNG 轉檔，不啟動機器人程式。`FRC_DOC_NODE_MODULES` 可指定包含 `@viz-js/viz` 與 `sharp` 的本地套件目錄；預設是此工作站的 Codex dependency runtime。

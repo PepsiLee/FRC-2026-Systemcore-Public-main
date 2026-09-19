@@ -136,8 +136,8 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraA/FiducialCount",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraA/FiducialCount",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/Camera/FiducialCount",
+              "_title": "/AdvantageKit/RealOutputs/Vision/Camera/FiducialCount",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -149,8 +149,8 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraA/MegatagCount",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraA/MegatagCount",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/Camera/MegatagCount",
+              "_title": "/AdvantageKit/RealOutputs/Vision/Camera/MegatagCount",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -162,8 +162,8 @@
             ],
             "content": {
               "_type": "Network Table Tree",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraA/MegatagPoseEstimate",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraA/MegatagPoseEstimate",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/Camera/MegatagPoseEstimate",
+              "_title": "/AdvantageKit/RealOutputs/Vision/Camera/MegatagPoseEstimate",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -175,8 +175,8 @@
             ],
             "content": {
               "_type": "Network Table Tree",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraA/Pose3d",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraA/Pose3d",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/Camera/Pose3d",
+              "_title": "/AdvantageKit/RealOutputs/Vision/Camera/Pose3d",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -188,75 +188,8 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraA/SeesTarget",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraA/SeesTarget",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraB/FiducialCount",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraB/FiducialCount",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "4,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraB/MegatagCount",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraB/MegatagCount",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "6,1": {
-            "size": [
-              3,
-              1
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraB/MegatagPoseEstimate",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraB/MegatagPoseEstimate",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,2": {
-            "size": [
-              3,
-              1
-            ],
-            "content": {
-              "_type": "Network Table Tree",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraB/Pose3d",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraB/Pose3d",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "2,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/CameraB/SeesTarget",
-              "_title": "/AdvantageKit/RealOutputs/Vision/CameraB/SeesTarget",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/Camera/SeesTarget",
+              "_title": "/AdvantageKit/RealOutputs/Vision/Camera/SeesTarget",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -336,7 +269,7 @@
             ],
             "content": {
               "_type": "Network Table Tree",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/fusedAccepted",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Vision/accepted",
               "_title": "Vision Fused Pose",
               "_glyph": 148,
               "_showGlyph": false

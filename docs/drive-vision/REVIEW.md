@@ -1,5 +1,9 @@
 # 修改完成後的編譯確認清單
 
+本輪新增 □ 對準／△ 持有 1 公尺跟隨，完整流程、檔案與待確認指令見 [APRILTAG-TRACKING.md](APRILTAG-TRACKING.md)。
+
+前一階段單顆 Limelight 變更、實際檔案與待確認指令見 [SINGLE-CAMERA.md](SINGLE-CAMERA.md)。本輪尚未編譯、測試或模擬；下方較早階段的紀錄保留供參考。
+
 目前 Java 套件與專案資料夾已依 [更名說明](NAMESPACE-MIGRATION.md) 更新；本次更名後尚未編譯。下方保留底盤整合的完整流程確認。
 
 分支：`offseason`。基準：`main` 的 `79645a4b0193d84b179d11654fbe499b42f2e52d`。此分支依使用者指示提交並推送至 GitHub；編譯、測試與模擬仍需另行確認，不部署機器人。

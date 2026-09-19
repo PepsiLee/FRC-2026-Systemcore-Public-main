@@ -1,6 +1,6 @@
 # FRC-2026-Systemcore-Public-main
 
-本分支 `offseason` 由 Team 254 的 [2025 Undertow 程式](https://www.team254.com/first/2025/) 精簡而來。原始完整機器人版本保留在 `main`。
+本分支 `main` 由 Team 254 的 [2025 Undertow 程式](https://www.team254.com/first/2025/) 精簡而來。原始完整機器人版本保留在本機的 `codex/original-2025` 分支（提交 `79645a4`）。
 
 本隊 Java 程式使用 `com.team11855.frc2026`，共用程式使用 `com.team11855.lib`。專案資料夾與套件名稱的對應及驗證狀態見 [更名說明](docs/drive-vision/NAMESPACE-MIGRATION.md)。
 
@@ -32,7 +32,7 @@
 
 已將依賴設定更新至 GradleRIO／WPILib 2026.2.1 與 2026 vendor 組合，保留 Java 17；MapleSim 使用官方已發布的 0.4.0-beta。版本表、來源及實際流程影響見 [Library 更新清單](docs/drive-vision/LIBRARY-UPGRADE.md)。底盤已改用使用者提供的 MK5i R2／Kraken X60 設定，接在 `canivore` CANivore；實機、路徑與模擬共用模組幾何。整合位置、參數表及仍沿用的預設值見 [Tuner 接入說明](docs/drive-vision/TUNER-INTEGRATION.md)。相機校正與 2025 AprilTag／尋路場地資料保留原設定。
 
-目前修改後的 Java 建置、測試及模擬**尚未執行**。依本工作區規則，先審閱 [變更與編譯確認清單](docs/drive-vision/REVIEW.md)，取得使用者確認後才執行該文件列出的指令。此工作不部署機器人、不推送遠端。
+目前修改後的 Java 建置、測試及模擬**尚未執行**。依本工作區規則，先審閱 [變更與編譯確認清單](docs/drive-vision/REVIEW.md)，取得使用者確認後才執行該文件列出的指令。程式驗證不部署機器人；GitHub 推送依使用者指示另行處理。
 
 ## 授權
 

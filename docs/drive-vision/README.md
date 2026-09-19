@@ -2,13 +2,13 @@
 
 目前專案名稱為 `FRC-2026-Systemcore-Public-main`；機器人套件為 `com.team11855.frc2026`、共用套件為 `com.team11855.lib`。詳見 [更名說明](NAMESPACE-MIGRATION.md)。
 
-本文件說明 `offseason` 的新版接線與操作方式。此分支把機器人功能縮為 **Drive 與 Vision 兩個 subsystem**，用一支 USB 0 的 PS5 控制器駕駛；保留本地 PathPlanner、三張 navgrid 與指定 Pose 的自動對位能力。預設 Autonomous 為 `Commands.none()`，沒有競賽取料、得分或機構排程。
+本文件說明 `main` 的新版接線與操作方式。此分支把機器人功能縮為 **Drive 與 Vision 兩個 subsystem**，用一支 USB 0 的 PS5 控制器駕駛；保留本地 PathPlanner、三張 navgrid 與指定 Pose 的自動對位能力。預設 Autonomous 為 `Commands.none()`，沒有競賽取料、得分或機構排程。
 
 目前底盤已接入使用者的 MK5i R2／Kraken X60／CANivore 設定，詳見 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md)。2026 library 更新見 [LIBRARY-UPGRADE.md](LIBRARY-UPGRADE.md)。
 
 **狀態：2026-09-19 依工作樹原始碼查核；尚未執行 Java 編譯、Gradle、測試、模擬或部署。** 本文件中的程式片段已對照本地方法簽章，沒有經編譯或實機驗證。三張圖以相同節點／連線模型產生 Mermaid、Graphviz DOT、SVG 與 PNG，並已開圖檢查。
 
-使用者要求：「程式下進去編譯前要跟我完整確認會改到哪些流程才可以下」。因此先提供可審查的分支變更、流程與待跑驗證；確認前不執行上述步驟。原 `main` 與 `docs/mentor-analysis/` 保留作為完整版參考，舊 mentor 文件不代表此精簡分支的現況。
+使用者要求：「程式下進去編譯前要跟我完整確認會改到哪些流程才可以下」。因此先提供可審查的分支變更、流程與待跑驗證；確認前不執行上述步驟。原始版本的本機分支 `codex/original-2025` 與 `docs/mentor-analysis/` 保留作為完整版參考，舊 mentor 文件不代表此精簡分支的現況。
 
 | 範圍 | 此分支內容 |
 |---|---|

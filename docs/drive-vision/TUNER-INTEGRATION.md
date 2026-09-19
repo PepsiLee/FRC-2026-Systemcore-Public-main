@@ -1,6 +1,6 @@
 # 使用者 Tuner 設定接入：MK5i R2／Kraken X60／CANivore
 
-日期：2026-09-19。分支：`main`。來源為使用者提供的 `/Users/pepsi/Downloads/DriveConstants.java`；使用者確認行走與轉向皆為 Kraken X60，底盤接 CANivore，重量、保險桿外尺寸與慣量等剩餘數值先沿用原預設。
+日期：2026-09-19。分支：`offseason`。來源為使用者提供的 `/Users/pepsi/Downloads/DriveConstants.java`；使用者確認行走與轉向皆為 Kraken X60，底盤接 CANivore，重量、保險桿外尺寸與慣量等剩餘數值先沿用原預設。
 
 **已完成原始碼修改與靜態查核；沒有執行 Gradle、Java 編譯、JUnit、機器人模擬或部署。** 這份說明接續 [Library 升級階段](LIBRARY-UPGRADE.md)，並更新 [完整流程確認清單](REVIEW.md)。
 

@@ -1,6 +1,11 @@
 # FRC-2026-Systemcore-Public-main
 
-本分支 `main` 由 Team 254 的 [2025 Undertow 程式](https://www.team254.com/first/2025/) 精簡而來。原始完整機器人版本保留在本機的 `codex/original-2025` 分支（提交 `79645a4`）。
+本分支 `offseason` 由 Team 254 的 [2025 Undertow 程式](https://www.team254.com/first/2025/) 精簡而來。原始完整機器人版本保留在 `main` 分支（提交 `79645a4`）；本機另保留 `codex/original-2025` 備份。
+
+| 分支 | 用途 |
+|---|---|
+| `main` | Team 254 原始完整機台程式，全部機構與 ControlBoard，WPILib 2025 |
+| `offseason` | 本隊 Drive＋Vision、PS5、WPILib 2026 與 Tuner 底盤設定 |
 
 本隊 Java 程式使用 `com.team11855.frc2026`，共用程式使用 `com.team11855.lib`。專案資料夾與套件名稱的對應及驗證狀態見 [更名說明](docs/drive-vision/NAMESPACE-MIGRATION.md)。
 

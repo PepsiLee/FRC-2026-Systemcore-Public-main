@@ -2,7 +2,7 @@
 
 **階段紀錄：本文件記錄 Library 升級當時的差異；其後已依使用者要求更新底盤硬體參數。現行 CAN bus、幾何、速度與模擬週期以 [TUNER-INTEGRATION.md](TUNER-INTEGRATION.md) 為準。**
 
-日期：2026-09-19。分支：`main`。已修改依賴設定與相容性原始碼，**尚未執行 Gradle、Java 編譯、JUnit、機器人模擬或部署**，因此此文件不是建置通過證明。
+日期：2026-09-19。分支：`offseason`。已修改依賴設定與相容性原始碼，**尚未執行 Gradle、Java 編譯、JUnit、機器人模擬或部署**，因此此文件不是建置通過證明。
 
 使用者已同意保留 MapleSim、採用官方 2026 beta。此次升級接續 Drive／Vision 精簡；完整前後流程見 [REVIEW.md](REVIEW.md)，全部工作樹檔案見 [CHANGES.md](CHANGES.md)。
 

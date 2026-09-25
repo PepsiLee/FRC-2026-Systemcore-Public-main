@@ -1,6 +1,7 @@
 package com.team11855.frc2026.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
+
 import java.util.Optional;
 
 /** Interface for vision system hardware abstraction. */
@@ -11,14 +12,11 @@ public interface VisionIO {
         /** Input data from a single camera. */
         public static class CameraInputs {
             public double heartbeat = Double.NaN;
-            public double megatag2AverageTagDistanceMeters = Double.NaN;
             public boolean seesTarget;
             // 局部追蹤量測獨立於場地定位；看不到目標時每輪清空，不保留舊有效旗標。
             public Optional<AprilTagObservation> aprilTagObservation = Optional.empty();
             public FiducialObservation[] fiducialObservations;
             public MegatagPoseEstimate megatagPoseEstimate;
-            public MegatagPoseEstimate megatag2PoseEstimate;
-            public int megatag2Count;
             public int megatagCount;
             public Pose3d pose3d;
             public double[] standardDeviations =
@@ -29,9 +27,6 @@ public interface VisionIO {
         /** 唯一一顆 Limelight 的輸入；實機與模擬使用相同資料結構。 */
         public final CameraInputs camera = new CameraInputs();
     }
-
-    /** 藍方原點座標：yaw 使用度，yawRate 使用度／秒；每輪讀取 MT2 前呼叫。 */
-    default void setRobotOrientation(double yawDegrees, double yawRateDegreesPerSecond) {}
 
     void readInputs(VisionIOInputs inputs);
 }

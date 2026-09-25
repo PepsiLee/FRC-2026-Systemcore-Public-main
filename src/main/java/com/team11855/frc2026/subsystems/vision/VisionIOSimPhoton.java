@@ -6,20 +6,23 @@ import com.team11855.frc2026.Constants.VisionConstants;
 import com.team11855.frc2026.RobotState;
 import com.team11855.frc2026.simulation.SimulatedDriveState;
 import com.team11855.lib.limelight.LimelightHelpers;
+
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.Timer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Simulation implementation of VisionIO using PhotonVision simulation. Extends Limelight hardware
@@ -79,9 +82,7 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
 
     /** Generates robot pose data from PhotonVision results. */
     private List<Double> getBotpose(
-            Transform3d fieldToCamera,
-            PhotonPipelineResult result,
-            PhotonCameraSim cameraSim) {
+            Transform3d fieldToCamera, PhotonPipelineResult result, PhotonCameraSim cameraSim) {
         if (result == null || !result.hasTargets()) return null;
 
         Optional<Transform3d> optRobotToCamera =
@@ -98,13 +99,23 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
         }
 
         // metadata 的數量、平均距離及 raw fiducials 必須對應真正參與解算的標籤。
-        var usedTargets = result.getMultiTagResult().isPresent()
-                ? result.getTargets().stream().filter(target -> result.getMultiTagResult().get()
-                        .fiducialIDsUsed.contains((short) target.getFiducialId())).toList()
-                : List.of(result.getBestTarget());
-        double averageDistance = usedTargets.stream()
-                .mapToDouble(target -> target.getBestCameraToTarget().getTranslation().getNorm())
-                .average().orElse(Double.NaN);
+        var usedTargets =
+                result.getMultiTagResult().isPresent()
+                        ? result.getTargets().stream()
+                                .filter(
+                                        target ->
+                                                result.getMultiTagResult()
+                                                        .get()
+                                                        .fiducialIDsUsed
+                                                        .contains((short) target.getFiducialId()))
+                                .toList()
+                        : List.of(result.getBestTarget());
+        double averageDistance =
+                usedTargets.stream()
+                        .mapToDouble(
+                                target -> target.getBestCameraToTarget().getTranslation().getNorm())
+                        .average()
+                        .orElse(Double.NaN);
         List<Double> pose_data =
                 new ArrayList<>(
                         Arrays.asList(
@@ -128,8 +139,10 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                             target.getPitch(), // tync
                             target.getArea(), // ta
                             target.getBestCameraToTarget().getTranslation().getNorm(),
-                            VisionConstants.kRobotToCamera.plus(target.getBestCameraToTarget())
-                                    .getTranslation().getNorm(),
+                            VisionConstants.kRobotToCamera
+                                    .plus(target.getBestCameraToTarget())
+                                    .getTranslation()
+                                    .getNorm(),
                             target.getPoseAmbiguity() // ambiguity
                             ));
         }
@@ -149,8 +162,7 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                 var multiTagResult = result.getMultiTagResult().get();
                 Transform3d best = multiTagResult.estimatedPose.best;
 
-                pose_data =
-                        getBotpose(best, result, cameraSim);
+                pose_data = getBotpose(best, result, cameraSim);
             } else if (result.hasTargets()) {
                 var bestTarget = result.getBestTarget();
                 Transform3d best =
@@ -163,39 +175,37 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                 pose_data = getBotpose(best, result, cameraSim);
             }
 
-            long publishTimestamp = Math.round((result.getTimestampSeconds()
-                    + result.metadata.getLatencyMillis() / 1000.0) * 1_000_000.0);
+            long publishTimestamp =
+                    Math.round(
+                            (result.getTimestampSeconds()
+                                            + result.metadata.getLatencyMillis() / 1000.0)
+                                    * 1_000_000.0);
             table.getEntry("hb").setDouble(++heartbeat);
             if (pose_data != null) {
                 double[] mt1 = pose_data.stream().mapToDouble(Double::doubleValue).toArray();
-                double[] mt2 = mt1.clone();
-                // Photon 只模擬觀測；此處不是 Limelight 專有 MT2 演算法。
-                // MT2 通道用 Photon 的位置、拍攝時底盤朝向，供雙通道管線驗證。
-                mt2[5] = robotState.getFieldToRobot(result.getTimestampSeconds())
-                        .orElse(Pose2d.kZero).getRotation().getDegrees();
                 LimelightHelpers.getLimelightDoubleArrayEntry(
-                        VisionConstants.kLimelightTableName, "botpose_wpiblue").set(mt1, publishTimestamp);
-                LimelightHelpers.getLimelightDoubleArrayEntry(
-                        VisionConstants.kLimelightTableName, "botpose_orb_wpiblue").set(mt2, publishTimestamp);
+                                VisionConstants.kLimelightTableName, "botpose_wpiblue")
+                        .set(mt1, publishTimestamp);
                 // [MT1x, MT1y, MT1z, MT1roll, MT1pitch, MT1Yaw, MT2x, MT2y, MT2z, MT2roll,
                 // MT2pitch,
                 // MT2yaw]
                 table.getEntry("stddevs")
                         .setDoubleArray(
                                 new Double[] {
-                                    0.3, 0.3, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 0.0, 0.0, 0.0, 0.3
+                                    0.3, 0.3, 0.0, 0.0, 0.0, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
                                 });
             } else {
                 table.getEntry("botpose_wpiblue").setDoubleArray(new double[0]);
-                table.getEntry("botpose_orb_wpiblue").setDoubleArray(new double[0]);
             }
             table.getEntry("cl").setDouble(result.metadata.getLatencyMillis());
             table.getEntry("tl").setDouble(0.0); // cl 已包含 Photon 的總延遲。
             // 場地定位仍使用所有可見標籤；只有局部追蹤資料固定挑選 21 號。
             var trackingTarget =
                     result.getTargets().stream()
-                            .filter(target ->
-                                    target.getFiducialId() == AprilTagTrackingConstants.kTargetTagId)
+                            .filter(
+                                    target ->
+                                            target.getFiducialId()
+                                                    == AprilTagTrackingConstants.kTargetTagId)
                             .findFirst();
             if (trackingTarget.isPresent()) {
                 var selectedTarget = trackingTarget.get();
@@ -207,8 +217,12 @@ public class VisionIOSimPhoton extends VisionIOHardwareLimelight {
                                 VisionConstants.kLimelightTableName, "targetpose_cameraspace")
                         .set(
                                 new double[] {
-                                    -translation.getY(), -translation.getZ(), translation.getX(),
-                                    0.0, 0.0, 0.0
+                                    -translation.getY(),
+                                    -translation.getZ(),
+                                    translation.getX(),
+                                    0.0,
+                                    0.0,
+                                    0.0
                                 },
                                 publishTimestamp);
             } else {

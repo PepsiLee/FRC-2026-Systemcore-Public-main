@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.team11855.frc2026.Constants.VisionConstants;
 import com.team11855.frc2026.RobotState;
 import com.team11855.lib.limelight.LimelightHelpers;
+
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -12,13 +13,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 class SingleCameraVisionTest {
     private static final Pose2d OBSERVED_POSE = new Pose2d(2.0, 3.0, Rotation2d.kZero);
@@ -47,7 +50,7 @@ class SingleCameraVisionTest {
     }
 
     @Test
-    void oneCameraForwardsOneHybridMeasurementWithReferenceUncertainty() {
+    void oneCameraForwardsOneMt1MeasurementWith254Uncertainty() {
         vision.periodic();
 
         assertEquals(1, accepted.size());
@@ -55,9 +58,10 @@ class SingleCameraVisionTest {
         assertEquals(OBSERVED_POSE, estimate.getVisionRobotPoseMeters());
         assertEquals(1.0, estimate.getTimestampSeconds());
         assertEquals(2, estimate.getNumTags());
-        assertEquals(0.4, estimate.getVisionMeasurementStdDevs().get(0, 0), 1e-9);
-        assertEquals(0.4, estimate.getVisionMeasurementStdDevs().get(1, 0), 1e-9);
-        assertEquals(10.0, estimate.getVisionMeasurementStdDevs().get(2, 0), 1e-9);
+        assertEquals(0.5, estimate.getVisionMeasurementStdDevs().get(0, 0), 1e-9);
+        assertEquals(0.5, estimate.getVisionMeasurementStdDevs().get(1, 0), 1e-9);
+        assertEquals(0.1, estimate.getVisionMeasurementStdDevs().get(2, 0), 1e-9);
+        assertEquals(VisionSubsystem.EstimateSource.MEGATAG, vision.getLastEstimateSource());
     }
 
     @Test
@@ -126,9 +130,12 @@ class SingleCameraVisionTest {
                 published,
                 1e-9);
 
-        assertEquals(21.0, NetworkTableInstance.getDefault()
-                .getTable(VisionConstants.kLimelightTableName)
-                .getEntry("priorityid").getDouble(-1.0));
+        assertEquals(
+                21.0,
+                NetworkTableInstance.getDefault()
+                        .getTable(VisionConstants.kLimelightTableName)
+                        .getEntry("priorityid")
+                        .getDouble(-1.0));
         var simMount = VisionConstants.kRobotToCamera;
         assertEquals(published[0], simMount.getX(), 1e-9);
         assertEquals(-published[1], simMount.getY(), 1e-9);
@@ -159,8 +166,9 @@ class SingleCameraVisionTest {
         var hardware = new VisionIOHardwareLimelight(state);
         var inputs = new VisionIO.VisionIOInputs();
         var table = NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightTableName);
-        var targetEntry = LimelightHelpers.getLimelightDoubleArrayEntry(
-                VisionConstants.kLimelightTableName, "targetpose_cameraspace");
+        var targetEntry =
+                LimelightHelpers.getLimelightDoubleArrayEntry(
+                        VisionConstants.kLimelightTableName, "targetpose_cameraspace");
         try {
             table.getEntry("tv").setDouble(1.0);
             table.getEntry("tid").setDouble(18.0);
@@ -199,15 +207,17 @@ class SingleCameraVisionTest {
         var hardware = new VisionIOHardwareLimelight(state);
         var inputs = new VisionIO.VisionIOInputs();
         var table = NetworkTableInstance.getDefault().getTable(VisionConstants.kLimelightTableName);
-        var poseEntry = LimelightHelpers.getLimelightDoubleArrayEntry(
-                VisionConstants.kLimelightTableName, "botpose_wpiblue");
+        var poseEntry =
+                LimelightHelpers.getLimelightDoubleArrayEntry(
+                        VisionConstants.kLimelightTableName, "botpose_wpiblue");
         try {
             table.getEntry("tv").setDouble(0.0);
-            poseEntry.set(new double[] {
-                2, 3, 0, 0, 0, 0, 0, 2, 0, 1, 4,
-                18, 0, 0, 4, 1, 1, 0.01,
-                19, 0, 0, 4, 1, 1, 0.01
-            }, 1_000_000L);
+            poseEntry.set(
+                    new double[] {
+                        2, 3, 0, 0, 0, 0, 0, 2, 0, 1, 4, 18, 0, 0, 4, 1, 1, 0.01, 19, 0, 0, 4, 1, 1,
+                        0.01
+                    },
+                    1_000_000L);
             hardware.readInputs(inputs);
             assertFalse(inputs.camera.seesTarget);
             assertTrue(inputs.camera.aprilTagObservation.isEmpty());
@@ -237,11 +247,12 @@ class SingleCameraVisionTest {
             camera.megatagPoseEstimate =
                     new MegatagPoseEstimate(
                             OBSERVED_POSE, timestamp, 0.02, 4.0, 1.0, new int[] {18, 19});
-            camera.megatag2Count = hasFieldPose ? 2 : 0;
-            camera.megatag2PoseEstimate = camera.megatagPoseEstimate;
-            camera.megatag2AverageTagDistanceMeters = 2.0;
             camera.pose3d = new Pose3d(OBSERVED_POSE);
-            camera.fiducialObservations = new FiducialObservation[0];
+            camera.fiducialObservations =
+                    new FiducialObservation[] {
+                        new FiducialObservation(18, 0, 0, 0.01, 4),
+                        new FiducialObservation(19, 0, 0, 0.01, 4)
+                    };
             camera.standardDeviations =
                     new double[] {0.4, 0.5, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
         }

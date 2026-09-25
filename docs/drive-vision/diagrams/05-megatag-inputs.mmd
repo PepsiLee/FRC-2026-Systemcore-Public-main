@@ -1,26 +1,28 @@
 flowchart TB
-    state["RobotState / blue-origin heading<br/>Pigeon angular rate (SIM: wheel rate)"]:::state
-    orientation["setRobotOrientation BEFORE read<br/>Yaw: degrees / yaw rate: degrees per second<br/>External IMU mode 0"]:::logic
     camera["limelight-rear / front-facing<br/>Center + 0.54m / pitch 0"]:::input
-    mt1["MT1: botpose_wpiblue<br/>Heading + capture timestamp"]:::io
-    mt2["MT2: botpose_orb_wpiblue<br/>XY + timestamp + tag count + distance"]:::io
-    filter["Both valid / fresh / within 50ms<br/>No reused frames / field / distance / rotation"]:::decision
-    combine["One Pose2d: MT2 XY + MT1 heading<br/>Use MT2 timestamp / heading std = 10 rad"]:::logic
-    callback["RobotState vision callback<br/>DriveIO: FPGA -> CTRE time ONCE"]:::state
+    mt1["MT1: botpose_wpiblue<br/>Pose + timestamp + fiducials + stddevs"]:::io
+    guard["Fresh / new timestamp / finite data<br/>Valid tag metadata + positive XY stddevs"]:::decision
+    main["254 MT1 checks<br/>Single-tag ambiguity / area / yaw<br/>Origin distance / Z / exclusive ID"]:::logic
+    gyro["254 single-tag fallback<br/>Historical yaw + known Reef tag<br/>abs(yaw rate) <= 5 rad/s"]:::logic
+    state["RobotState<br/>Historical pose + angular rate"]:::state
+    select["Prefer MT1; otherwise gyro fallback<br/>Gyro does not repeat MT1 quality gates"]:::decision
+    callback["One measurement / one timestamp<br/>DriveIO: FPGA -> CTRE time ONCE"]:::state
     drive["CTRE pose estimator<br/>Vision + gyro + wheel odometry"]:::sink
     relative["tv + tid + targetpose_cameraspace<br/>Square / Triangle track ID 21<br/>Independent of field-pose acceptance"]:::logic
-    reject["No field-pose update<br/>Log Vision/RejectionReason"]:::stop
-    state -->|"every periodic"| orientation
-    orientation -->|"robot_orientation_set"| camera
-    camera -->|"Helper read"| mt1
-    camera -->|"Helper read"| mt2
-    mt1 -->|"required"| filter
-    mt2 -->|"required"| filter
-    filter -->|"accepted"| combine
-    filter -->|"rejected"| reject
-    combine -->|"one measurement"| callback
+    reject["No accepted candidate / useVision=false<br/>No field-pose update; log reasons"]:::stop
+    camera -->|"Helper read; no MT2"| mt1
+    mt1 -->|"raw MT1"| guard
+    guard -->|"valid"| main
+    guard -->|"valid"| gyro
+    guard -->|"invalid"| reject
+    state -->|"historical yaw"| main
+    state -->|"pose and rate"| gyro
+    main -->|"MT1 candidate"| select
+    gyro -->|"fallback candidate"| select
+    select -->|"selected; useVision=true"| callback
+    select -->|"none / disabled"| reject
     callback -->|"latency-aware fusion"| drive
-    drive -->|"updated odometry"| state
+    drive -->|"updated pose"| state
     camera -->|"separate observation"| relative
     classDef host fill:#e6eef8,stroke:#43688f,color:#172d43
     classDef input fill:#e5f4f0,stroke:#2d7868,color:#172d43

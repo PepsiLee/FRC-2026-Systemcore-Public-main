@@ -9,7 +9,7 @@
 
 本隊 Java 程式使用 `com.team11855.frc2026`，共用程式使用 `com.team11855.lib`。專案資料夾與套件名稱的對應及驗證狀態見 [更名說明](docs/drive-vision/NAMESPACE-MIGRATION.md)。
 
-只保留 Drive、Vision 兩個 subsystem，以及通用 PathPlanner 路徑、AprilTag 定位、AdvantageKit 記錄與底盤模擬。PS5 控制器透過 WPILib 的 `CommandPS5Controller` 直接接入；舊 controlboard 與機構得分流程已移除。
+只保留 Drive、Vision 兩個 subsystem，以及通用 PathPlanner 路徑、AprilTag 定位、AdvantageKit 記錄與底盤模擬。視覺定位採 Team 254 的 MT1 優先＋單 Tag 歷史航向備援，流程與編譯前確認見 [MT1 移植說明](docs/drive-vision/TEAM254-MT1.md)。PS5 控制器透過 WPILib 的 `CommandPS5Controller` 直接接入；舊 controlboard 與機構得分流程已移除。
 
 詳見 [底盤／視覺使用說明與三張架構圖](docs/drive-vision/README.md)。[原始完整機器人的 mentor 分析](docs/mentor-analysis/README.md) 保留為歷史參考，其中機構與按鍵不適用此分支。
 

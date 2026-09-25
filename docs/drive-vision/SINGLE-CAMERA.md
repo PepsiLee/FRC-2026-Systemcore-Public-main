@@ -1,6 +1,6 @@
 # 單顆 Limelight：安裝位置設定與編譯前確認
 
-> 最新定位原始碼已改為 MT2 位置＋MT1 朝向，完整檔案清單、流程差異及待確認指令見 [MEGATAG-IO.md](MEGATAG-IO.md)。下方保留前階段的確認紀錄；其中「MT1／gyro 備援保留」只描述當時版本。
+> 最新定位原始碼採用 Team 254 的 MT1 優先＋單 Tag 歷史航向備援。完整流程、差異、檔案清單與編譯前確認見 [TEAM254-MT1.md](TEAM254-MT1.md)。下方保留較早階段紀錄，以最新文件為準；本輪尚未編譯、執行測試或部署。
 
 這次在 `offseason` 將目前架構整理為單顆 `limelight-rear`。保留 MegaTag1、gyro 輔助判斷，以及 `Vision → RobotState → Drive` 的定位回送。沒有改成 MegaTag2；`main` 原始 Team 254 完整機台分支不受影響。
 

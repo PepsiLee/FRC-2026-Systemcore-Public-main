@@ -2,8 +2,8 @@ flowchart TB
     mount["Constants.VisionConstants<br/>Camera name + mounting position"]:::state
     cameras["Single Limelight: limelight-rear<br/>Blue-origin pose + capture time"]:::input
     sim["SimulatedDriveState Pose2d<br/>→ One Photon camera simulation"]:::input
-    visionio["VisionIO inputs<br/>MT1 + MT2 + relative target"]:::io
-    vision["VisionSubsystem<br/>MT2 XY + MT1 heading<br/>One accepted measurement"]:::logic
+    visionio["VisionIO inputs<br/>MT1 + relative target"]:::io
+    vision["VisionSubsystem<br/>MT1 first / single-tag gyro fallback<br/>One accepted measurement"]:::logic
     state["RobotState<br/>Pose and motion history<br/>Vision estimate callback"]:::state
     ctre["DriveIOHardware / CTRE<br/>Vision time conversion<br/>Odometry telemetry ~250 Hz"]:::io
     api["Local AutoBuilder.pathfindToPose<br/>Pose2d + 6 constraint parameters"]:::logic

@@ -1,6 +1,6 @@
 {
   "check_type": "static structure only; no Java compilation or runtime tests",
-  "production_java_files": 83,
+  "production_java_files": 82,
   "subsystem_directories": [
     "drive",
     "vision"
@@ -17,6 +17,6 @@
     "maple-sim.json": "0.4.0-beta",
     "photonlib.json": "v2026.3.4"
   },
-  "junit_test_cases_not_executed": 57,
+  "junit_test_cases_not_executed": 64,
   "errors": []
 }

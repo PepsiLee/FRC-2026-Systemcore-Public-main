@@ -13,95 +13,95 @@
 <!-- mount -->
 <g id="node1" class="node">
 <title>mount</title>
-<path fill="#f2eafb" stroke="#8057a2" stroke-width="1.3" d="M433.91,-773.76C433.91,-773.76 220.48,-773.76 220.48,-773.76 214.48,-773.76 208.48,-767.76 208.48,-761.76 208.48,-761.76 208.48,-734.88 208.48,-734.88 208.48,-728.88 214.48,-722.88 220.48,-722.88 220.48,-722.88 433.91,-722.88 433.91,-722.88 439.91,-722.88 445.91,-728.88 445.91,-734.88 445.91,-734.88 445.91,-761.76 445.91,-761.76 445.91,-767.76 439.91,-773.76 433.91,-773.76"/>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-752.52" font-family="Arial" font-size="14.00" fill="#172d43">Constants.VisionConstants</text>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-735.72" font-family="Arial" font-size="14.00" fill="#172d43">Camera name + mounting position</text>
+<path fill="#f2eafb" stroke="#8057a2" stroke-width="1.3" d="M420.91,-773.76C420.91,-773.76 207.48,-773.76 207.48,-773.76 201.48,-773.76 195.48,-767.76 195.48,-761.76 195.48,-761.76 195.48,-734.88 195.48,-734.88 195.48,-728.88 201.48,-722.88 207.48,-722.88 207.48,-722.88 420.91,-722.88 420.91,-722.88 426.91,-722.88 432.91,-728.88 432.91,-734.88 432.91,-734.88 432.91,-761.76 432.91,-761.76 432.91,-767.76 426.91,-773.76 420.91,-773.76"/>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-752.52" font-family="Arial" font-size="14.00" fill="#172d43">Constants.VisionConstants</text>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-735.72" font-family="Arial" font-size="14.00" fill="#172d43">Camera name + mounting position</text>
 </g>
 <!-- cameras -->
 <g id="node2" class="node">
 <title>cameras</title>
-<path fill="#e5f4f0" stroke="#2d7868" stroke-width="1.3" d="M298.79,-661.68C298.79,-661.68 105.59,-661.68 105.59,-661.68 99.59,-661.68 93.59,-655.68 93.59,-649.68 93.59,-649.68 93.59,-622.8 93.59,-622.8 93.59,-616.8 99.59,-610.8 105.59,-610.8 105.59,-610.8 298.79,-610.8 298.79,-610.8 304.79,-610.8 310.79,-616.8 310.79,-622.8 310.79,-622.8 310.79,-649.68 310.79,-649.68 310.79,-655.68 304.79,-661.68 298.79,-661.68"/>
-<text xml:space="preserve" text-anchor="middle" x="202.19" y="-640.44" font-family="Arial" font-size="14.00" fill="#172d43">Single Limelight: limelight&#45;rear</text>
-<text xml:space="preserve" text-anchor="middle" x="202.19" y="-623.64" font-family="Arial" font-size="14.00" fill="#172d43">Blue&#45;origin pose + capture time</text>
+<path fill="#e5f4f0" stroke="#2d7868" stroke-width="1.3" d="M285.79,-661.68C285.79,-661.68 92.59,-661.68 92.59,-661.68 86.59,-661.68 80.59,-655.68 80.59,-649.68 80.59,-649.68 80.59,-622.8 80.59,-622.8 80.59,-616.8 86.59,-610.8 92.59,-610.8 92.59,-610.8 285.79,-610.8 285.79,-610.8 291.79,-610.8 297.79,-616.8 297.79,-622.8 297.79,-622.8 297.79,-649.68 297.79,-649.68 297.79,-655.68 291.79,-661.68 285.79,-661.68"/>
+<text xml:space="preserve" text-anchor="middle" x="189.19" y="-640.44" font-family="Arial" font-size="14.00" fill="#172d43">Single Limelight: limelight&#45;rear</text>
+<text xml:space="preserve" text-anchor="middle" x="189.19" y="-623.64" font-family="Arial" font-size="14.00" fill="#172d43">Blue&#45;origin pose + capture time</text>
 </g>
 <!-- mount&#45;&gt;cameras -->
 <g id="edge1" class="edge">
 <title>mount&#45;&gt;cameras</title>
-<path fill="none" stroke="#7a91a5" d="M298.83,-722.34C280.37,-706.09 256.18,-684.78 236.62,-667.56"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="238.45,-665.91 231.58,-663.12 235.22,-669.59 238.45,-665.91"/>
-<text xml:space="preserve" text-anchor="middle" x="324.15" y="-688.98" font-family="Arial" font-size="11.00" fill="#435c71">REAL mounting pose</text>
+<path fill="none" stroke="#7a91a5" d="M285.83,-722.34C267.37,-706.09 243.18,-684.78 223.62,-667.56"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="225.45,-665.91 218.58,-663.12 222.22,-669.59 225.45,-665.91"/>
+<text xml:space="preserve" text-anchor="middle" x="311.15" y="-688.98" font-family="Arial" font-size="11.00" fill="#435c71">REAL mounting pose</text>
 </g>
 <!-- sim -->
 <g id="node3" class="node">
 <title>sim</title>
-<path fill="#e5f4f0" stroke="#2d7868" stroke-width="1.3" d="M556.6,-661.68C556.6,-661.68 349.79,-661.68 349.79,-661.68 343.79,-661.68 337.79,-655.68 337.79,-649.68 337.79,-649.68 337.79,-622.8 337.79,-622.8 337.79,-616.8 343.79,-610.8 349.79,-610.8 349.79,-610.8 556.6,-610.8 556.6,-610.8 562.6,-610.8 568.6,-616.8 568.6,-622.8 568.6,-622.8 568.6,-649.68 568.6,-649.68 568.6,-655.68 562.6,-661.68 556.6,-661.68"/>
-<text xml:space="preserve" text-anchor="middle" x="453.19" y="-640.44" font-family="Arial" font-size="14.00" fill="#172d43">SimulatedDriveState Pose2d</text>
-<text xml:space="preserve" text-anchor="middle" x="453.19" y="-623.64" font-family="Arial" font-size="14.00" fill="#172d43">→ One Photon camera simulation</text>
+<path fill="#e5f4f0" stroke="#2d7868" stroke-width="1.3" d="M543.6,-661.68C543.6,-661.68 336.79,-661.68 336.79,-661.68 330.79,-661.68 324.79,-655.68 324.79,-649.68 324.79,-649.68 324.79,-622.8 324.79,-622.8 324.79,-616.8 330.79,-610.8 336.79,-610.8 336.79,-610.8 543.6,-610.8 543.6,-610.8 549.6,-610.8 555.6,-616.8 555.6,-622.8 555.6,-622.8 555.6,-649.68 555.6,-649.68 555.6,-655.68 549.6,-661.68 543.6,-661.68"/>
+<text xml:space="preserve" text-anchor="middle" x="440.19" y="-640.44" font-family="Arial" font-size="14.00" fill="#172d43">SimulatedDriveState Pose2d</text>
+<text xml:space="preserve" text-anchor="middle" x="440.19" y="-623.64" font-family="Arial" font-size="14.00" fill="#172d43">→ One Photon camera simulation</text>
 </g>
 <!-- mount&#45;&gt;sim -->
 <g id="edge2" class="edge">
 <title>mount&#45;&gt;sim</title>
-<path fill="none" stroke="#7a91a5" d="M355.79,-722.34C374.39,-706.09 398.78,-684.78 418.49,-667.56"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="419.92,-669.57 423.58,-663.12 416.69,-665.88 419.92,-669.57"/>
-<text xml:space="preserve" text-anchor="middle" x="446.95" y="-688.98" font-family="Arial" font-size="11.00" fill="#435c71">SIM axis conversion</text>
+<path fill="none" stroke="#7a91a5" d="M342.79,-722.34C361.39,-706.09 385.78,-684.78 405.49,-667.56"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="406.92,-669.57 410.58,-663.12 403.69,-665.88 406.92,-669.57"/>
+<text xml:space="preserve" text-anchor="middle" x="433.95" y="-688.98" font-family="Arial" font-size="11.00" fill="#435c71">SIM axis conversion</text>
 </g>
 <!-- visionio -->
 <g id="node4" class="node">
 <title>visionio</title>
-<path fill="#fff1dd" stroke="#9c7032" stroke-width="1.3" d="M413.08,-549.6C413.08,-549.6 241.31,-549.6 241.31,-549.6 235.31,-549.6 229.31,-543.6 229.31,-537.6 229.31,-537.6 229.31,-510.72 229.31,-510.72 229.31,-504.72 235.31,-498.72 241.31,-498.72 241.31,-498.72 413.08,-498.72 413.08,-498.72 419.08,-498.72 425.08,-504.72 425.08,-510.72 425.08,-510.72 425.08,-537.6 425.08,-537.6 425.08,-543.6 419.08,-549.6 413.08,-549.6"/>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-528.36" font-family="Arial" font-size="14.00" fill="#172d43">VisionIO inputs</text>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-511.56" font-family="Arial" font-size="14.00" fill="#172d43">MT1 + MT2 + relative target</text>
+<path fill="#fff1dd" stroke="#9c7032" stroke-width="1.3" d="M378.1,-549.6C378.1,-549.6 250.29,-549.6 250.29,-549.6 244.29,-549.6 238.29,-543.6 238.29,-537.6 238.29,-537.6 238.29,-510.72 238.29,-510.72 238.29,-504.72 244.29,-498.72 250.29,-498.72 250.29,-498.72 378.1,-498.72 378.1,-498.72 384.1,-498.72 390.1,-504.72 390.1,-510.72 390.1,-510.72 390.1,-537.6 390.1,-537.6 390.1,-543.6 384.1,-549.6 378.1,-549.6"/>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-528.36" font-family="Arial" font-size="14.00" fill="#172d43">VisionIO inputs</text>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-511.56" font-family="Arial" font-size="14.00" fill="#172d43">MT1 + relative target</text>
 </g>
 <!-- cameras&#45;&gt;visionio -->
 <g id="edge3" class="edge">
 <title>cameras&#45;&gt;visionio</title>
-<path fill="none" stroke="#7a91a5" d="M230.56,-610.26C249.02,-594.01 273.21,-572.7 292.77,-555.48"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="294.17,-557.51 297.81,-551.04 290.93,-553.83 294.17,-557.51"/>
-<text xml:space="preserve" text-anchor="middle" x="286.55" y="-576.9" font-family="Arial" font-size="11.00" fill="#435c71">REAL</text>
+<path fill="none" stroke="#7a91a5" d="M217.56,-610.26C236.02,-594.01 260.21,-572.7 279.77,-555.48"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="281.17,-557.51 284.81,-551.04 277.93,-553.83 281.17,-557.51"/>
+<text xml:space="preserve" text-anchor="middle" x="273.55" y="-576.9" font-family="Arial" font-size="11.00" fill="#435c71">REAL</text>
 </g>
 <!-- sim&#45;&gt;visionio -->
 <g id="edge4" class="edge">
 <title>sim&#45;&gt;visionio</title>
-<path fill="none" stroke="#7a91a5" d="M424.6,-610.26C406,-594.01 381.61,-572.7 361.9,-555.48"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="363.7,-553.8 356.81,-551.04 360.47,-557.49 363.7,-553.8"/>
-<text xml:space="preserve" text-anchor="middle" x="407.52" y="-576.9" font-family="Arial" font-size="11.00" fill="#435c71">SIM</text>
+<path fill="none" stroke="#7a91a5" d="M411.6,-610.26C393,-594.01 368.61,-572.7 348.9,-555.48"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="350.7,-553.8 343.81,-551.04 347.47,-557.49 350.7,-553.8"/>
+<text xml:space="preserve" text-anchor="middle" x="394.52" y="-576.9" font-family="Arial" font-size="11.00" fill="#435c71">SIM</text>
 </g>
 <!-- vision -->
 <g id="node5" class="node">
 <title>vision</title>
-<path fill="#edf2ff" stroke="#5269ad" stroke-width="1.3" d="M415.04,-437.52C415.04,-437.52 239.35,-437.52 239.35,-437.52 233.35,-437.52 227.35,-431.52 227.35,-425.52 227.35,-425.52 227.35,-381.84 227.35,-381.84 227.35,-375.84 233.35,-369.84 239.35,-369.84 239.35,-369.84 415.04,-369.84 415.04,-369.84 421.04,-369.84 427.04,-375.84 427.04,-381.84 427.04,-381.84 427.04,-425.52 427.04,-425.52 427.04,-431.52 421.04,-437.52 415.04,-437.52"/>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-416.28" font-family="Arial" font-size="14.00" fill="#172d43">VisionSubsystem</text>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-399.48" font-family="Arial" font-size="14.00" fill="#172d43">MT2 XY + MT1 heading</text>
-<text xml:space="preserve" text-anchor="middle" x="327.19" y="-382.68" font-family="Arial" font-size="14.00" fill="#172d43">One accepted measurement</text>
+<path fill="#edf2ff" stroke="#5269ad" stroke-width="1.3" d="M418.36,-437.52C418.36,-437.52 210.03,-437.52 210.03,-437.52 204.03,-437.52 198.03,-431.52 198.03,-425.52 198.03,-425.52 198.03,-381.84 198.03,-381.84 198.03,-375.84 204.03,-369.84 210.03,-369.84 210.03,-369.84 418.36,-369.84 418.36,-369.84 424.36,-369.84 430.36,-375.84 430.36,-381.84 430.36,-381.84 430.36,-425.52 430.36,-425.52 430.36,-431.52 424.36,-437.52 418.36,-437.52"/>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-416.28" font-family="Arial" font-size="14.00" fill="#172d43">VisionSubsystem</text>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-399.48" font-family="Arial" font-size="14.00" fill="#172d43">MT1 first / single&#45;tag gyro fallback</text>
+<text xml:space="preserve" text-anchor="middle" x="314.19" y="-382.68" font-family="Arial" font-size="14.00" fill="#172d43">One accepted measurement</text>
 </g>
 <!-- visionio&#45;&gt;vision -->
 <g id="edge5" class="edge">
 <title>visionio&#45;&gt;vision</title>
-<path fill="none" stroke="#7a91a5" d="M327.19,-498.32C327.19,-483.28 327.19,-463.7 327.19,-446.34"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="329.64,-446.54 327.19,-439.54 324.74,-446.54 329.64,-446.54"/>
-<text xml:space="preserve" text-anchor="middle" x="363.88" y="-464.82" font-family="Arial" font-size="11.00" fill="#435c71">main&#45;loop read</text>
+<path fill="none" stroke="#7a91a5" d="M314.19,-498.32C314.19,-483.28 314.19,-463.7 314.19,-446.34"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="316.64,-446.54 314.19,-439.54 311.74,-446.54 316.64,-446.54"/>
+<text xml:space="preserve" text-anchor="middle" x="350.88" y="-464.82" font-family="Arial" font-size="11.00" fill="#435c71">main&#45;loop read</text>
 </g>
 <!-- state -->
 <g id="node6" class="node">
 <title>state</title>
-<path fill="#f2eafb" stroke="#8057a2" stroke-width="1.3" d="M363.81,-308.64C363.81,-308.64 214.58,-308.64 214.58,-308.64 208.58,-308.64 202.58,-302.64 202.58,-296.64 202.58,-296.64 202.58,-252.96 202.58,-252.96 202.58,-246.96 208.58,-240.96 214.58,-240.96 214.58,-240.96 363.81,-240.96 363.81,-240.96 369.81,-240.96 375.81,-246.96 375.81,-252.96 375.81,-252.96 375.81,-296.64 375.81,-296.64 375.81,-302.64 369.81,-308.64 363.81,-308.64"/>
-<text xml:space="preserve" text-anchor="middle" x="289.19" y="-287.4" font-family="Arial" font-size="14.00" fill="#172d43">RobotState</text>
-<text xml:space="preserve" text-anchor="middle" x="289.19" y="-270.6" font-family="Arial" font-size="14.00" fill="#172d43">Pose and motion history</text>
-<text xml:space="preserve" text-anchor="middle" x="289.19" y="-253.8" font-family="Arial" font-size="14.00" fill="#172d43">Vision estimate callback</text>
+<path fill="#f2eafb" stroke="#8057a2" stroke-width="1.3" d="M355.81,-308.64C355.81,-308.64 206.58,-308.64 206.58,-308.64 200.58,-308.64 194.58,-302.64 194.58,-296.64 194.58,-296.64 194.58,-252.96 194.58,-252.96 194.58,-246.96 200.58,-240.96 206.58,-240.96 206.58,-240.96 355.81,-240.96 355.81,-240.96 361.81,-240.96 367.81,-246.96 367.81,-252.96 367.81,-252.96 367.81,-296.64 367.81,-296.64 367.81,-302.64 361.81,-308.64 355.81,-308.64"/>
+<text xml:space="preserve" text-anchor="middle" x="281.19" y="-287.4" font-family="Arial" font-size="14.00" fill="#172d43">RobotState</text>
+<text xml:space="preserve" text-anchor="middle" x="281.19" y="-270.6" font-family="Arial" font-size="14.00" fill="#172d43">Pose and motion history</text>
+<text xml:space="preserve" text-anchor="middle" x="281.19" y="-253.8" font-family="Arial" font-size="14.00" fill="#172d43">Vision estimate callback</text>
 </g>
 <!-- vision&#45;&gt;state -->
 <g id="edge7" class="edge">
 <title>vision&#45;&gt;state</title>
-<path fill="none" stroke="#7a91a5" d="M295.5,-369.29C283.75,-356.91 273.24,-345.84 273.24,-345.84 273.24,-345.84 273.24,-332.64 273.24,-332.64 273.24,-332.64 275.1,-326.02 277.55,-317.29"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="279.88,-318.05 279.41,-310.65 275.16,-316.73 279.88,-318.05"/>
-<text xml:space="preserve" text-anchor="middle" x="330.72" y="-335.94" font-family="Arial" font-size="11.00" fill="#435c71">accepted measurement</text>
+<path fill="none" stroke="#7a91a5" d="M285.44,-369.29C274.78,-356.91 265.24,-345.84 265.24,-345.84 265.24,-345.84 265.24,-332.64 265.24,-332.64 265.24,-332.64 267.1,-326.02 269.55,-317.29"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="271.88,-318.05 271.41,-310.65 267.16,-316.73 271.88,-318.05"/>
+<text xml:space="preserve" text-anchor="middle" x="322.72" y="-335.94" font-family="Arial" font-size="11.00" fill="#435c71">accepted measurement</text>
 </g>
 <!-- state&#45;&gt;vision -->
 <g id="edge6" class="edge">
 <title>state&#45;&gt;vision</title>
-<path fill="none" stroke="#7a91a5" d="M350.88,-309.19C373.74,-321.57 394.19,-332.64 394.19,-332.64 394.19,-332.64 394.19,-345.84 394.19,-345.84 394.19,-345.84 384.73,-353.87 372.91,-363.9"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="371.46,-361.91 367.71,-368.31 374.63,-365.65 371.46,-361.91"/>
-<text xml:space="preserve" text-anchor="middle" x="450.44" y="-335.94" font-family="Arial" font-size="11.00" fill="#435c71">historical pose / motion</text>
+<path fill="none" stroke="#7a91a5" d="M342.88,-309.19C365.74,-321.57 386.19,-332.64 386.19,-332.64 386.19,-332.64 386.19,-345.84 386.19,-345.84 386.19,-345.84 375.83,-354.02 362.97,-364.17"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="361.66,-362.09 357.68,-368.35 364.69,-365.93 361.66,-362.09"/>
+<text xml:space="preserve" text-anchor="middle" x="442.44" y="-335.94" font-family="Arial" font-size="11.00" fill="#435c71">historical pose / motion</text>
 </g>
 <!-- ctre -->
 <g id="node7" class="node">
@@ -114,7 +114,7 @@
 <!-- state&#45;&gt;ctre -->
 <g id="edge8" class="edge">
 <title>state&#45;&gt;ctre</title>
-<path fill="none" stroke="#7a91a5" d="M202.03,-247.29C153.3,-232.48 102.27,-216.96 102.27,-216.96 102.27,-216.96 102.07,-203.7 101.84,-188.72"/>
+<path fill="none" stroke="#7a91a5" d="M194.09,-246.13C148.59,-231.67 102.27,-216.96 102.27,-216.96 102.27,-216.96 102.07,-203.7 101.84,-188.72"/>
 <polygon fill="#7a91a5" stroke="#7a91a5" points="104.29,-188.77 101.73,-181.81 99.39,-188.85 104.29,-188.77"/>
 <text xml:space="preserve" text-anchor="middle" x="137.73" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">vision callback</text>
 </g>
@@ -128,9 +128,9 @@
 <!-- state&#45;&gt;controller -->
 <g id="edge15" class="edge">
 <title>state&#45;&gt;controller</title>
-<path fill="none" stroke="#7a91a5" d="M360.66,-240.46C404.07,-220.21 458.91,-194.63 500.27,-175.34"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="501.15,-177.63 506.45,-172.45 499.07,-173.19 501.15,-177.63"/>
-<text xml:space="preserve" text-anchor="middle" x="469.13" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">pose feedback</text>
+<path fill="none" stroke="#7a91a5" d="M354.76,-240.46C399.55,-220.17 456.14,-194.52 498.74,-175.22"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="499.51,-177.56 504.88,-172.44 497.49,-173.1 499.51,-177.56"/>
+<text xml:space="preserve" text-anchor="middle" x="465.37" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">pose feedback</text>
 </g>
 <!-- align -->
 <g id="node13" class="node">
@@ -142,16 +142,16 @@
 <!-- state&#45;&gt;align -->
 <g id="edge17" class="edge">
 <title>state&#45;&gt;align</title>
-<path fill="none" stroke="#7a91a5" d="M299.18,-240.46C304.81,-221.66 311.82,-198.26 317.41,-179.57"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="319.7,-180.47 319.36,-173.06 315.01,-179.07 319.7,-180.47"/>
-<text xml:space="preserve" text-anchor="middle" x="345.11" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">pose feedback</text>
+<path fill="none" stroke="#7a91a5" d="M293.28,-240.46C300.1,-221.66 308.58,-198.26 315.36,-179.57"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="317.64,-180.45 317.73,-173.04 313.04,-178.78 317.64,-180.45"/>
+<text xml:space="preserve" text-anchor="middle" x="341.35" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">pose feedback</text>
 </g>
 <!-- ctre&#45;&gt;state -->
 <g id="edge9" class="edge">
 <title>ctre&#45;&gt;state</title>
-<path fill="none" stroke="#7a91a5" d="M150.58,-180.25C175.85,-197.31 206.71,-218.13 232.9,-235.81"/>
-<polygon fill="#7a91a5" stroke="#7a91a5" points="231.37,-237.73 238.54,-239.62 234.11,-233.67 231.37,-237.73"/>
-<text xml:space="preserve" text-anchor="middle" x="244.85" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">odometry / motion</text>
+<path fill="none" stroke="#7a91a5" d="M148.48,-180.25C172.57,-197.23 201.97,-217.96 226.97,-235.58"/>
+<polygon fill="#7a91a5" stroke="#7a91a5" points="225.53,-237.56 232.66,-239.59 228.35,-233.56 225.53,-237.56"/>
+<text xml:space="preserve" text-anchor="middle" x="240.61" y="-207.06" font-family="Arial" font-size="11.00" fill="#435c71">odometry / motion</text>
 </g>
 <!-- api -->
 <g id="node8" class="node">

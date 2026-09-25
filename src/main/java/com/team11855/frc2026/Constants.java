@@ -2,6 +2,7 @@ package com.team11855.frc2026;
 
 import com.team11855.frc2026.subsystems.drive.CommandSwerveDrivetrain;
 import com.team11855.frc2026.subsystems.drive.CompTunerConstants;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+
 import java.util.Arrays;
 
 public class Constants {
@@ -76,6 +78,7 @@ public class Constants {
 
     /** PS5 controller index in the Driver Station USB tab. */
     public static final int kDriverControllerPort = 0;
+
     public static final boolean useMapleSim = true;
 
     // April Tag Layout
@@ -106,11 +109,6 @@ public class Constants {
         public static final int kMegatag1XStdDevIndex = 0;
         public static final int kMegatag1YStdDevIndex = 1;
         public static final int kMegatag1YawStdDevIndex = 5;
-
-        // Standard deviation array indices for Megatag2
-        public static final int kMegatag2XStdDevIndex = 6;
-        public static final int kMegatag2YStdDevIndex = 7;
-        public static final int kMegatag2YawStdDevIndex = 11;
 
         // Validation constants
         public static final int kExpectedStdDevArrayLength = 12;
@@ -144,21 +142,24 @@ public class Constants {
                                 -Units.degreesToRadians(kCameraPitchDegrees),
                                 Units.degreesToRadians(kCameraYawDegrees)));
 
-        // MT2 位置 + MT1 朝向：量測仍以 FPGA 秒保存，僅 DriveIO 轉換 CTRE 時間。
+        // Team 254 MT1 主分支門檻；單 Tag 失敗時另試歷史航向備援。
+        public static final double kDefaultAmbiguityThreshold = 0.19;
+        public static final double kDefaultYawDiffThreshold = 5.0; // 度。
+        public static final double kTagAreaThresholdForYawCheck = 2.0; // 影像面積百分比。
+        public static final double kTagMinAreaForSingleTagMegatag = 1.0;
+        public static final double kDefaultZThreshold = 0.2; // 公尺。
+        public static final double kDefaultNormThreshold = 1.0; // 距離場地原點，非標籤距離。
+        public static final double kHighYawLookbackSeconds = 0.3;
+        public static final double kMaxVisionYawRateRadiansPerSecond = 5.0; // 僅限 gyro 備援。
+
+        // 保留本機資料逾時保護；時間仍為 FPGA 秒，僅 DriveIO 轉換 CTRE 時基。
         public static final double kMaxMeasurementAgeSeconds = 0.50;
         public static final double kFutureTimestampToleranceSeconds = 0.05;
-        public static final double kMaxMegatagTimestampSkewSeconds = 0.05;
-        public static final double kMaxTagDistanceMeters = 6.0;
-        public static final double kFieldBoundaryMarginMeters = 0.5;
-        public static final double kMaxVisionYawRateRadiansPerSecond = 5.0; // 約 286 度／秒。
-        // 與參考專案相同：10 rad 的大標準差，讓陀螺儀主導朝向。
-        public static final double kHeadingStandardDeviationRadians = 10.0;
 
         public static final double kCameraHorizontalFOVDegrees = 81.0;
         public static final double kCameraVerticalFOVDegrees = 55.0;
         public static final int kCameraImageWidth = 1280;
         public static final int kCameraImageHeight = 800;
-
     }
 
     /** AprilTag 對準／跟隨專用參數；不改手動駕駛、路徑或朝向維持的 PID。 */
@@ -206,5 +207,4 @@ public class Constants {
                 new TrapezoidProfile.Constraints(
                         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
-
 }
